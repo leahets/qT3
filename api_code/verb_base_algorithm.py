@@ -22,47 +22,58 @@ def file_writer(text, file_name):
     f.write(text)
     f.close()
 
+def make_word(verb):
+    return Word(verb)
 
 def which_form(verb):
     base_verb = verb.third_past
 
     if base_verb[0] == "أ":
         print("checking form iv")
-        print(check_iv(verb))
+        if(check_iv(verb)):
+            return "Form IV"
     else:
         if base_verb[0] == "ا":
             if base_verb[1] == "ن":
                 print("checking form vii")
-                print(check_vii(verb))
+                if(check_vii(verb)):
+                    return "Form VII"
             else:
                 if base_verb[1] == "س":
                     print("checking form x")
-                    print(check_x(verb))
+                    if(check_x(verb)):
+                        return "Form X"
                 else:
                     if base_verb[2] == "ت":
                         print("checking form viii")
-                        print(check_viii(verb))
+                        if(check_viii(verb)):
+                            return "Form VIII"
         else:
             if base_verb[0] == "ت":
                 if base_verb[2] == "ا":
                     print("checking form vi")
-                    print(check_vi(verb))
+                    if(check_vi(verb)):
+                        return "Form VI"
                 if base_verb[3] == "ّ":
                     print("checking form v")
-                    print(check_v(verb))
+                    if(check_v(verb)):
+                        return "Form V"
             else:
                 # 1st letter is in root
                 if base_verb[1] == "ا":
                     print("checking form iii")
-                    print(check_iii(verb))
+                    if(check_iii(verb)):
+                        return "Form III"
                 else:
                     if base_verb[2] == "ّ":
                         print("checking form ii")
-                        print(check_ii(verb))
+                        if(check_ii(verb)):
+                            return "Form II"
                     else:
                         if len(base_verb) == 3:
                             print("checking form i")
-                            print(check_i(verb))
+                            if(check_i(verb)):
+                                return "Form I"
                         else:
                             print("no form found")
 

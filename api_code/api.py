@@ -1,5 +1,7 @@
 import flask
 from flask import request
+import verb_base_algorithm
+
 
 app = flask.Flask(__name__)
 #app.config["DEBUG"] = True
@@ -13,22 +15,15 @@ def home():
 def api_arabic():
     return "فعل"
 
-@app.route('/api/arabic', methods=['GET'])
-def api_word_id():
+@app.route('/api/form', methods=['GET'])
+def api_verb_form():
     # Check if an ID was provided as part of the URL.
     # If ID is provided, assign it to a variable.
     # If no ID is provided, display an error in the browser.
     if 'id' in request.args:
-        id = request.args['id']
+        verb = request.args['id']
     else:
-        return "Error: No id field provided. Please specify an id."
+        return "Error: No verb field provided. Please specify a verb."
 
-    # if id == 1:
-    #     return "كتب"
-    # if id == 2:
-    #     return "مفعل"
-    # if id == 3:
-    #     return "تملك"
-    if id == "مشمش":
-        return id
-    return "uh-oh"
+    word = verb_base_algorithm.make_word(verb)
+    return str(verb_base_algorithm.which_form(word))
