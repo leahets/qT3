@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         label.text = "text"
         view.addSubview(label)
         
-        let url = "http://api.sunrise-sunset.org/json?date=2020-01-01&lat=-74.0060&lng=40.7128&formatted=0"
+        let url = "https://qt3-arabic-deduction.herokuapp.com/api/form?id=%D8%A7%D8%B3%D8%AA%D8%B9%D9%85%D9%84"
         getData(from: url)
     }
     
@@ -48,19 +48,19 @@ class ViewController: UIViewController {
             }
             catch{
                 print("failed to convert \(error.localizedDescription)")
+                print(Response.self)
             }
             guard let json = result else {
                 return
             }
             print(json.status)
-            print(json.results.sunrise)
-            print(json.results.sunset)
-             
+            print(json.results)
+         
         })
         task.resume()
     }
     struct Response: Codable {
-        let results: MyResult
+        let results: String //MyResult
         let status: String
     }
     struct MyResult: Codable{

@@ -1,6 +1,7 @@
 import flask
 from flask import request
 import verb_base_algorithm
+import json
 
 
 app = flask.Flask(__name__)
@@ -26,4 +27,6 @@ def api_verb_form():
         return "Error: No verb field provided. Please specify a verb."
 
     word = verb_base_algorithm.make_word(verb)
-    return str(verb_base_algorithm.which_form(word))
+    form = verb_base_algorithm.which_form(word)
+    dict_word = {"word": verb, "form": form}
+    return json.dumps(dict_word)
