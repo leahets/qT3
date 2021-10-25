@@ -27,53 +27,60 @@ class ViewController: UIViewController {
         label.text = "text"
         view.addSubview(label)
         
-        let url = "https://qt3-arabic-deduction.herokuapp.com/api/form?id=%D8%A7%D8%B3%D8%AA%D8%B9%D9%85%D9%84"
-        getData(from: url)
+        
+        
+      
     }
     
     @IBAction func buttonTapped(){
         field.resignFirstResponder()
     }
 
-    private func getData(from url: String){
+    private func getData(from url: String, completion: @escaping (Result<MyResult, Error>) -> Void) {
+        //var return_val: MyResult?
+        
         let task = URLSession.shared.dataTask(with: URL(string: url)!,completionHandler: {data, response, error in
             guard let data = data, error == nil else {
-                print("something went wrong")
+                print(error)
+                DispatchQueue.main.async {
+                    completion(.failure(error as! Error))
+                }
                 return
             }
             //have data
-            var result: Response?
+            var result: MyResult?
             do{
-                result = try JSONDecoder().decode(Response.self, from: data)
+                result = try JSONDecoder().decode(MyResult.self, from: data)
             }
             catch{
                 print("failed to convert \(error.localizedDescription)")
-                print(Response.self)
+                
             }
             guard let json = result else {
                 return
             }
-            print(json.status)
-            print(json.results)
-         
+            
+            
+            print(json.word)
+            print(json.form)
+            
+           DispatchQueue.main.async {
+            completion(.success(json))
+           }
+           //return json
+            //return_val = json.form
         })
         task.resume()
+    
     }
     struct Response: Codable {
-        let results: String //MyResult
+        let results: MyResult
         let status: String
     }
     struct MyResult: Codable{
-        let sunrise: String
-        let sunset: String
-        let solar_noon: String
-        let day_length: Int
-        let civil_twilight_begin: String
-        let civil_twilight_end: String
-        let nautical_twilight_begin: String
-        let nautical_twilight_end: String
-        let astronomical_twilight_begin: String
-        let astronomical_twilight_end: String
+        let word: String
+        let form: String
+       
         
     }
 
@@ -85,9 +92,40 @@ extension ViewController: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         
+        func updateLabel(input: String) -> Void{
+            label.text = input
+        }
         if let text = textField.text{
             label.text = text
-            print("\(text)")
+            
+            let verb_test: String
+            let verb_encoded: String
+            verb_test = text
+            print(verb_test)
+            verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+            print(verb_encoded)
+            let url = "https://qt3-arabic-deduction.herokuapp.com/api/form?id=" + verb_encoded
+            //print(url)
+            //var help = ""
+            getData(from: url){ [self] results in
+                
+                //var test_help: String
+                switch results {
+                case .failure(let error):
+                    print(error.localizedDescription)
+
+                case .success(let response):
+                    //print(response.form)
+                    label.text = response.form
+                    // use `genres` here, e.g. update model and UI
+                }
+                
+            }
+            
+            //label.text = help
+            
+            
+            //print("\(text)")
         }
         
         return true
