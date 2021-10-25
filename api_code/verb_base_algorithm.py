@@ -8,10 +8,22 @@ i = 0
 class Word:
     def __init__(self, raw_text):
         self.raw_text = raw_text
+        self.conjugated = raw_text
+        self.features = set()
         self.third_past = raw_text
         self.checked_forms = set()
         self.root = ""
         self.pos = "V"  # automatically verbs for now
+        self.form = 0
+
+
+class Features:
+    def __init__(self, tense, person, gender, number, mood):
+        self.tense = tense
+        self.number = number
+        self.gender = gender
+        self.person = person
+        self.mood = mood
 
 
 def file_writer(text, file_name):
@@ -22,8 +34,10 @@ def file_writer(text, file_name):
     f.write(text)
     f.close()
 
+
 def make_word(verb):
     return Word(verb)
+
 
 def which_form(verb):
     base_verb = verb.third_past
@@ -245,5 +259,106 @@ def check_form(base_verb, form):
         print("INVALID FORM")
 
 
+def decode_features(code):
+    tense = ""
+    person = 0
+    gender = ""
+    number = 0
+    mood = ""
+
+    tense_code = code[0]
+    person_code = code[1]
+    gender_code = code[2]
+    number_code = code[3]
+    mood_code = code[4]
+
+    if tense_code == 'p':
+        tense = 'past'
+    elif tense_code == 'r':
+        tense = 'present'
+    elif tense_code == 'f':
+        tense = 'future'
+
+    person = person_code
+
+    if gender_code == 'm':
+        gender = 'masculine'
+    elif gender_code == 'f':
+        gender = 'feminine'
+    elif gender_code == 'n':
+        gender = 'neutral'
+
+    number = number_code
+
+    if mood_code == 'i':
+        mood = 'indicative'
+    elif mood_code == 's':
+        mood = 'subjunctive'
+    elif mood_code == 'j':
+        mood = 'jussive'
+    elif mood_code == 'n':
+        mood = 'none'
+
+    return Features(tense, person, gender, number, mood)
+
+
+def deconjugate(word):
+    verb = word.conjugated
+    first_letter = verb[0]
+    last_letter = verb[-1]
+    if first_letter not in ("أ", "ن", "ت", "ي"):
+        # Prefix 1 (None)
+        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+            # Suffix 1 (None)
+            print("Third person singular masculine past")
+            # word.features.add(p1m1n)
+            word.third_past = verb
+            word.person = 3
+            word.plurality = 1
+            word.gender = 'm'
+            print_word(word)
+
+
+def print_word(word):
+    print("Raw text: " + word.raw_text)
+    print("Conjugated form: " + word.conjugated)
+    print("Base form: " + word.third_past)
+
+    for item in word.features:
+        print_features(item)
+
+    print("This verb has been checked for the following forms: ")
+    print(word.checked_forms)
+    print("The root of this word is " + word.root)
+
+
+def print_features(f):
+    if f.person == 0:
+        print("The person of this word is not known.")
+    elif f.person == 1:
+        print("This word is in the first person.")
+    elif f.person == 2:
+        print("This word is in the second person.")
+    elif f.person == 3:
+        print("This word is in the 3rd person.")
+
+    if f.number == 0:
+        print("The plurality of this word is not known.")
+    elif f.number == 1:
+        print("This word is singular.")
+    elif f.number == 2:
+        print("This word is dual.")
+    elif f.number == 3:
+        print("This word is plural.")
+
+    if f.gender == 0:
+        print("The gender of this word is unknown.")
+    elif f.gender == 'm':
+        print("This word is masculine.")
+    elif f.gender == 'f':
+        print("This word is feminine.")
+
+
+# define_features()
 test_word = Word("فعل")
-which_form(test_word)
+deconjugate(test_word)
