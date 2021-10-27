@@ -267,9 +267,9 @@ def decode_features(code):
     mood = ""
 
     tense_code = code[0]
-    person_code = code[1]
+    person_code = int(code[1])
     gender_code = code[2]
-    number_code = code[3]
+    number_code = int(code[3])
     mood_code = code[4]
 
     if tense_code == 'p':
@@ -302,6 +302,121 @@ def decode_features(code):
     return Features(tense, person, gender, number, mood)
 
 
+def create_features():
+    global p3m1n
+    p3m1n = decode_features('p3m1n')
+    global p1n1n
+    p1n1n = decode_features('p1n1n')
+    global p2m1n
+    p2m1n = decode_features('p2m1n')
+    global p2f1n
+    p2f1n = decode_features('p2f1n')
+    global p3f1n
+    p3f1n = decode_features('p3f1n')
+    global p3f3n
+    p3f3n = decode_features('p3f3n')
+    global p3m2n
+    p3m2n = decode_features('p3m2n')
+    global p1n3n
+    p1n3n = decode_features('p1n3n')
+    global p3m3n
+    p3m3n = decode_features('p3m3n')
+    global p3f2n
+    p3f2n = decode_features('p3f2n')
+    global p2m2n
+    p2m2n = decode_features('p2m2n')
+    global p2f2n
+    p2f2n = decode_features('p2f2n')
+    global p2m3n
+    p2m3n = decode_features('p2m3n')
+    global p2f3n
+    p2m3n = decode_features('p2f3n')
+    global r1n1i
+    r1n1i = decode_features('r1n1i')
+    global r1n1s
+    r1n1s = decode_features('r1n1s')
+    global r1n1j
+    r1n1j = decode_features('r1n1j')
+    global r1n3i
+    r1n3i = decode_features('r1n3i')
+    global r1n3s
+    r1n3s = decode_features('r1n3s')
+    global r1n3j
+    r1n3j = decode_features('r1n3j')
+    global r2m1i
+    r2m1i = decode_features('r2m1i')
+    global r2m1s
+    r2m1s = decode_features('r2m1s')
+    global r2m1j
+    r2m1j = decode_features('r2m1j')
+    global r3f1i
+    r3f1i = decode_features('r3f1i')
+    global r3f1s
+    r3f1s = decode_features('r3f1s')
+    global r3f1j
+    r3f1j = decode_features('r3f1j')
+    global r2f3i
+    r2f3i = decode_features('r2f3i')
+    global r2f3s
+    r2f3s = decode_features('r2f3s')
+    global r2f3j
+    r2f3j = decode_features('r2f3j')
+    global r2m2i
+    r2m2i = decode_features('r2m2i')
+    global r2f2i
+    r2f2i = decode_features('r2f2i')
+    global r3f2i
+    r3f2i = decode_features('r3f2i')
+    global r2m3i
+    r2m3i = decode_features('r2m3i')
+    global r2f1i
+    r2f1i = decode_features('r2f1i')
+    global r2m2s
+    r2m2s = decode_features('r2m2s')
+    global r2m2j
+    r2m2j = decode_features('r2m2j')
+    global r2f2s
+    r2f2s = decode_features('r2f2s')
+    global r2f2j
+    r2f2j = decode_features('r2f2j')
+    global r3f2s
+    r3f2s = decode_features('r3f2s')
+    global r3f2j
+    r3f2j = decode_features('r3f2j')
+    global r2m3s
+    r2m3s = decode_features('r2m3s')
+    global r2m3j
+    r2m3j = decode_features('r2m3j')
+    global r2f1s
+    r2f1s = decode_features('r2f1s')
+    global r2f1j
+    r2f1j = decode_features('r2f1j')
+    global r3m1i
+    r3m1i = decode_features('r3m1i')
+    global r3m1s
+    r3m1s = decode_features('r3m1s')
+    global r3m1j
+    r3m1j = decode_features('r3m1j')
+    global r3f3i
+    r3f3i = decode_features('r3f3i')
+    global r3f3s
+    r3f3s = decode_features('r3f3s')
+    global r3f3j
+    r3f3j = decode_features('r3f3j')
+    global r3m2i
+    r3m2i = decode_features('r3m2i')
+    global r3m3i
+    r3m3i = decode_features('r3m3i')
+    global r3m2s
+    r3m2s = decode_features('r3m2s')
+    global r3m2j
+    r3m2j = decode_features('r3m2j')
+    global r3m3s
+    r3m3s = decode_features('r3m3s')
+    global r3m3j
+    r3m3j = decode_features('r3m3j')
+
+
 def deconjugate(word):
     verb = word.conjugated
     first_letter = verb[0]
@@ -310,12 +425,7 @@ def deconjugate(word):
         # Prefix 1 (None)
         if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
             # Suffix 1 (None)
-            print("Third person singular masculine past")
-            # word.features.add(p1m1n)
-            word.third_past = verb
-            word.person = 3
-            word.plurality = 1
-            word.gender = 'm'
+            word.features.add(p3m1n)
             print_word(word)
 
 
@@ -333,32 +443,13 @@ def print_word(word):
 
 
 def print_features(f):
-    if f.person == 0:
-        print("The person of this word is not known.")
-    elif f.person == 1:
-        print("This word is in the first person.")
-    elif f.person == 2:
-        print("This word is in the second person.")
-    elif f.person == 3:
-        print("This word is in the 3rd person.")
-
-    if f.number == 0:
-        print("The plurality of this word is not known.")
-    elif f.number == 1:
-        print("This word is singular.")
-    elif f.number == 2:
-        print("This word is dual.")
-    elif f.number == 3:
-        print("This word is plural.")
-
-    if f.gender == 0:
-        print("The gender of this word is unknown.")
-    elif f.gender == 'm':
-        print("This word is masculine.")
-    elif f.gender == 'f':
-        print("This word is feminine.")
+    print("This word is in the " + f.tense + " tense.")
+    print("This word is in the " + str(f.person) + " person.")
+    print("This word is " + f.gender)
+    print("This word refers to " + str(f.number) + " people.")
+    print("This word is in the " + f.mood + " mood.")
 
 
-# define_features()
+create_features()
 test_word = Word("فعل")
 deconjugate(test_word)
