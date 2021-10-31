@@ -15,6 +15,8 @@ class Word:
         self.root = ""
         self.pos = "V"  # automatically verbs for now
         self.form = 0
+        self.prefix_count = 0
+        self.suffix_count = 0
 
 
 class Features:
@@ -24,6 +26,8 @@ class Features:
         self.gender = gender
         self.person = person
         self.mood = mood
+        self.prefix_count = 0
+        self.suffix_count = 0
 
 
 def file_writer(text, file_name):
@@ -421,12 +425,166 @@ def deconjugate(word):
     verb = word.conjugated
     first_letter = verb[0]
     last_letter = verb[-1]
+    second_last = verb[-2]
+    third_last = verb[-3]
     if first_letter not in ("أ", "ن", "ت", "ي"):
         # Prefix 1 (None)
         if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
             # Suffix 1 (None)
             word.features.add(p3m1n)
-            print_word(word)
+        elif last_letter == "ت":
+            # Suffix 2 (ta)
+            word.suffix_count += 1
+            word.features.add(p1n1n)
+            word.features.add(p2m1n)
+            word.features.add(p2f1n)
+            word.features.add(p3f1n)
+        elif last_letter == "ن":
+            # Suffix 3 (nun)
+            word.suffix_count += 1
+            word.features.add(p3f3n)
+        elif last_letter == "ا":
+            # Suffix 4 (alif)
+            # AMBIGUOUS CASE, need to figure out how to check for p3m2n in multiple verb forms
+            word.suffix_count += 1
+            word.features.add(p3m2n)
+            if second_last == "ن":
+                # Suffix 4-1 (نا)
+                word.suffix_count += 1
+                word.features.add(p1n3n)
+            elif second_last == "و":
+                # Suffix 4-2 (وا)
+                word.suffix_count += 1
+                word.features.add(p3m3n)
+            elif second_last == "ت":
+                # suffix 4-3 (تا)
+                word.suffix_count += 1
+                word.features.add(p3f2n)
+            elif second_last == "م":
+                # Suffix 4-4 (تما)
+                if third_last == "ت":
+                    word.suffix_count += 2
+                    word.features.add(p2m2n)
+                    word.features.add(p2f2n)
+                else:
+                    print("UNCERTAIN")
+    elif first_letter == "أ":
+        # Prefix 2 (أ)
+        word.prefix_count += 1
+        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+            # Suffix 1 (None)
+            word.features.add(r1n1i)
+            word.features.add(r1n1s)
+            word.features.add(r1n1j)
+        else:
+            print(
+                "THIS IS PROBABLY FORM IV - but actually uncertain because why are we checking the suffix")
+    elif first_letter == "ن":
+        # Prefix 3 (ن)
+        word.prefix_count += 1
+        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+            # Suffix 1 (None)
+            word.features.add(r1n3i)
+            word.features.add(r1n3s)
+            word.features.add(r1n3j)
+        else:
+            print("could still be first person plural present")
+    elif first_letter == "ت":
+        # Prefix 4 (ta)
+        word.prefix_count += 1
+        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+            # Suffix 1 (None)
+            word.features.add(r2m1i)
+            word.features.add(r2m1s)
+            word.features.add(r2m1j)
+            word.features.add(r3f1i)
+            word.features.add(r3f1s)
+            word.features.add(r3f1j)
+        elif last_letter == "ن":
+            word.suffix_count += 1
+            if second_last not in ("ا", "و", "ي"):
+                # Suffix 3 (nun)
+                word.features.add(r2f3i)
+                word.features.add(r2f3s)
+                word.features.add(r2f3j)
+            elif second_last == "ا":
+                # Suffix 3-1 (ان)
+                word.suffix_count += 1
+                word.features.add(r2m2i)
+                word.features.add(r2f2i)
+                word.features.add(r3f2i)
+            elif second_last == "و":
+                # Suffix 3-2 (ون)
+                word.suffix_count += 1
+                word.features.add(r2m3i)
+            elif second_last == "ي":
+                # Suffix 3-3 (ين)
+                word.suffix_count += 1
+                word.features.add(r2f1i)
+        elif last_letter == "ا":
+            word.suffix_count += 1
+            if second_last not in ("ن", "و"):
+                # Suffix 4 (ا)
+                word.features.add(r2m2s)
+                word.features.add(r2m2j)
+                word.features.add(r2f2s)
+                word.features.add(r2f2j)
+                word.features.add(r3f2s)
+                word.features.add(r3f2j)
+            elif second_last == "و":
+                # Suffix 4-2 (وا)
+                word.suffix_count += 1
+                word.features.add(r2m3s)
+                word.features.add(r2m3j)
+        elif last_letter == "ي":
+            # Suffix 5 (ي)
+            word.suffix_count += 1
+            word.features.add(r2f1s)
+            word.features.add(r2f1j)
+    elif first_letter == "ي":
+        # Prefix 5 (yaa)
+        word.prefix_count += 1
+        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+            # Suffix 1 (None)
+            word.features.add(r3m1i)
+            word.features.add(r3m1s)
+            word.features.add(r3m1j)
+        elif last_letter == "ن":
+            word.suffix_count += 1
+            if second_last not in ("ا", "و"):
+                # Suffix 3 (nun)
+                word.features.add(r3f3i)
+                word.features.add(r3f3s)
+                word.features.add(r3f3j)
+            elif second_last == "ا":
+                # Suffix 3-1 (ان)
+                word.suffix_count += 1
+                word.features.add(r3m2i)
+            elif second_last == "و":
+                # Suffix 3-2 (ون)
+                word.suffix_count += 1
+                word.features.add(r3m3i)
+        elif last_letter == "ا":
+            word.suffix_count += 1
+            if second_last not in ("ن", "و"):
+                # Suffix 4 (alif)
+                word.suffix_count += 1
+                word.features.add(r3m2s)
+                word.features.add(r3m2j)
+            elif second_last == "و":
+                # Suffix 4-2 (وا)
+                word.suffix_count += 1
+                word.features.add(r3m3s)
+                word.features.add(r3m3j)
+
+
+def strip_fixes(word):
+    print('\n')
+    print(word.raw_text)
+    no_prefix = word.raw_text[word.prefix_count:]
+    no_suffix = no_prefix[0:len(no_prefix) - word.suffix_count]
+    word.third_past = no_suffix
+    return word.third_past
 
 
 def print_word(word):
@@ -434,8 +592,11 @@ def print_word(word):
     print("Conjugated form: " + word.conjugated)
     print("Base form: " + word.third_past)
 
+    feature_counter = 1
     for item in word.features:
+        print("FEATURE SET " + str(feature_counter))
         print_features(item)
+        feature_counter += 1
 
     print("This verb has been checked for the following forms: ")
     print(word.checked_forms)
@@ -451,5 +612,9 @@ def print_features(f):
 
 
 create_features()
-test_word = Word("فعل")
+test_word = Word("يكتبون")
 deconjugate(test_word)
+print_word(test_word)
+
+
+strip_fixes(test_word)
