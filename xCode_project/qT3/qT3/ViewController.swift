@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     var rootLabel: UILabel!
     var rootTitle: UILabel!
     var rectangleView1: UIView!
-    var infoLabel: UILabel!
+    var infoLabel: UITextView!
     var infoTitle: UILabel!
     
     @IBOutlet var field: UITextField!
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
         rectangleView.backgroundColor = .systemBlue
         rectangleView.alpha = 0.5
         
-        rootLabel = UILabel(frame: CGRect(x: 200, y: 300, width: 220, height: 50))
+        rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
         rootLabel.text = ""
         rootTitle = UILabel(frame: CGRect(x: 200, y: 275, width: 200, height: 50))
         rootTitle.text = "root:"
@@ -48,9 +48,9 @@ class ViewController: UIViewController {
         rectangleView1.backgroundColor = .systemBlue
         rectangleView1.alpha = 0.5
         
-        infoLabel = UILabel(frame: CGRect(x: 100, y: 400, width: 220, height: 100))
+        infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
         infoLabel.text = ""
-        infoTitle = UILabel(frame: CGRect(x: 40, y: 475, width: 200, height: 100))
+        infoTitle = UILabel(frame: CGRect(x: 40, y: 375, width: 200, height: 50))
         infoTitle.text = "info:"
         infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
         
@@ -157,20 +157,33 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     //print(response.form)
-                    var featureStringMonster = " "
+                   // var featureStringMonster = " "
+                    var genders = "gender: "
+                    var tenses = "tense: "
+                    var moods = "mood: "
+                    var nums = "number: "
+                    var persons = "person: "
+                    
                     for feature in response.features{
-                        print(feature)
-                        let tenseNum = feature.tense + " " + String(feature.number) + " "
-                            
-                        let personGender = feature.gender + " " + String(feature.person) + " "
-                        let mood = feature.mood + "\n"
-                        let featureString = tenseNum + personGender + mood
-                        featureStringMonster = featureStringMonster + featureString
+                        genders = genders + " " + feature.gender
+                        tenses = tenses + " " + feature.tense
+                        moods = moods + " " + feature.mood
+                        nums = nums + " " + String(feature.number)
+                        persons = persons + " " + String(feature.person)
+//                        print(feature)
+//                        let tenseNum = feature.tense + " " + String(feature.number) + " "
+//
+//                        let personGender = feature.gender + " " + String(feature.person) + " "
+//                        let mood = feature.mood + "\n"
+//                        let featureString = tenseNum + personGender + mood
+//                        featureStringMonster = featureStringMonster + featureString
+                        //feature
+                        
                     }
                     formLabel.text = response.form //+ " " + response.root + "\n" + featureStringMonster
                     rootLabel.text = response.root
                     
-                    infoLabel.text = response.features[0].gender
+                    infoLabel.text = genders + "\n" + tenses + "\n" + moods + "\n" + nums + "\n" + persons
                     // use `genres` here, e.g. update model and UI
                 }
                 
