@@ -12,6 +12,11 @@ class ViewController: UIViewController {
     var formLabel: UILabel!
     var rectangleView: UIView!
     var formTitle: UILabel!
+    var rootLabel: UILabel!
+    var rootTitle: UILabel!
+    var rectangleView1: UIView!
+    var infoLabel: UILabel!
+    var infoTitle: UILabel!
     
     @IBOutlet var field: UITextField!
     @IBOutlet var button: UIButton!
@@ -34,9 +39,29 @@ class ViewController: UIViewController {
         rectangleView.backgroundColor = .systemBlue
         rectangleView.alpha = 0.5
         
+        rootLabel = UILabel(frame: CGRect(x: 200, y: 300, width: 220, height: 50))
+        rootLabel.text = ""
+        rootTitle = UILabel(frame: CGRect(x: 200, y: 275, width: 200, height: 50))
+        rootTitle.text = "root:"
+        rootTitle.font = UIFont.boldSystemFont(ofSize: 16)
+        rectangleView1 = UIView(frame: CGRect(x: 200, y: 300, width: 300, height: 50))
+        rectangleView1.backgroundColor = .systemBlue
+        rectangleView1.alpha = 0.5
+        
+        infoLabel = UILabel(frame: CGRect(x: 100, y: 400, width: 220, height: 100))
+        infoLabel.text = ""
+        infoTitle = UILabel(frame: CGRect(x: 40, y: 475, width: 200, height: 100))
+        infoTitle.text = "info:"
+        infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
+        
         view.addSubview(rectangleView)
         view.addSubview(formTitle)
         view.addSubview(formLabel)
+        view.addSubview(rectangleView1)
+        view.addSubview(rootTitle)
+        view.addSubview(rootLabel)
+        view.addSubview(infoTitle)
+        view.addSubview(infoLabel)
       
     }
     
@@ -81,13 +106,20 @@ class ViewController: UIViewController {
         task.resume()
     
     }
-    struct Response: Codable {
-        let results: MyResult
-        let status: String
+    struct Feature: Codable {
+        let tense: String
+        let number: Int
+        let gender: String
+        let person: Int
+        let mood: String
+
     }
     struct MyResult: Codable{
         let word: String
         let form: String
+        let features: Array<Feature>
+        let root: String
+        
        
         
     }
@@ -113,7 +145,7 @@ extension ViewController: UITextFieldDelegate{
             print(verb_test)
             verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             print(verb_encoded)
-            let url = "https://qt3-arabic-deduction.herokuapp.com/api/form?id=" + verb_encoded
+            let url = "https://qt3-arabic-deduction.herokuapp.com/api/verb?id=" + verb_encoded
             
             
             getData(from: url){ [self] results in
@@ -125,7 +157,20 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     //print(response.form)
-                    formLabel.text = response.form
+                    var featureStringMonster = " "
+                    for feature in response.features{
+                        print(feature)
+                        let tenseNum = feature.tense + " " + String(feature.number) + " "
+                            
+                        let personGender = feature.gender + " " + String(feature.person) + " "
+                        let mood = feature.mood + "\n"
+                        let featureString = tenseNum + personGender + mood
+                        featureStringMonster = featureStringMonster + featureString
+                    }
+                    formLabel.text = response.form //+ " " + response.root + "\n" + featureStringMonster
+                    rootLabel.text = response.root
+                    
+                    infoLabel.text = response.features[0].gender
                     // use `genres` here, e.g. update model and UI
                 }
                 
