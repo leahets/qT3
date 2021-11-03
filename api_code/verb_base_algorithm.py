@@ -49,49 +49,49 @@ def which_form(verb):
     if base_verb[0] == "أ":
         print("checking form iv")
         if(check_iv(verb)):
-            return "Form IV"
+            return "Form IV", verb
     else:
         if base_verb[0] == "ا":
             if base_verb[1] == "ن":
                 print("checking form vii")
                 if(check_vii(verb)):
-                    return "Form VII"
+                    return "Form VII", verb
             else:
                 if base_verb[1] == "س":
                     print("checking form x")
                     if(check_x(verb)):
-                        return "Form X"
+                        return "Form X", verb
                 else:
                     if base_verb[2] == "ت":
                         print("checking form viii")
                         if(check_viii(verb)):
-                            return "Form VIII"
+                            return "Form VIII", verb
         else:
             if base_verb[0] == "ت":
                 if base_verb[2] == "ا":
                     print("checking form vi")
                     if(check_vi(verb)):
-                        return "Form VI"
+                        return "Form VI", verb
                 if base_verb[3] == "ّ":
                     print("checking form v")
                     if(check_v(verb)):
-                        return "Form V"
+                        return "Form V", verb
             else:
                 # 1st letter is in root
                 if base_verb[1] == "ا":
                     print("checking form iii")
                     if(check_iii(verb)):
-                        return "Form III"
+                        return "Form III", verb
                 else:
                     if base_verb[2] == "ّ":
                         print("checking form ii")
                         if(check_ii(verb)):
-                            return "Form II"
+                            return "Form II", verb
                     else:
                         if len(base_verb) == 3:
                             print("checking form i")
                             if(check_i(verb)):
-                                return "Form I"
+                                return "Form I", verb
                         else:
                             print("no form found")
 

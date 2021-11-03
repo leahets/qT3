@@ -71,11 +71,11 @@ def api_verb_info():
     deconjugated_word_obj = verb_base_algorithm.deconjugate(word)
 
     new_word = verb_base_algorithm.strip_fixes(deconjugated_word_obj)
-    form = verb_base_algorithm.which_form(new_word)
+    form, new_word = verb_base_algorithm.which_form(new_word)
     features_list = []
     for feature in deconjugated_word_obj.features:
         new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
         features_list.append(new_feature_format)
 
-    dict_word = {"word": verb, "form": form, "features": features_list}
+    dict_word = {"word": verb, "form": form, "features": features_list, "root": new_word.root}
     return json.dumps(dict_word)
