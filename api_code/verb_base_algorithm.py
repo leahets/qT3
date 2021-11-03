@@ -576,7 +576,7 @@ def deconjugate(word):
                 word.suffix_count += 1
                 word.features.add(r3m3s)
                 word.features.add(r3m3j)
-
+    return word
 
 def strip_fixes(word):
     print('\n')
@@ -584,7 +584,7 @@ def strip_fixes(word):
     no_prefix = word.raw_text[word.prefix_count:]
     no_suffix = no_prefix[0:len(no_prefix) - word.suffix_count]
     word.third_past = no_suffix
-    return word.third_past
+    return word
 
 
 def print_word(word):

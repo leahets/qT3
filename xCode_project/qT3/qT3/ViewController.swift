@@ -9,11 +9,13 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var label: UILabel!
+    var formLabel: UILabel!
+    var rectangleView: UIView!
+    var formTitle: UILabel!
     
     @IBOutlet var field: UITextField!
     @IBOutlet var button: UIButton!
-    
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -23,12 +25,18 @@ class ViewController: UIViewController {
         field.becomeFirstResponder()
         field.delegate = self
         
-        label = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
-        label.text = "text"
-        view.addSubview(label)
+        formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
+        formLabel.text = ""
+        formTitle = UILabel(frame: CGRect(x: 40, y: 175, width: 200, height: 50))
+        formTitle.text = "form:"
+        formTitle.font = UIFont.boldSystemFont(ofSize: 16)
+        rectangleView = UIView(frame: CGRect(x: 0, y: 200, width: 300, height: 50))
+        rectangleView.backgroundColor = .systemBlue
+        rectangleView.alpha = 0.5
         
-        
-        
+        view.addSubview(rectangleView)
+        view.addSubview(formTitle)
+        view.addSubview(formLabel)
       
     }
     
@@ -41,9 +49,9 @@ class ViewController: UIViewController {
         
         let task = URLSession.shared.dataTask(with: URL(string: url)!,completionHandler: {data, response, error in
             guard let data = data, error == nil else {
-                print(error)
+                print(error ?? "unknown error")
                 DispatchQueue.main.async {
-                    completion(.failure(error as! Error))
+                    completion(.failure(error!))
                 }
                 return
             }
@@ -83,6 +91,7 @@ class ViewController: UIViewController {
        
         
     }
+     
 
 }
 
@@ -93,10 +102,10 @@ extension ViewController: UITextFieldDelegate{
         textField.resignFirstResponder()
         
         func updateLabel(input: String) -> Void{
-            label.text = input
+            formLabel.text = input
         }
         if let text = textField.text{
-            label.text = text
+            formLabel.text = text
             
             let verb_test: String
             let verb_encoded: String
@@ -105,8 +114,8 @@ extension ViewController: UITextFieldDelegate{
             verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             print(verb_encoded)
             let url = "https://qt3-arabic-deduction.herokuapp.com/api/form?id=" + verb_encoded
-            //print(url)
-            //var help = ""
+            
+            
             getData(from: url){ [self] results in
                 
                 //var test_help: String
@@ -116,7 +125,7 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     //print(response.form)
-                    label.text = response.form
+                    formLabel.text = response.form
                     // use `genres` here, e.g. update model and UI
                 }
                 
