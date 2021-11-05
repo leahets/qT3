@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     var rectangleView1: UIView!
     var infoLabel: UITextView!
     var infoTitle: UILabel!
+    var rectangleView2: UIView!
     
     @IBOutlet var field: UITextField!
     @IBOutlet var button: UIButton!
@@ -49,10 +50,15 @@ class ViewController: UIViewController {
         rectangleView1.alpha = 0.5
         
         infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
+        infoLabel.backgroundColor = .systemBlue
         infoLabel.text = ""
         infoTitle = UILabel(frame: CGRect(x: 40, y: 375, width: 200, height: 50))
         infoTitle.text = "info:"
         infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
+        rectangleView2 = UIView(frame: CGRect(x: 0, y: 400, width: 400, height: 200))
+        rectangleView2.backgroundColor = .systemBlue
+        //rectangleView2.alpha = 0.5
+
         
         view.addSubview(rectangleView)
         view.addSubview(formTitle)
@@ -60,8 +66,10 @@ class ViewController: UIViewController {
         view.addSubview(rectangleView1)
         view.addSubview(rootTitle)
         view.addSubview(rootLabel)
+        view.addSubview(rectangleView2)
         view.addSubview(infoTitle)
         view.addSubview(infoLabel)
+        
       
     }
     
