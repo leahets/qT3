@@ -46,54 +46,55 @@ def make_word(verb):
 def which_form(verb):
     base_verb = verb.third_past
 
-    if base_verb[0] == "أ":
+    if base_verb[0] == "أ" and 4 not in verb.checked_forms:
         print("checking form iv")
         if(check_iv(verb)):
             return "Form IV", verb
     else:
         if base_verb[0] == "ا":
-            if base_verb[1] == "ن":
+            if base_verb[1] == "ن" and 7 not in verb.checked_forms:
                 print("checking form vii")
                 if(check_vii(verb)):
                     return "Form VII", verb
             else:
-                if base_verb[1] == "س":
+                if base_verb[1] == "س" and 10 not in verb.checked_forms:
                     print("checking form x")
                     if(check_x(verb)):
                         return "Form X", verb
                 else:
-                    if base_verb[2] == "ت":
+                    if base_verb[2] == "ت" and 8 not in verb.checked_forms:
                         print("checking form viii")
                         if(check_viii(verb)):
                             return "Form VIII", verb
         else:
             if base_verb[0] == "ت":
-                if base_verb[2] == "ا":
+                if base_verb[2] == "ا" and 6 not in verb.checked_forms:
                     print("checking form vi")
                     if(check_vi(verb)):
                         return "Form VI", verb
-                if base_verb[3] == "ّ":
+                if base_verb[3] == "ّ" and 5 not in verb.checked_forms:
                     print("checking form v")
                     if(check_v(verb)):
                         return "Form V", verb
             else:
                 # 1st letter is in root
-                if base_verb[1] == "ا":
+                if base_verb[1] == "ا" and 3 not in verb.checked_forms:
                     print("checking form iii")
                     if(check_iii(verb)):
                         return "Form III", verb
                 else:
-                    if base_verb[2] == "ّ":
+                    if base_verb[2] == "ّ" and 2 not in verb.checked_forms:
                         print("checking form ii")
                         if(check_ii(verb)):
                             return "Form II", verb
                     else:
-                        if len(base_verb) == 3:
+                        if len(base_verb) == 3 and 1 not in verb.checked_forms:
                             print("checking form i")
                             if(check_i(verb)):
                                 return "Form I", verb
                         else:
                             print("no form found")
+                            return "Not a verb"
 
 
 def check_i(word):
