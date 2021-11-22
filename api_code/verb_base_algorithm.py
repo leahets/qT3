@@ -228,11 +228,15 @@ def check_x(word):
     if base_verb[0] == "ا":
         if base_verb[1] == "س":
             if base_verb[2] == "ت":
-                root = root + base_verb[3]
-                root = root + base_verb[4]
-                root = root + base_verb[5]
-                word.root = root
-                return True
+                if len(word.third_past) == 6:
+                    root = root + base_verb[3]
+                    root = root + base_verb[4]
+                    root = root + base_verb[5]
+                    word.root = root
+                    return True
+                else:
+                    return False
+                    ##LOOP HERE
             else:
                 return False
         else:
