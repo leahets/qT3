@@ -170,6 +170,7 @@ def test_root():
 
     tricky = verb_base_algorithm.make_word("نام")
 
+
     basic1 = verb_base_algorithm.deconjugate(basic)
     basic2 = verb_base_algorithm.strip_fixes(basic1)
     basic_form, basic_value = verb_base_algorithm.which_form(basic2)
@@ -185,6 +186,40 @@ def test_root():
     tricky_form, tricky_value = verb_base_algorithm.which_form(tricky2)
     assert tricky_value.root == "نام"
 
+
+def test_correct_form_basic():
+    pass
+
+def test_correct_form():
+    #tests form eight and form ten where the leading alif is dropped in all present tense conjugations
+    leading_alif_dropped = verb_base_algorithm.make_word("يستعملون")
+
+    leading_alif_dropped = verb_base_algorithm.deconjugate(leading_alif_dropped)
+    leading_alif_dropped = verb_base_algorithm.strip_fixes(leading_alif_dropped)
+    leading_form, leading_alif_dropped = verb_base_algorithm.which_form(leading_alif_dropped)
+
+
+    assert leading_form == "Form X"
+
+    leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل")
+
+    leading_alif_dropped1 = verb_base_algorithm.deconjugate(leading_alif_dropped1)
+    leading_alif_dropped1 = verb_base_algorithm.strip_fixes(leading_alif_dropped1)
+    leading_form1, leading_alif_dropped1 = verb_base_algorithm.which_form(leading_alif_dropped1)
+
+
+    assert leading_form1 == "Form VIII"
+    # test hamsated verbs like "to eat" where first person form creates double hamsa
+
+    hamsa = verb_base_algorithm.make_word("آكل")
+
+    hamsa = verb_base_algorithm.deconjugate(hamsa)
+    hamsa = verb_base_algorithm.strip_fixes(hamsa)
+    hamsa_form, hamsa = verb_base_algorithm.which_form(hamsa)
+
+    assert hamsa_form == "Form I"
+    assert hamsa.root == "ءكل"
+    
 
 
 
