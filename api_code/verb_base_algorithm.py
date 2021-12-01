@@ -666,11 +666,13 @@ def check_double_hamza(word):
     return word
 
 
-create_features()
-test_word = Word("يكتبون")
-deconjugate(test_word)
+def pipeline(text):
+    test_word = Word(text)
+    create_features()
+    deconjugate(test_word)
+    strip_fixes(test_word)
+    which_form(test_word)
+    print_word(test_word)
 
 
-strip_fixes(test_word)
-which_form(test_word)
-print_word(test_word)
+pipeline("يكتبون")
