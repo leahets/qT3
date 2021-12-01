@@ -1,6 +1,8 @@
 # test verbs should be in 3rd person past tense singular (rightmost column of form chart)
 
 output_file_name = "output.txt"
+prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "and"),
+            ("ال", "the"), ("أ", "asking"), ("ف", "then"), ("ل", "to, because"))
 
 i = 0
 
@@ -17,6 +19,7 @@ class Word:
         self.form = 0
         self.prefix_count = 0
         self.suffix_count = 0
+        self.possible_prefixes = set()
 
 
 class Features:
@@ -260,7 +263,7 @@ def check_x(word):
                     return True
                 else:
                     return False
-                    ##LOOP HERE
+                    # LOOP HERE
             else:
                 return False
         else:
@@ -607,6 +610,7 @@ def deconjugate(word):
                 word.features.add(r3m3j)
     return word
 
+
 def strip_fixes(word):
     print('\n')
     print(word.raw_text)
@@ -614,6 +618,13 @@ def strip_fixes(word):
     no_suffix = no_prefix[0:len(no_prefix) - word.suffix_count]
     word.third_past = no_suffix
     return word
+
+
+def identify_affixes(word):
+    # create set of possible affixes if they overlap with list of ALL possible affixes
+    for prefix in prefixes:
+        if word.raw_text[0] == prefix[0]:
+            word.possible_prefixes.add(prefix)
 
 
 def print_word(word):
