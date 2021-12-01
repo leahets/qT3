@@ -666,12 +666,22 @@ def check_double_hamza(word):
     return word
 
 
+def check_root_hamza(word):
+    for i in range(0, 5):
+        if word.root[i] in ("أ", "ؤ", "ئ"):
+            new_root = word.root[0:i] + "ء" + word.root[i:]
+            word.root = new_root
+    return word
+
+
 def pipeline(text):
     test_word = Word(text)
     create_features()
+    check_double_hamza(test_word)
     deconjugate(test_word)
     strip_fixes(test_word)
     which_form(test_word)
+    check_root_hamza(test_word)
     print_word(test_word)
 
 
