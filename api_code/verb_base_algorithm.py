@@ -31,7 +31,31 @@ class Features:
         self.mood = mood
         self.prefix_count = 0
         self.suffix_count = 0
+        self.hash_string = self.calc_hash_string()
+    
+    def __eq__(self, o: object) -> bool:
+        return self.tense == o.tense and self.number == o.number and self.gender == o.gender and self.person == o.person and self.mood == o.mood
+    def __hash__(self) -> int:
+        return hash(self.hash_string)
+    def calc_hash_string(self):
+        """
+        pretty much an 'encode features' method
+        """
+        hash_string = ""
+        if self.tense == "past":
+            hash_string += "p"
+        elif self.tense == "present":
+            hash_string += "r"
+        
+        hash_string += str(self.number)
 
+        hash_string += self.gender[0]
+
+        hash_string += str(self.person)
+
+        hash_string += self.mood[0]
+
+        return hash_string
 
 def file_writer(text, file_name):
     global i
