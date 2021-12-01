@@ -105,8 +105,8 @@ def check_i(word):
     base_verb = word.third_past
     root = ""
     if len(base_verb) == 3:
-        root = root + base_verb[0]
-        root = root + base_verb[1]
+        root = root + base_verb[0] + ' '
+        root = root + base_verb[1] + ' '
         root = root + base_verb[2]
         word.root = root
         return True
@@ -118,8 +118,8 @@ def check_ii(word):
     word.checked_forms.add(2)
     base_verb = word.third_past
     root = ""
-    root = root + base_verb[0]
-    root = root + base_verb[1]
+    root = root + base_verb[0] + ' '
+    root = root + base_verb[1] + ' '
     if base_verb[2] == "ّ":
         root = root + base_verb[3]
         word.root = root
@@ -132,9 +132,9 @@ def check_iii(word):
     word.checked_forms.add(3)
     base_verb = word.third_past
     root = ""
-    root = root + base_verb[0]
+    root = root + base_verb[0] + ' '
     if base_verb[1] == "ا":
-        root = root + base_verb[2]
+        root = root + base_verb[2] + ' '
         root = root + base_verb[3]
         word.root = root
         return True
@@ -147,8 +147,8 @@ def check_iv(word):
     base_verb = word.third_past
     root = ""
     if base_verb[0] == "أ":
-        root = root + base_verb[1]
-        root = root + base_verb[2]
+        root = root + base_verb[1] + ' '
+        root = root + base_verb[2] + ' '
         root = root + base_verb[3]
         word.root = root
         return True
@@ -161,8 +161,8 @@ def check_v(word):
     base_verb = word.third_past
     root = ""
     if base_verb[0] == "ت":
-        root = root + base_verb[1]
-        root = root + base_verb[2]
+        root = root + base_verb[1] + ' '
+        root = root + base_verb[2] + ' '
         if base_verb[3] == "ّ":
             root = root + base_verb[4]
             word.root = root
@@ -178,9 +178,9 @@ def check_vi(word):
     base_verb = word.third_past
     root = ""
     if base_verb[0] == "ت":
-        root = root + base_verb[1]
+        root = root + base_verb[1] + ' '
         if base_verb[2] == "ا":
-            root = root + base_verb[3]
+            root = root + base_verb[3] + ' '
             root = root + base_verb[4]
             word.root = root
             return True
@@ -196,8 +196,8 @@ def check_vii(word):
     root = ""
     if base_verb[0] == "ا":
         if base_verb[1] == "ن":
-            root = root + base_verb[2]
-            root = root + base_verb[3]
+            root = root + base_verb[2] + ' '
+            root = root + base_verb[3] + ' '
             root = root + base_verb[4]
             word.root = root
             return True
@@ -212,9 +212,9 @@ def check_viii(word):
     base_verb = word.third_past
     root = ""
     if base_verb[0] == "ا":
-        root = root + base_verb[1]
+        root = root + base_verb[1] + ' '
         if base_verb[2] == "ت":
-            root = root + base_verb[3]
+            root = root + base_verb[3] + ' '
             root = root + base_verb[4]
             word.root = root
             return True
@@ -232,8 +232,8 @@ def check_x(word):
         if base_verb[1] == "س":
             if base_verb[2] == "ت":
                 if len(word.third_past) == 6:
-                    root = root + base_verb[3]
-                    root = root + base_verb[4]
+                    root = root + base_verb[3] + ' '
+                    root = root + base_verb[4] + ' '
                     root = root + base_verb[5]
                     word.root = root
                     return True
@@ -603,6 +603,12 @@ def identify_affixes(word):
             word.possible_prefixes.add(prefix)
 
 
+def test_affixes(word):
+    for prefix in word.possible_prefixes:
+        strip_fixes(word)
+        # fix this function
+
+
 def print_word(word):
     print("Raw text: " + word.raw_text)
     print("Conjugated form: " + word.conjugated)
@@ -625,6 +631,12 @@ def print_features(f):
     print("This word is " + f.gender)
     print("This word refers to " + str(f.number) + " people.")
     print("This word is in the " + f.mood + " mood.")
+
+
+def check_double_hamza(word):
+    if (word.raw_text[0]) == "آ":
+        word.conjugated = "أ" + "أ" + word.raw_text[1:]
+    return word
 
 
 create_features()
