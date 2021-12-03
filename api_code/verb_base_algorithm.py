@@ -6,6 +6,9 @@ prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "a
 
 i = 0
 
+verb_prefixes = (("س", "will"), ("و", "and"),
+                 ("ف", "then"), ("ل", "to, because"))
+
 
 class Word:
     def __init__(self, raw_text):
@@ -15,11 +18,11 @@ class Word:
         self.third_past = raw_text
         self.checked_forms = set()
         self.root = ""
-        self.pos = "V"  # automatically verbs for now
         self.form = 0
         self.prefix_count = 0
         self.suffix_count = 0
         self.possible_prefixes = set()
+        self.future = True
 
 
 class Features:
