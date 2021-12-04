@@ -811,6 +811,11 @@ def check_root_hamza(word):
     return word
 
 
+def check_weak(word):
+    if len(word.raw_text) <= 2:
+        word.weak = True
+
+
 def full_pipeline(text):
     word_possibilities = list()
     create_features()
@@ -889,6 +894,7 @@ def full_pipeline(text):
 
 def pipeline(text):
     test_word = Word(text)
+    check_weak(test_word)
     check_double_hamza(test_word)
     deconjugate(test_word)
     strip_fixes(test_word)
@@ -898,4 +904,8 @@ def pipeline(text):
     return test_word
 
 
-full_pipeline("سأفهم")
+possible_words = full_pipeline("سأفهم")
+
+print('\n')
+for possible_word in possible_words:
+    print(possible_word.raw_text)
