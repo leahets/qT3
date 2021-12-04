@@ -24,7 +24,7 @@ class Word:
         self.form = 0
         self.prefix_count = 0
         self.suffix_count = 0
-        self.possible_prefixes = set()
+        self.possible_prefixes = list()
         self.suffix = None
         self.future = False
         self.weak = False
@@ -631,24 +631,30 @@ def strip_fixes(word):
     return word
 
 
-def identify_prefixes(word):
+def identify_prefixes(text):
     # create set of possible affixes if they overlap with list of ALL possible affixes
+    # made using text, NOT word object, for looping function
+    possible_prefixes = list()
+    for prefix in verb_prefixes:
+        if (text[0] == prefix[0]):
+            possible_prefixes.append(prefix)
+            text = text[1:]
+    return possible_prefixes
 
-    for prefix in prefixes:
-        if (word.raw_text[0] == prefix[0]) or (word.raw_text[1] == prefix[0]):
-            word.possible_prefixes.add(prefix)
 
-
-def identify_suffixes(word):
+def identify_suffix(text):
+    # made using text, NOT word object, for looping function
+    possible_suffix = None
     for suffix in verb_suffixes:
         suffix_length = len(suffix[0])
-        if len(word.raw_text) <= suffix_length:
+        if len(text) <= suffix_length:
             continue
         else:
-            if suffix[0] == word.raw_text[-suffix_length:]:
-                word.suffix = suffix
+            if suffix[0] == text[-suffix_length:]:
+                possible_suffix = suffix
                 print(suffix)
                 break
+    return possible_suffix
 
 
 def test_affixes(word):
@@ -696,8 +702,41 @@ def check_root_hamza(word):
 
 
 def full_pipeline(text):
+    word_possibilities = set()
     create_features()
-    pipeline(text)
+    prefixes = identify_prefixes(text)
+    print(prefixes)
+    suffix = identify_suffix(text)
+    total_prefixes = len(prefixes)
+    print(total_prefixes)
+
+    dropped_text = text
+    # Drop everything
+    if suffix != None:
+        dropped_text = dropped_text[:-len(suffix[0])]
+        print(dropped_text)
+        dropped_text = dropped_text[total_prefixes:]
+        print("\nDropping all prefixes and suffixes:")
+        # this is where we would check for 2 letters and put the pipeline
+        # add all returned words to set, then sanity check every word in set after
+        print(dropped_text)
+        word_possibilities.add(pipeline(dropped_text))
+    dropped_text = text
+    # Drop suffix, keep all prefixes
+
+    # order to check:
+    # drop everything (first step of next step, technically)
+    # (suffix dropped) add prefix left to right
+    # add suffix, add prefix left to right
+    # add everything (last step of previous step, technically)
+
+    # order to check:
+    # drop all prefixes and suffixes
+    # from raw text, drop suffix, keep all prefixes
+    # from raw text, drop suffix, drop prefixes right to left
+    # from raw text, keep suffix, drop prefixes right to left
+    # from raw text, keep suffix, keep prefixes
+    # pipeline(text)
 
 
 def pipeline(text):
@@ -708,9 +747,7 @@ def pipeline(text):
     which_form(test_word)
     check_root_hamza(test_word)
     print_word(test_word)
+    return test_word
 
 
-# pipeline("يكتبون")
-
-test = Word("أحبهمناك")
-identify_suffixes(test)
+full_pipeline("سأفهم")
