@@ -193,11 +193,12 @@ def test_form10_check():
     assert verb_base_algorithm.check_viii(basic) == True
 
 
-def test_which_form_check_if():
+def test_which_form_check_if_gibberish():
     # basic = verb_base_algorithm.make_word("فعّل")
     # assert verb_base_algorithm.which_form(basic) == "Form II", basic
     gibberish = verb_base_algorithm.make_word("ثتصصنيبيت")
-    assert verb_base_algorithm.which_form(gibberish) == "Not a verb", gibberish
+    gibberish = verb_base_algorithm.which_form(gibberish) 
+    assert gibberish.invalid == True
 
 
 def test_root():
@@ -209,18 +210,19 @@ def test_root():
 
     basic1 = verb_base_algorithm.deconjugate(basic)
     basic2 = verb_base_algorithm.strip_fixes(basic1)
-    basic_form, basic_value = verb_base_algorithm.which_form(basic2)
-    assert basic_value.root == "فعل"
+    basic_value = verb_base_algorithm.which_form(basic2)
+    assert basic_value.root == "ف ع ل"
 
     sample1 = verb_base_algorithm.deconjugate(sample)
     sample2 = verb_base_algorithm.strip_fixes(sample1)
-    sample_form, sample_value = verb_base_algorithm.which_form(sample2)
-    assert sample_value.root == "لعب"
+    sample_value = verb_base_algorithm.which_form(sample2)
+    assert sample_value.root == "ل ع ب"
 
     tricky1 = verb_base_algorithm.deconjugate(tricky)
-    tricky2 = verb_base_algorithm.strip_fixes(tricky1)
-    tricky_form, tricky_value = verb_base_algorithm.which_form(tricky2)
-    assert tricky_value.root == "نام"
+    # tricky2 = verb_base_algorithm.strip_fixes(tricky1)
+    # print(tricky2)
+    tricky_value = verb_base_algorithm.which_form(tricky1)
+    assert tricky_value.root == "ن ا م"
 
 
 def test_correct_form_basic():
@@ -235,10 +237,10 @@ def test_correct_form():
         leading_alif_dropped)
     leading_alif_dropped = verb_base_algorithm.strip_fixes(
         leading_alif_dropped)
-    leading_form, leading_alif_dropped = verb_base_algorithm.which_form(
+    leading_alif_dropped = verb_base_algorithm.which_form(
         leading_alif_dropped)
 
-    assert leading_form == "Form X"
+    assert leading_alif_dropped.form == "Form X"
 
     leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل")
 
@@ -246,19 +248,19 @@ def test_correct_form():
         leading_alif_dropped1)
     leading_alif_dropped1 = verb_base_algorithm.strip_fixes(
         leading_alif_dropped1)
-    leading_form1, leading_alif_dropped1 = verb_base_algorithm.which_form(
+    leading_alif_dropped1 = verb_base_algorithm.which_form(
         leading_alif_dropped1)
 
-    assert leading_form1 == "Form VIII"
+    assert leading_alif_dropped1.form == "Form VIII"
     # test hamsated verbs like "to eat" where first person form creates double hamsa
 
     hamsa = verb_base_algorithm.make_word("آكل")
 
     hamsa = verb_base_algorithm.deconjugate(hamsa)
     hamsa = verb_base_algorithm.strip_fixes(hamsa)
-    hamsa_form, hamsa = verb_base_algorithm.which_form(hamsa)
+    hamsa = verb_base_algorithm.which_form(hamsa)
 
-    assert hamsa_form == "Form I"
+    assert hamsa.form == "Form I"
     assert hamsa.root == "ءكل"
 
 # write a seperate test for form 14 and 25
