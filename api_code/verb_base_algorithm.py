@@ -371,45 +371,48 @@ def check_x(word):
         sixth_letter = ' '
 
     root = ""
-    arbitrary_feature = word.features.pop()
-    word.features.add(arbitrary_feature)
-    tense = arbitrary_feature.tense
-    if tense == "past":
-        if first_letter == "ا":
-            if second_letter == "س":
-                if third_letter == "ت":
-                    if len(word.third_past) == 6:
+    if not word.features.isEmpty():
+        arbitrary_feature = word.features.pop()
+        word.features.add(arbitrary_feature)
+        tense = arbitrary_feature.tense
+        if tense == "past":
+            if first_letter == "ا":
+                if second_letter == "س":
+                    if third_letter == "ت":
+                        if len(word.third_past) == 6:
+                            root = root + fourth_letter + ' '
+                            root = root + fifth_letter + ' '
+                            root = root + sixth_letter
+                            word.root = root
+                            word.form = "Form X"
+                            return True
+                        else:
+                            return False
+                            # LOOP HERE
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+        else:
+            if first_letter == "س":
+                if second_letter == "ت":
+                    if len(word.third_past) == 5:
+                        root = root + third_letter + ' '
                         root = root + fourth_letter + ' '
                         root = root + fifth_letter + ' '
-                        root = root + sixth_letter
                         word.root = root
                         word.form = "Form X"
                         return True
                     else:
                         return False
-                        # LOOP HERE
                 else:
                     return False
             else:
                 return False
-        else:
-            return False
     else:
-        if first_letter == "س":
-            if second_letter == "ت":
-                if len(word.third_past) == 5:
-                    root = root + third_letter + ' '
-                    root = root + fourth_letter + ' '
-                    root = root + fifth_letter + ' '
-                    word.root = root
-                    word.form = "Form X"
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
+        return False
 
 
 def check_form(base_verb, form):
