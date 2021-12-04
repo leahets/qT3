@@ -113,52 +113,53 @@ def letter_assignment(text):
 
 def which_form(verb):
     base_verb = verb.third_past
+    length = len(base_verb)
     first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
         base_verb)
 
-    if first_letter == "أ" and 4 not in verb.checked_forms:
+    if first_letter == "أ" and length == 4 and 4 not in verb.checked_forms:
         print("checking form iv")
         if(check_iv(verb)):
             return verb
     else:
         if first_letter == "ا":
-            if second_letter == "ن" and 7 not in verb.checked_forms:
+            if second_letter == "ن" and length == 5 and 7 not in verb.checked_forms:
                 print("checking form vii")
                 if(check_vii(verb)):
                     return verb
             else:
-                if second_letter == "س" and 10 not in verb.checked_forms:
+                if second_letter == "س" and length == 6 and 10 not in verb.checked_forms:
                     print("checking form x")
                     if(check_x(verb)):
                         return verb
                 else:
-                    if third_letter == "ت" and 8 not in verb.checked_forms:
+                    if third_letter == "ت" and length == 5 and 8 not in verb.checked_forms:
                         print("checking form viii")
                         if(check_viii(verb)):
                             return verb
         else:
             if first_letter == "ت":
-                if third_letter == "ا" and 6 not in verb.checked_forms:
+                if third_letter == "ا" and length == 5 and 6 not in verb.checked_forms:
                     print("checking form vi")
                     if(check_vi(verb)):
                         return verb
-                if fourth_letter == "ّ" and 5 not in verb.checked_forms:
+                if fourth_letter == "ّ" and length == 5 and 5 not in verb.checked_forms:
                     print("checking form v")
                     if(check_v(verb)):
                         return verb
             else:
                 # 1st letter is in root
-                if second_letter == "ا" and 3 not in verb.checked_forms:
+                if second_letter == "ا" and length == 4 and 3 not in verb.checked_forms:
                     print("checking form iii")
                     if(check_iii(verb)):
                         return verb
                 else:
-                    if third_letter == "ّ" and 2 not in verb.checked_forms:
+                    if third_letter == "ّ" and length == 4 and 2 not in verb.checked_forms:
                         print("checking form ii")
                         if(check_ii(verb)):
                             return verb
                     else:
-                        if len(base_verb) == 3 and 1 not in verb.checked_forms:
+                        if length == 3 and 1 not in verb.checked_forms:
                             print("checking form i")
                             if(check_i(verb)):
                                 return verb
