@@ -828,6 +828,15 @@ def check_weak(word):
         word.weak = True
 
 
+def sanity_check(word):
+    # If in form 14 or 25, word must also have features 14 and 25
+
+    # If verb is marked as future, features must be in present
+
+    # If verb has multiple prefixes, check that they're in proper order
+    return word
+
+
 def full_pipeline(text):
     word_possibilities = list()
     create_features()
