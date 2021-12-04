@@ -261,6 +261,53 @@ def test_correct_form():
     assert hamsa_form == "Form I"
     assert hamsa.root == "ءكل"
 
+# write a seperate test for form 14 and 25
+def test_which_form_raw():
+    pass
+    # test form 1
+    form1 = verb_base_algorithm.make_word("فعل")
+    form1 = verb_base_algorithm.which_form(form1)
+    assert form1.form == "Form I"
+
+    #test form 2
+    form2 = verb_base_algorithm.make_word("فعّل")
+    form2 = verb_base_algorithm.which_form(form2)
+    assert form2.form == "Form II"
+    # test form 3 
+    form3 = verb_base_algorithm.make_word("فاعل")
+    form3 = verb_base_algorithm.which_form(form3)
+    assert form3.form == "Form III"
+    # test form 4
+    form4 = verb_base_algorithm.make_word("أفعل")
+    form4 = verb_base_algorithm.which_form(form4)
+    assert form4.form == "Form IV"
+
+    #test form 5
+    form5 = verb_base_algorithm.make_word("تفعّل")
+    form5 = verb_base_algorithm.which_form(form5)
+    assert form5.form == "Form V"
+
+    # test form 6
+    form6 = verb_base_algorithm.make_word("تفاعل")
+    form6 = verb_base_algorithm.which_form(form6)
+    assert form6.form == "Form VI"
+
+    #test form 7
+    form7 = verb_base_algorithm.make_word("انفعل")
+    form7 = verb_base_algorithm.which_form(form7)
+    assert form7.form == "Form VII"
+    
+    #test form 8
+    form8 = verb_base_algorithm.make_word("افتعل")
+    form8 = verb_base_algorithm.which_form(form8)
+    assert form8.form == "Form VIII"
+
+
+    #test form 10
+    form10 = verb_base_algorithm.make_word("استفعل")
+    form10 = verb_base_algorithm.which_form(form10)
+    assert form10.form == "Form X"
+
 
 def test_deconjugate():
     #  test we form
