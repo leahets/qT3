@@ -183,9 +183,9 @@ def check_i(word):
         word.root = root
         # checking for form 14
         if word.raw_text[0] == "أ":
-            word.form = 14
+            word.form = "Form I/Form IV"
         else:
-            word.form = 1
+            word.form = "Form I"
         return True
     else:
         return False
@@ -205,9 +205,9 @@ def check_ii(word):
         root = root + fourth_letter
         word.root = root
         if word.raw_text[0] == "ت":
-            word.form = 25
+            word.form = "Form II/Form V"
         else:
-            word.form = 2
+            word.form = "Form II"
         return True
     else:
         return False
@@ -225,7 +225,7 @@ def check_iii(word):
         root = root + third_letter + ' '
         root = root + fourth_letter
         word.root = root
-        word.form = 3
+        word.form = "Form III"
         return True
     else:
         return False
@@ -243,7 +243,7 @@ def check_iv(word):
         root = root + third_letter + ' '
         root = root + fourth_letter
         word.root = root
-        word.form = 4
+        word.form = "Form IV"
         return True
     else:
         return False
@@ -267,7 +267,7 @@ def check_v(word):
         if fourth_letter == "ّ":
             root = root + fifth_letter
             word.root = root
-            word.form = 5
+            word.form = "Form V"
             return True
         else:
             return False
@@ -293,7 +293,7 @@ def check_vi(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
-            word.form = 6
+            word.form = "Form VI"
             return True
         else:
             return False
@@ -319,7 +319,7 @@ def check_vii(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
-            word.form = 7
+            word.form = "Form VII"
             return True
         else:
             return False
@@ -345,7 +345,7 @@ def check_viii(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
-            word.form = 8
+            word.form = "Form VIII"
             return True
         else:
             return False
@@ -378,7 +378,7 @@ def check_x(word):
                     root = root + fifth_letter + ' '
                     root = root + sixth_letter
                     word.root = root
-                    word.form = 10
+                    word.form = "Form X"
                     return True
                 else:
                     return False
