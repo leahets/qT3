@@ -628,6 +628,7 @@ def strip_fixes(word):
 
 def identify_affixes(word):
     # create set of possible affixes if they overlap with list of ALL possible affixes
+
     for prefix in prefixes:
         if word.raw_text[0] == prefix[0]:
             word.possible_prefixes.add(prefix)
@@ -677,9 +678,13 @@ def check_root_hamza(word):
     return word
 
 
+def full_pipeline(text):
+    create_features()
+    pipeline(text)
+
+
 def pipeline(text):
     test_word = Word(text)
-    create_features()
     check_double_hamza(test_word)
     deconjugate(test_word)
     strip_fixes(test_word)
