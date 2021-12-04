@@ -802,6 +802,7 @@ def print_word(word):
 
     print("This verb has been checked for the following forms: ")
     print(word.checked_forms)
+    print("This verb is in form: " + str(word.form))
     print("The root of this word is " + word.root)
     print("This word may be weak:" + str(word.weak))
 
@@ -957,7 +958,7 @@ def pipeline(text):
     return test_word
 
 
-complete_possible_words = full_pipeline("تدرّس")
+complete_possible_words = full_pipeline("أفهم")
 
 for word in complete_possible_words:
     print(word.raw_text)
