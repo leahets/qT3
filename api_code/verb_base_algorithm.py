@@ -371,8 +371,9 @@ def check_x(word):
         sixth_letter = ' '
 
     root = ""
-    arbitrary_feature_set = word.features[0]
-    tense = arbitrary_feature_set.tense
+    arbitrary_feature = word.features.pop()
+    word.features.add(arbitrary_feature)
+    tense = arbitrary_feature.tense
     if tense == "past":
         if first_letter == "ا":
             if second_letter == "س":
