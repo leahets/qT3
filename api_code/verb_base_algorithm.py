@@ -21,7 +21,7 @@ class Word:
         self.third_past = raw_text
         self.checked_forms = set()
         self.root = ""
-        self.form = 0
+        self.form = ""
         self.prefix_count = 0
         self.suffix_count = 0
         self.possible_prefixes = list()
