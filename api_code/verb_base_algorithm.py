@@ -799,10 +799,12 @@ def check_double_hamza(word):
 
 
 def check_root_hamza(word):
-    for i in range(0, 5):
-        if word.root[i] in ("أ", "ؤ", "ئ"):
-            new_root = word.root[0:i] + "ء" + word.root[i:]
-            word.root = new_root
+    if word.root != "":
+        for i in range(0, 5):
+            if word.root[i] in ("أ", "ؤ", "ئ"):
+                new_root = word.root[0:i] + "ء" + word.root[i+1:]
+                word.root = new_root
+                break
     return word
 
 
