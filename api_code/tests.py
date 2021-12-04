@@ -181,6 +181,8 @@ def test_form8_check():
 
 def test_form10_check():
     basic = verb_base_algorithm.make_word("استعمل")
+    past_features = verb_base_algorithm.decode_features("p2f1n")
+    basic.features.add(past_features)
     assert verb_base_algorithm.check_x(basic) == True
 
     assert verb_base_algorithm.check_iii(basic) == False
@@ -235,10 +237,13 @@ def test_correct_form():
 
     leading_alif_dropped = verb_base_algorithm.deconjugate(
         leading_alif_dropped)
+   
     leading_alif_dropped = verb_base_algorithm.strip_fixes(
         leading_alif_dropped)
+    assert leading_alif_dropped.third_past == "ستعمل"
     leading_alif_dropped = verb_base_algorithm.which_form(
         leading_alif_dropped)
+
 
     assert leading_alif_dropped.form == "Form X"
 
@@ -307,6 +312,8 @@ def test_which_form_raw():
 
     #test form 10
     form10 = verb_base_algorithm.make_word("استفعل")
+    past_features = verb_base_algorithm.decode_features("p2f1n")
+    form10.features.add(past_features)
     form10 = verb_base_algorithm.which_form(form10)
     assert form10.form == "Form X"
 
