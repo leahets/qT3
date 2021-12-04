@@ -81,47 +81,78 @@ def make_word(verb):
     return Word(verb)
 
 
+def letter_assignment(text):
+    word_length = len(text)
+    if word_length >= 1:
+        first_letter = text[0]
+    else:
+        first_letter = ' '
+
+    if word_length >= 2:
+        second_letter = text[1]
+    else:
+        second_letter = ' '
+
+    if word_length >= 3:
+        third_letter = text[2]
+    else:
+        third_letter = ' '
+
+    if word_length >= 4:
+        fourth_letter = text[3]
+    else:
+        fourth_letter = ' '
+
+    if word_length >= 2:
+        last_letter = text[-1]
+    else:
+        last_letter = ' '
+    return first_letter, second_letter, third_letter, fourth_letter, last_letter
+
+
 def which_form(verb):
     base_verb = verb.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
 
-    if base_verb[0] == "أ" and 4 not in verb.checked_forms:
+    if first_letter == "أ" and 4 not in verb.checked_forms:
         print("checking form iv")
         if(check_iv(verb)):
             return "Form IV", verb
     else:
-        if base_verb[0] == "ا":
-            if base_verb[1] == "ن" and 7 not in verb.checked_forms:
+        if first_letter == "ا":
+            if second_letter == "ن" and 7 not in verb.checked_forms:
                 print("checking form vii")
                 if(check_vii(verb)):
                     return "Form VII", verb
             else:
-                if base_verb[1] == "س" and 10 not in verb.checked_forms:
+                if second_letter == "س" and 10 not in verb.checked_forms:
                     print("checking form x")
                     if(check_x(verb)):
                         return "Form X", verb
                 else:
-                    if base_verb[2] == "ت" and 8 not in verb.checked_forms:
+                    if third_letter == "ت" and 8 not in verb.checked_forms:
                         print("checking form viii")
                         if(check_viii(verb)):
                             return "Form VIII", verb
         else:
-            if base_verb[0] == "ت":
-                if base_verb[2] == "ا" and 6 not in verb.checked_forms:
+            if first_letter == "ت":
+                if third_letter == "ا" and 6 not in verb.checked_forms:
                     print("checking form vi")
                     if(check_vi(verb)):
                         return "Form VI", verb
-                if base_verb[3] == "ّ" and 5 not in verb.checked_forms:
+                if fourth_letter == "ّ" and 5 not in verb.checked_forms:
                     print("checking form v")
                     if(check_v(verb)):
                         return "Form V", verb
             else:
                 # 1st letter is in root
-                if base_verb[1] == "ا" and 3 not in verb.checked_forms:
+                if second_letter == "ا" and 3 not in verb.checked_forms:
                     print("checking form iii")
                     if(check_iii(verb)):
                         return "Form III", verb
                 else:
-                    if base_verb[2] == "ّ" and 2 not in verb.checked_forms:
+                    if third_letter == "ّ" and 2 not in verb.checked_forms:
                         print("checking form ii")
                         if(check_ii(verb)):
                             return "Form II", verb
@@ -138,11 +169,14 @@ def which_form(verb):
 def check_i(word):
     word.checked_forms.add(1)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
     root = ""
     if len(base_verb) == 3:
-        root = root + base_verb[0] + ' '
-        root = root + base_verb[1] + ' '
-        root = root + base_verb[2]
+        root = root + first_letter + ' '
+        root = root + second_letter + ' '
+        root = root + third_letter
         word.root = root
         return True
     else:
@@ -152,11 +186,14 @@ def check_i(word):
 def check_ii(word):
     word.checked_forms.add(2)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
     root = ""
-    root = root + base_verb[0] + ' '
-    root = root + base_verb[1] + ' '
-    if base_verb[2] == "ّ":
-        root = root + base_verb[3]
+    root = root + first_letter + ' '
+    root = root + second_letter + ' '
+    if third_letter == "ّ":
+        root = root + fourth_letter
         word.root = root
         return True
     else:
@@ -166,11 +203,14 @@ def check_ii(word):
 def check_iii(word):
     word.checked_forms.add(3)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
     root = ""
-    root = root + base_verb[0] + ' '
-    if base_verb[1] == "ا":
-        root = root + base_verb[2] + ' '
-        root = root + base_verb[3]
+    root = root + first_letter + ' '
+    if second_letter == "ا":
+        root = root + third_letter + ' '
+        root = root + fourth_letter
         word.root = root
         return True
     else:
@@ -180,11 +220,14 @@ def check_iii(word):
 def check_iv(word):
     word.checked_forms.add(4)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
     root = ""
-    if base_verb[0] == "أ":
-        root = root + base_verb[1] + ' '
-        root = root + base_verb[2] + ' '
-        root = root + base_verb[3]
+    if first_letter == "أ":
+        root = root + second_letter + ' '
+        root = root + third_letter + ' '
+        root = root + fourth_letter
         word.root = root
         return True
     else:
@@ -194,12 +237,20 @@ def check_iv(word):
 def check_v(word):
     word.checked_forms.add(5)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
     root = ""
-    if base_verb[0] == "ت":
-        root = root + base_verb[1] + ' '
-        root = root + base_verb[2] + ' '
-        if base_verb[3] == "ّ":
-            root = root + base_verb[4]
+    if first_letter == "ت":
+        root = root + second_letter + ' '
+        root = root + third_letter + ' '
+        if fourth_letter == "ّ":
+            root = root + fifth_letter
             word.root = root
             return True
         else:
@@ -211,12 +262,20 @@ def check_v(word):
 def check_vi(word):
     word.checked_forms.add(6)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
     root = ""
-    if base_verb[0] == "ت":
-        root = root + base_verb[1] + ' '
-        if base_verb[2] == "ا":
-            root = root + base_verb[3] + ' '
-            root = root + base_verb[4]
+    if first_letter == "ت":
+        root = root + second_letter + ' '
+        if third_letter == "ا":
+            root = root + fourth_letter + ' '
+            root = root + fifth_letter
             word.root = root
             return True
         else:
@@ -228,12 +287,20 @@ def check_vi(word):
 def check_vii(word):
     word.checked_forms.add(7)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
     root = ""
-    if base_verb[0] == "ا":
-        if base_verb[1] == "ن":
-            root = root + base_verb[2] + ' '
-            root = root + base_verb[3] + ' '
-            root = root + base_verb[4]
+    if first_letter == "ا":
+        if second_letter == "ن":
+            root = root + third_letter + ' '
+            root = root + fourth_letter + ' '
+            root = root + fifth_letter
             word.root = root
             return True
         else:
@@ -245,12 +312,20 @@ def check_vii(word):
 def check_viii(word):
     word.checked_forms.add(8)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
     root = ""
-    if base_verb[0] == "ا":
-        root = root + base_verb[1] + ' '
-        if base_verb[2] == "ت":
-            root = root + base_verb[3] + ' '
-            root = root + base_verb[4]
+    if first_letter == "ا":
+        root = root + second_letter + ' '
+        if third_letter == "ت":
+            root = root + fourth_letter + ' '
+            root = root + fifth_letter
             word.root = root
             return True
         else:
@@ -262,14 +337,27 @@ def check_viii(word):
 def check_x(word):
     word.checked_forms.add(10)
     base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
+    if len(base_verb) >= 6:
+        sixth_letter = base_verb[5]
+    else:
+        sixth_letter = ' '
+
     root = ""
-    if base_verb[0] == "ا":
-        if base_verb[1] == "س":
-            if base_verb[2] == "ت":
+    if first_letter == "ا":
+        if second_letter == "س":
+            if third_letter == "ت":
                 if len(word.third_past) == 6:
-                    root = root + base_verb[3] + ' '
-                    root = root + base_verb[4] + ' '
-                    root = root + base_verb[5]
+                    root = root + fourth_letter + ' '
+                    root = root + fifth_letter + ' '
+                    root = root + sixth_letter
                     word.root = root
                     return True
                 else:
@@ -466,10 +554,27 @@ def create_features():
 
 def deconjugate(word):
     verb = word.conjugated
-    first_letter = verb[0]
-    last_letter = verb[-1]
-    second_last = verb[-2]
-    third_last = verb[-3]
+    word_length = len(verb)
+    if word_length >= 1:
+        first_letter = verb[0]
+    else:
+        first_letter = None
+
+    if word_length >= 2:
+        last_letter = verb[-1]
+    else:
+        last_letter = None
+
+    if word_length >= 3:
+        second_last = verb[-2]
+    else:
+        second_last = None
+
+    if word_length >= 4:
+        third_last = verb[-3]
+    else:
+        third_last = None
+
     if first_letter not in ("أ", "ن", "ت", "ي"):
         # Prefix 1 (None)
         if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
@@ -726,22 +831,31 @@ def full_pipeline(text):
     dropped_text = text
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
+    print(dropped_text)
+    word_possibilities.add(pipeline(dropped_text))
+
+    # Drop suffix, remove prefixes one at a time (keeping order)
+    dropped_text = text
+    if suffix != None:
+        dropped_text = dropped_text[:-len(suffix[0])]
+    i = 0
+    while i < total_prefixes:
+        dropped_text = dropped_text[i:]
         print(dropped_text)
-        word_possibilities.add(pipeline(dropped_text))
+        i += 1
+        # order to check:
+        # drop everything (first step of next step, technically)
+        # (suffix dropped) add prefix left to right
+        # add suffix, add prefix left to right
+        # add everything (last step of previous step, technically)
 
-    # order to check:
-    # drop everything (first step of next step, technically)
-    # (suffix dropped) add prefix left to right
-    # add suffix, add prefix left to right
-    # add everything (last step of previous step, technically)
-
-    # order to check:
-    # drop all prefixes and suffixes
-    # from raw text, drop suffix, keep all prefixes
-    # from raw text, drop suffix, drop prefixes right to left
-    # from raw text, keep suffix, drop prefixes right to left
-    # from raw text, keep suffix, keep prefixes
-    # pipeline(text)
+        # order to check:
+        # drop all prefixes and suffixes
+        # from raw text, drop suffix, keep all prefixes
+        # from raw text, drop suffix, drop prefixes right to left
+        # from raw text, keep suffix, drop prefixes right to left
+        # from raw text, keep suffix, keep prefixes
+        # pipeline(text)
 
 
 def pipeline(text):
