@@ -170,6 +170,7 @@ def which_form(verb):
 
 def check_i(word):
     word.checked_forms.add(1)
+    word.checked_forms.add(14)
     base_verb = word.third_past
     first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
         base_verb)
@@ -180,6 +181,11 @@ def check_i(word):
         root = root + second_letter + ' '
         root = root + third_letter
         word.root = root
+        # checking for form 14
+        if word.raw_text[0] == "أ":
+            word.form = 14
+        else:
+            word.form = 1
         return True
     else:
         return False
@@ -187,6 +193,7 @@ def check_i(word):
 
 def check_ii(word):
     word.checked_forms.add(2)
+    word.checked_forms.add(25)
     base_verb = word.third_past
     first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
         base_verb)
@@ -197,6 +204,10 @@ def check_ii(word):
     if third_letter == "ّ":
         root = root + fourth_letter
         word.root = root
+        if word.raw_text[0] == "ت":
+            word.form = 25
+        else:
+            word.form = 2
         return True
     else:
         return False
@@ -214,6 +225,7 @@ def check_iii(word):
         root = root + third_letter + ' '
         root = root + fourth_letter
         word.root = root
+        word.form = 3
         return True
     else:
         return False
@@ -231,15 +243,10 @@ def check_iv(word):
         root = root + third_letter + ' '
         root = root + fourth_letter
         word.root = root
+        word.form = 4
         return True
     else:
         return False
-
-
-def check_14(word):
-    word.checked_forms.add(14)
-    if check_i(word) and check_iv(word):
-        return True
 
 
 def check_v(word):
@@ -260,17 +267,12 @@ def check_v(word):
         if fourth_letter == "ّ":
             root = root + fifth_letter
             word.root = root
+            word.form = 5
             return True
         else:
             return False
     else:
         return False
-
-
-def check_25(word):
-    word.checked_forms.add(25)
-    if check_ii(word) and check_v(word):
-        return True
 
 
 def check_vi(word):
@@ -291,6 +293,7 @@ def check_vi(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
+            word.form = 6
             return True
         else:
             return False
@@ -316,6 +319,7 @@ def check_vii(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
+            word.form = 7
             return True
         else:
             return False
@@ -341,6 +345,7 @@ def check_viii(word):
             root = root + fourth_letter + ' '
             root = root + fifth_letter
             word.root = root
+            word.form = 8
             return True
         else:
             return False
@@ -373,6 +378,7 @@ def check_x(word):
                     root = root + fifth_letter + ' '
                     root = root + sixth_letter
                     word.root = root
+                    word.form = 10
                     return True
                 else:
                     return False
@@ -772,7 +778,7 @@ def identify_suffix(text):
         else:
             if suffix[0] == text[-suffix_length:]:
                 possible_suffix = suffix
-                print(suffix)
+                # print(suffix)
                 break
     return possible_suffix
 
@@ -797,6 +803,7 @@ def print_word(word):
     print("This verb has been checked for the following forms: ")
     print(word.checked_forms)
     print("The root of this word is " + word.root)
+    print("This word may be weak:" + str(word.weak))
 
 
 def print_features(f):
@@ -823,8 +830,13 @@ def check_root_hamza(word):
     return word
 
 
-def check_weak(word):
+def check_invalid_preconjugate(word):
     if len(word.raw_text) <= 2:
+        word.invalid = True
+
+
+def check_weak_postconjugate(word):
+    if len(word.third_past) <= 2:
         word.weak = True
 
 
@@ -834,29 +846,35 @@ def sanity_check(word):
     # If verb is marked as future, features must be in present
 
     # If verb has multiple prefixes, check that they're in proper order
+
+    # Vowel dropping - check that features match with possibility of a hollow verb
     return word
 
 
-def full_pipeline(text):
-    word_possibilities = list()
+def create_possible_words(text):
+    text_possibilities = list()
     create_features()
     prefixes = identify_prefixes(text)
+    print("PREFIXES:")
     print(prefixes)
     suffix = identify_suffix(text)
+    print("SUFFIX:")
+    print(suffix)
     total_prefixes = len(prefixes)
+    print("NUMBER OF PREFIXES:")
     print(total_prefixes)
 
     dropped_text = text
     # Drop everything
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
-        print(dropped_text)
-        dropped_text = dropped_text[total_prefixes:]
-        print("\nDropping all prefixes and suffixes:")
-        # this is where we would check for 2 letters and put the pipeline
-        # add all returned words to set, then sanity check every word in set after
-        print(dropped_text)
-        word_possibilities.append(pipeline(dropped_text))
+        # print(dropped_text)
+    dropped_text = dropped_text[total_prefixes:]
+    print("\nDropping all prefixes and suffixes:")
+    # this is where we would check for 2 letters and put the pipeline
+    # add all returned words to set, then sanity check every word in set after
+    print(dropped_text)
+    text_possibilities.append(dropped_text)
 
     # Drop suffix, keep all prefixes
     dropped_text = text
@@ -864,7 +882,7 @@ def full_pipeline(text):
         dropped_text = dropped_text[:-len(suffix[0])]
     print("\nDropping suffix, keeping prefix")
     print(dropped_text)
-    word_possibilities.append(pipeline(dropped_text))
+    text_possibilities.append(dropped_text)
 
     # Drop suffix, remove prefixes one at a time (keeping order)
     dropped_text = text
@@ -876,7 +894,7 @@ def full_pipeline(text):
         print("\nDropping suffix, dropping prefixes gradually at step:")
         print(i)
         print(dropped_text)
-        word_possibilities.append(pipeline(dropped_text))
+        text_possibilities.append(dropped_text)
         i += 1
 
     # Keep suffix, remove prefixes one at a time (keeping order)
@@ -887,16 +905,17 @@ def full_pipeline(text):
         print(total_prefixes)
         while j <= total_prefixes:
             dropped_text = dropped_text[j:]
-            print("\nDropping suffix, dropping prefixes gradually at step:")
+            print("\nKeeping suffix, dropping prefixes gradually at step:")
             print(j)
             print(dropped_text)
-            word_possibilities.append(pipeline(dropped_text))
+            text_possibilities.append(dropped_text)
             j += 1
 
     # Keep everything
     dropped_text = text
     print("\nKeeping everything")
-    word_possibilities.append(pipeline(dropped_text))
+    print(dropped_text)
+    text_possibilities.append(dropped_text)
     # order to check:
     # drop everything (first step of next step, technically)
     # (suffix dropped) add prefix left to right
@@ -910,23 +929,35 @@ def full_pipeline(text):
     # from raw text, keep suffix, drop prefixes right to left
     # from raw text, keep suffix, keep prefixes
     # pipeline(text)
-    return word_possibilities
+    return text_possibilities
+
+
+def full_pipeline(text):
+    full_text_possibilities = create_possible_words(text)
+    text_possibilities = list(dict.fromkeys(full_text_possibilities))
+    # this^ removes duplicates
+    final_words = list()
+
+    for possible_word in text_possibilities:
+        final_words.append(pipeline(possible_word))
+
+    return final_words
 
 
 def pipeline(text):
     test_word = Word(text)
-    check_weak(test_word)
+    check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
     deconjugate(test_word)
     strip_fixes(test_word)
+    check_weak_postconjugate(test_word)
     which_form(test_word)
     check_root_hamza(test_word)
     print_word(test_word)
     return test_word
 
 
-possible_words = full_pipeline("استفعل")
+complete_possible_words = full_pipeline("تدرّس")
 
-print('\n')
-for possible_word in possible_words:
-    print(possible_word.raw_text)
+for word in complete_possible_words:
+    print(word.raw_text)
