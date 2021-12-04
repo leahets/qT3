@@ -236,6 +236,12 @@ def check_iv(word):
         return False
 
 
+def check_14(word):
+    word.checked_forms.add(14)
+    if check_i(word) and check_iv(word):
+        return True
+
+
 def check_v(word):
     word.checked_forms.add(5)
     base_verb = word.third_past
@@ -259,6 +265,12 @@ def check_v(word):
             return False
     else:
         return False
+
+
+def check_25(word):
+    word.checked_forms.add(25)
+    if check_ii(word) and check_v(word):
+        return True
 
 
 def check_vi(word):
@@ -904,7 +916,7 @@ def pipeline(text):
     return test_word
 
 
-possible_words = full_pipeline("سأفهم")
+possible_words = full_pipeline("استفعل")
 
 print('\n')
 for possible_word in possible_words:
