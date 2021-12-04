@@ -721,8 +721,13 @@ def full_pipeline(text):
         # add all returned words to set, then sanity check every word in set after
         print(dropped_text)
         word_possibilities.add(pipeline(dropped_text))
-    dropped_text = text
+
     # Drop suffix, keep all prefixes
+    dropped_text = text
+    if suffix != None:
+        dropped_text = dropped_text[:-len(suffix[0])]
+        print(dropped_text)
+        word_possibilities.add(pipeline(dropped_text))
 
     # order to check:
     # drop everything (first step of next step, technically)
