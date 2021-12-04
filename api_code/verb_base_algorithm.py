@@ -371,7 +371,7 @@ def check_x(word):
         sixth_letter = ' '
 
     root = ""
-    if not len(word.features) != 0:
+    if len(word.features) != 0:
         arbitrary_feature = word.features.pop()
         word.features.add(arbitrary_feature)
         tense = arbitrary_feature.tense
