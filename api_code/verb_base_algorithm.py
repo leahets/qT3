@@ -22,7 +22,8 @@ class Word:
         self.prefix_count = 0
         self.suffix_count = 0
         self.possible_prefixes = set()
-        self.future = True
+        self.future = False
+        self.weak = False
 
 
 class Features:
