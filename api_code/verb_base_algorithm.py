@@ -28,6 +28,7 @@ class Word:
         self.suffix = None
         self.future = False
         self.weak = False
+        self.invalid = False
 
 
 class Features:
@@ -118,52 +119,53 @@ def which_form(verb):
     if first_letter == "أ" and 4 not in verb.checked_forms:
         print("checking form iv")
         if(check_iv(verb)):
-            return "Form IV", verb
+            return verb
     else:
         if first_letter == "ا":
             if second_letter == "ن" and 7 not in verb.checked_forms:
                 print("checking form vii")
                 if(check_vii(verb)):
-                    return "Form VII", verb
+                    return verb
             else:
                 if second_letter == "س" and 10 not in verb.checked_forms:
                     print("checking form x")
                     if(check_x(verb)):
-                        return "Form X", verb
+                        return verb
                 else:
                     if third_letter == "ت" and 8 not in verb.checked_forms:
                         print("checking form viii")
                         if(check_viii(verb)):
-                            return "Form VIII", verb
+                            return verb
         else:
             if first_letter == "ت":
                 if third_letter == "ا" and 6 not in verb.checked_forms:
                     print("checking form vi")
                     if(check_vi(verb)):
-                        return "Form VI", verb
+                        return verb
                 if fourth_letter == "ّ" and 5 not in verb.checked_forms:
                     print("checking form v")
                     if(check_v(verb)):
-                        return "Form V", verb
+                        return verb
             else:
                 # 1st letter is in root
                 if second_letter == "ا" and 3 not in verb.checked_forms:
                     print("checking form iii")
                     if(check_iii(verb)):
-                        return "Form III", verb
+                        return verb
                 else:
                     if third_letter == "ّ" and 2 not in verb.checked_forms:
                         print("checking form ii")
                         if(check_ii(verb)):
-                            return "Form II", verb
+                            return verb
                     else:
                         if len(base_verb) == 3 and 1 not in verb.checked_forms:
                             print("checking form i")
                             if(check_i(verb)):
-                                return "Form I", verb
+                                return verb
                         else:
                             print("no form found")
-                            return "Not a verb"
+                            verb.invalid = True
+                            return verb
 
 
 def check_i(word):
@@ -391,6 +393,7 @@ def check_form(base_verb, form):
     if form == 10:
         return check_x(base_verb)
     else:
+        base_verb.invalid = True
         print("INVALID FORM")
 
 
@@ -809,7 +812,7 @@ def check_root_hamza(word):
 
 
 def full_pipeline(text):
-    word_possibilities = set()
+    word_possibilities = list()
     create_features()
     prefixes = identify_prefixes(text)
     print(prefixes)
@@ -827,37 +830,61 @@ def full_pipeline(text):
         # this is where we would check for 2 letters and put the pipeline
         # add all returned words to set, then sanity check every word in set after
         print(dropped_text)
-        word_possibilities.add(pipeline(dropped_text))
+        word_possibilities.append(pipeline(dropped_text))
 
     # Drop suffix, keep all prefixes
     dropped_text = text
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
+    print("\nDropping suffix, keeping prefix")
     print(dropped_text)
-    word_possibilities.add(pipeline(dropped_text))
+    word_possibilities.append(pipeline(dropped_text))
 
     # Drop suffix, remove prefixes one at a time (keeping order)
     dropped_text = text
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
     i = 0
-    while i < total_prefixes:
+    while i <= total_prefixes:
         dropped_text = dropped_text[i:]
+        print("\nDropping suffix, dropping prefixes gradually at step:")
+        print(i)
         print(dropped_text)
+        word_possibilities.append(pipeline(dropped_text))
         i += 1
-        # order to check:
-        # drop everything (first step of next step, technically)
-        # (suffix dropped) add prefix left to right
-        # add suffix, add prefix left to right
-        # add everything (last step of previous step, technically)
 
-        # order to check:
-        # drop all prefixes and suffixes
-        # from raw text, drop suffix, keep all prefixes
-        # from raw text, drop suffix, drop prefixes right to left
-        # from raw text, keep suffix, drop prefixes right to left
-        # from raw text, keep suffix, keep prefixes
-        # pipeline(text)
+    # Keep suffix, remove prefixes one at a time (keeping order)
+    # Note: If there is no suffix, this step already happened in the previous step
+    dropped_text = text
+    if suffix != None:
+        j = 0
+        print(total_prefixes)
+        while j <= total_prefixes:
+            dropped_text = dropped_text[j:]
+            print("\nDropping suffix, dropping prefixes gradually at step:")
+            print(j)
+            print(dropped_text)
+            word_possibilities.append(pipeline(dropped_text))
+            j += 1
+
+    # Keep everything
+    dropped_text = text
+    print("\nKeeping everything")
+    word_possibilities.append(pipeline(dropped_text))
+    # order to check:
+    # drop everything (first step of next step, technically)
+    # (suffix dropped) add prefix left to right
+    # add suffix, add prefix left to right
+    # add everything (last step of previous step, technically)
+
+    # order to check:
+    # drop all prefixes and suffixes
+    # from raw text, drop suffix, keep all prefixes
+    # from raw text, drop suffix, drop prefixes right to left
+    # from raw text, keep suffix, drop prefixes right to left
+    # from raw text, keep suffix, keep prefixes
+    # pipeline(text)
+    return word_possibilities
 
 
 def pipeline(text):
