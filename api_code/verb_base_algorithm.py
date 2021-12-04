@@ -164,9 +164,12 @@ def which_form(verb):
                             if(check_i(verb)):
                                 return verb
                         else:
-                            print("no form found")
-                            verb.invalid = True
-                            return verb
+                            if (check_x(verb)):
+                                return verb
+                            else:
+                                print("no form found")
+                                verb.invalid = True
+                                return verb
 
 
 def check_i(word):
