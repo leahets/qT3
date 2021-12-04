@@ -9,6 +9,9 @@ i = 0
 verb_prefixes = (("س", "will"), ("و", "and"),
                  ("ف", "then"), ("ل", "to, because"))
 
+verb_suffixes = (("ني", "me"), ("ك", "you"), ("ه", "him"), ("ها", "her"), ("كما", "you (dual)"), ("هما", "them (dual)"), ("نا", "us"),
+                 ("كم", "you (plural masculine)"), ("كن", "you (plural feminine)"), ("هم", "them (plural masculine"), ("هن", "them (plural feminine)"))
+
 
 class Word:
     def __init__(self, raw_text):
@@ -22,6 +25,7 @@ class Word:
         self.prefix_count = 0
         self.suffix_count = 0
         self.possible_prefixes = set()
+        self.suffix = None
         self.future = False
         self.weak = False
 
@@ -627,12 +631,24 @@ def strip_fixes(word):
     return word
 
 
-def identify_affixes(word):
+def identify_prefixes(word):
     # create set of possible affixes if they overlap with list of ALL possible affixes
 
     for prefix in prefixes:
-        if word.raw_text[0] == prefix[0]:
+        if (word.raw_text[0] == prefix[0]) or (word.raw_text[1] == prefix[0]):
             word.possible_prefixes.add(prefix)
+
+
+def identify_suffixes(word):
+    for suffix in verb_suffixes:
+        suffix_length = len(suffix[0])
+        if len(word.raw_text) <= suffix_length:
+            continue
+        else:
+            if suffix[0] == word.raw_text[-suffix_length:]:
+                word.suffix = suffix
+                print(suffix)
+                break
 
 
 def test_affixes(word):
@@ -694,4 +710,7 @@ def pipeline(text):
     print_word(test_word)
 
 
-pipeline("يكتبون")
+# pipeline("يكتبون")
+
+test = Word("أحبهمناك")
+identify_suffixes(test)
