@@ -167,6 +167,8 @@ def test_form7_check():
 
 def test_form8_check():
     basic = verb_base_algorithm.make_word("افتعل")
+    past_features = verb_base_algorithm.decode_features("p2f1n")
+    basic.features.add(past_features)
     assert verb_base_algorithm.check_viii(basic) == True
 
     assert verb_base_algorithm.check_iii(basic) == False
@@ -231,7 +233,7 @@ def test_correct_form_basic():
     pass
 
 
-def test_correct_form():
+def test_leading_alif():
     # tests form eight and form ten where the leading alif is dropped in all present tense conjugations
     leading_alif_dropped = verb_base_algorithm.make_word("يستعملون")
 
@@ -247,7 +249,7 @@ def test_correct_form():
 
     assert leading_alif_dropped.form == "Form X"
 
-    leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل")
+    leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل") # we kill
 
     leading_alif_dropped1 = verb_base_algorithm.deconjugate(
         leading_alif_dropped1)
@@ -257,16 +259,17 @@ def test_correct_form():
         leading_alif_dropped1)
 
     assert leading_alif_dropped1.form == "Form VIII"
+    
+def test_hamsa():    
     # test hamsated verbs like "to eat" where first person form creates double hamsa
 
     hamsa = verb_base_algorithm.make_word("آكل")
 
-    hamsa = verb_base_algorithm.deconjugate(hamsa)
-    hamsa = verb_base_algorithm.strip_fixes(hamsa)
-    hamsa = verb_base_algorithm.which_form(hamsa)
+    hamsa = verb_base_algorithm.pipeline(hamsa)
 
-    assert hamsa.form == "Form I"
-    assert hamsa.root == "ءكل"
+
+    assert hamsa.form == "Form I/Form IV"
+    assert hamsa.root == "ء ك ل"
 
 # write a seperate test for form 14 and 25
 def test_which_form_raw():
@@ -306,6 +309,8 @@ def test_which_form_raw():
     
     #test form 8
     form8 = verb_base_algorithm.make_word("افتعل")
+    past_features = verb_base_algorithm.decode_features("p2f1n")
+    form8.features.add(past_features)
     form8 = verb_base_algorithm.which_form(form8)
     assert form8.form == "Form VIII"
 
@@ -342,7 +347,7 @@ def test_defective():
     ## these words should all be flagged as weak by the algorithm
     ex1 = verb_base_algorithm.full_pipeline("يقضون")
 
-   # assert len (ex1) == 1
+    assert len (ex1) == 1
     word1 = ex1[0]
     assert word1.weak == True
     assert word1.form == "Form I"
@@ -350,14 +355,14 @@ def test_defective():
 
     ex2 = verb_base_algorithm.full_pipeline("قضت")
 
-   # assert len (ex2) == 1
+    assert len (ex2) == 1
     word2 = ex2[0]
     assert word2.weak == True
     assert word2.form == "Form I"
 
     ex3 = verb_base_algorithm.full_pipeline("قضوا")
 
-    #assert len (ex3) == 1
+    assert len (ex3) == 1
     word3 = ex3[0]
     assert word3.weak == True
     assert word3.form == "Form I"
