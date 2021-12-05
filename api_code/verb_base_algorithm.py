@@ -832,6 +832,7 @@ def print_word(word):
     print("This verb is in form: " + str(word.form))
     print("The root of this word is " + word.root)
     print("This word may be weak:" + str(word.weak))
+    print("Invalid? " + str(word.invalid))
 
 
 def print_features(f):
@@ -870,6 +871,8 @@ def check_weak_postconjugate(word):
 
 
 def sanity_check(word):
+    word = shadda_in_root(word)
+    return word
     # If in form 14 or 25, word must also have features 14 and 25
 
     # If verb is marked as future, features must be in present
@@ -877,7 +880,6 @@ def sanity_check(word):
     # If verb has multiple prefixes, check that they're in proper order
 
     # Vowel dropping - check that features match with possibility of a hollow verb
-    return word
 
 
 def create_possible_words(text):
@@ -969,10 +971,20 @@ def full_pipeline(text):
 
     for possible_word in text_possibilities:
         word = pipeline(possible_word)
+        word = sanity_check(word)
         if not word.invalid:
             final_words.append(word)
 
     return final_words
+
+
+def shadda_in_root(word):
+    if "ّ" in word.root:
+        print("DING DING DING SHADDA")
+        word.invalid = True
+    else:
+        print("**************shadda not found")
+    return word
 
 
 def pipeline(text):
@@ -984,13 +996,10 @@ def pipeline(text):
     check_weak_postconjugate(test_word)
     which_form(test_word)
     check_root_hamza(test_word)
-    print_word(test_word)
-    # run sanity check
-    # if word is invalid, don't return it
     return test_word
 
 
 complete_possible_words = full_pipeline("فكّرت")
 
 for word in complete_possible_words:
-    print(word.raw_text)
+    print_word(word)
