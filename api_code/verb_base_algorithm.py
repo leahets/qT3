@@ -33,12 +33,14 @@ class Word:
         self.dropped_suffix = set()
 
     def __eq__(self, o) -> bool:
-        if self.raw_text ==  o.raw_text:
+        if self.raw_text == o.raw_text:
             return True
-        else: 
+        else:
             return False
+
     def __hash__(self) -> int:
         return hash(self.raw_text)
+
 
 class Features:
     def __init__(self, tense, person, gender, number, mood):
@@ -356,17 +358,38 @@ def check_viii(word):
         fifth_letter = ' '
 
     root = ""
-    if first_letter == "ا":
-        root = root + second_letter + ' '
-        if third_letter == "ت":
-            root = root + fourth_letter + ' '
-            root = root + fifth_letter
-            word.root = root
-            word.form = "Form VIII"
-            return True
+    if len(word.features) != 0:
+        arbitrary_feature = word.features.pop()
+        word.features.add(arbitrary_feature)
+        tense = arbitrary_feature.tense
+        if tense == "past":
+            if first_letter == "ا":
+                root = root + second_letter + ' '
+                if third_letter == "ت":
+                    root = root + fourth_letter + ' '
+                    root = root + fifth_letter
+                    word.root = root
+                    word.form = "Form VIII"
+                    return True
+                else:
+                    return False
+            else:
+                return False
         else:
-            return False
+            if len(word.third_past) == 4:
+                root = root + first_letter + ' '
+                if second_letter == "ت":
+                    root = root + third_letter + ' '
+                    root = root + fourth_letter
+                    word.root = root
+                    word.form = "Form VIII"
+                    return True
+                else:
+                    return False
+            else:
+                return False
     else:
+        print("This word does not have any features, not in form VIII")
         return False
 
 
