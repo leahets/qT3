@@ -988,7 +988,7 @@ def pipeline(text):
     return test_word
 
 
-complete_possible_words = full_pipeline("فكّرت")
+complete_possible_words = full_pipeline("نمت")
 
 for word in complete_possible_words:
     print_word(word)
