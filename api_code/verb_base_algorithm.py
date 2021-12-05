@@ -170,8 +170,12 @@ def which_form(verb):
                                 return verb
                             else:
                                 print("no form found")
-                                verb.invalid = True
-                                return verb
+                                if verb.weak:
+                                    verb.form = "Form I"
+                                    return verb
+                                else:
+                                    verb.invalid = True
+                                    return verb
 
 
 def check_i(word):
@@ -1023,7 +1027,10 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("سأذهب")
+complete_possible_words = full_pipeline("يقضون")
 
 for word in complete_possible_words:
+    print('\n')
     print_word(word)
+
+# SINCE WE CHANGED THE TEXT TO A WORD OBJECT, THE OBJECTS ARE NOT EQUIVALENT WHEN WE CHECK FOR DUPLICATES
