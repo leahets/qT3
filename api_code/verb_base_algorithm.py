@@ -866,6 +866,7 @@ def check_invalid_preconjugate(word):
 def check_weak_postconjugate(word):
     if len(word.third_past) <= 2:
         word.weak = True
+        word.form = "Form I"
 
 
 def sanity_check(word):
@@ -881,7 +882,6 @@ def sanity_check(word):
 
 def create_possible_words(text):
     text_possibilities = list()
-    create_features()
     prefixes = identify_prefixes(text)
     print("PREFIXES:")
     print(prefixes)
@@ -961,13 +961,16 @@ def create_possible_words(text):
 
 
 def full_pipeline(text):
+    create_features()
     full_text_possibilities = create_possible_words(text)
     text_possibilities = list(dict.fromkeys(full_text_possibilities))
     # this^ removes duplicates
     final_words = list()
 
     for possible_word in text_possibilities:
-        final_words.append(pipeline(possible_word))
+        word = pipeline(possible_word)
+        if not word.invalid:
+            final_words.append(word)
 
     return final_words
 
@@ -982,10 +985,12 @@ def pipeline(text):
     which_form(test_word)
     check_root_hamza(test_word)
     print_word(test_word)
+    # run sanity check
+    # if word is invalid, don't return it
     return test_word
 
 
-complete_possible_words = full_pipeline("يقضون")
+complete_possible_words = full_pipeline("فكّرت")
 
 for word in complete_possible_words:
     print(word.raw_text)
