@@ -389,7 +389,7 @@ def check_viii(word):
             else:
                 return False
     else:
-        print("This word does not have any features, not in form VIII")
+        return "This word does not have any features, not in form VIII"
         return False
 
 
