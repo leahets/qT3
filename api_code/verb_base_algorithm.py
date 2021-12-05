@@ -641,7 +641,6 @@ def deconjugate(word):
             word.features.add(p3f3n)
         elif last_letter == "ا":
             # Suffix 4 (alif)
-            # AMBIGUOUS CASE, need to figure out how to check for p3m2n in multiple verb forms
             word.suffix_count += 1
             word.features.add(p3m2n)
             if second_last == "ن":
@@ -662,8 +661,6 @@ def deconjugate(word):
                     word.suffix_count += 2
                     word.features.add(p2m2n)
                     word.features.add(p2f2n)
-                else:
-                    print("UNCERTAIN")
     elif first_letter == "أ":
         # Prefix 2 (أ)
         word.prefix_count += 1
@@ -672,9 +669,6 @@ def deconjugate(word):
             word.features.add(r1n1i)
             word.features.add(r1n1s)
             word.features.add(r1n1j)
-        else:
-            print(
-                "THIS IS PROBABLY FORM IV - but actually uncertain because why are we checking the suffix")
     elif first_letter == "ن":
         # Prefix 3 (ن)
         word.prefix_count += 1
@@ -683,8 +677,6 @@ def deconjugate(word):
             word.features.add(r1n3i)
             word.features.add(r1n3s)
             word.features.add(r1n3j)
-        else:
-            print("could still be first person plural present")
     elif first_letter == "ت":
         # Prefix 4 (ta)
         word.prefix_count += 1
@@ -776,8 +768,8 @@ def deconjugate(word):
 
 
 def strip_fixes(word):
-    print('\n')
-    print(word.raw_text)
+    # print('\n')
+    # print(word.raw_text)
     no_prefix = word.raw_text[word.prefix_count:]
     no_suffix = no_prefix[0:len(no_prefix) - word.suffix_count]
     word.third_past = no_suffix
@@ -980,10 +972,7 @@ def full_pipeline(text):
 
 def shadda_in_root(word):
     if "ّ" in word.root:
-        print("DING DING DING SHADDA")
         word.invalid = True
-    else:
-        print("**************shadda not found")
     return word
 
 
