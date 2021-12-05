@@ -317,6 +317,21 @@ def test_which_form_raw():
     form10 = verb_base_algorithm.which_form(form10)
     assert form10.form == "Form X"
 
+def test_ambiguous_forms():
+    form14 = verb_base_algorithm.pipeline("أفعل")
+    assert form14.form == "Form I/Form IV"
+
+    form25 = verb_base_algorithm.pipeline("تدرّس")
+    assert form25.form == "Form II/Form V"
+
+    form5 = verb_base_algorithm.pipeline("يتدرّس")
+    assert form5.form == "Form V"
+
+    form4 = verb_base_algorithm.pipeline("يأفعلون")
+    assert form4.form == "Form IV"
+
+def test_full_pipeline():
+    pass
 
 def test_deconjugate():
     #  test we form
@@ -376,7 +391,7 @@ def test_deconjugate():
 #     assert word.root == "فعل"
 #     form, word = verb_base_algorithm.which_form(verb_base_algorithm.deconjugate(sample))
 
-#     #shoot we have another ambiguity between form v and form 2
+
 
 
 def test_new_hash():
