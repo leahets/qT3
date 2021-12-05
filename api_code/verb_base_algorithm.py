@@ -1042,6 +1042,12 @@ def full_pipeline(text):
     return final_words
 
 
+def future_check(word):
+    # if sin is in set of prefixes, mark as future
+    # sanity check: if future is true, features must be present
+    return word
+
+
 def shadda_in_root(word):
     if "ّ" in word.root:
         word.invalid = True
