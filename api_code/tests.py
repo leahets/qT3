@@ -318,19 +318,68 @@ def test_which_form_raw():
     assert form10.form == "Form X"
 
 def test_ambiguous_forms():
-    form14 = verb_base_algorithm.pipeline("أفعل")
+    form14 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("أفعل"))
     assert form14.form == "Form I/Form IV"
 
-    form25 = verb_base_algorithm.pipeline("تدرّس")
+    form25 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("تدرّس"))
     assert form25.form == "Form II/Form V"
 
-    form5 = verb_base_algorithm.pipeline("يتدرّس")
+    form5 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("يتدرّس"))
     assert form5.form == "Form V"
 
-    form4 = verb_base_algorithm.pipeline("يأفعلون")
+    form4 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("يأفعلون"))
     assert form4.form == "Form IV"
 
 def test_full_pipeline():
+    pass
+
+    word_list_ex1 = verb_base_algorithm.full_pipeline("فكّت")
+
+    #ex2 = 
+
+
+def test_defective():
+    ## these words should all be flagged as weak by the algorithm
+    ex1 = verb_base_algorithm.full_pipeline("يقضون")
+
+    assert len (ex1) == 1
+    word1 = ex1[0]
+    assert word1.weak == True
+    assert word1.form == "Form I"
+    
+
+    ex2 = verb_base_algorithm.full_pipeline("قضت")
+
+    assert len (ex2) == 1
+    word2 = ex2[0]
+    assert word2.weak == True
+    assert word2.form == "Form I"
+
+    ex3 = verb_base_algorithm.full_pipeline("قضوا")
+
+    assert len (ex3) == 1
+    word3 = ex3[0]
+    assert word3.weak == True
+    assert word3.form == "Form I"
+
+    ## these words should all return the root with an alif maqsooora
+
+    #ex4 = full_pipeline("")
+
+    ## these words should all return the root with a ya 
+
+    #ex4 = full_pipeline("")
+
+    #ex4 = full_pipeline("")
+
+    #ex4 = full_pipeline("")
+
+
+    #every present tense conjugation
+
+def test_hollow():
+    pass
+def test_assimilated():
     pass
 
 def test_deconjugate():
