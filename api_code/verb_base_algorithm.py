@@ -32,6 +32,13 @@ class Word:
         self.dropped_prefixes = set()
         self.dropped_suffix = set()
 
+    def __eq__(self, o) -> bool:
+        if self.raw_text ==  o.raw_text:
+            return True
+        else: 
+            return False
+    def __hash__(self) -> int:
+        return hash(self.raw_text)
 
 class Features:
     def __init__(self, tense, person, gender, number, mood):
