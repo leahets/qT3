@@ -29,6 +29,8 @@ class Word:
         self.future = False
         self.weak = False
         self.invalid = False
+        self.dropped_prefixes = set()
+        self.dropped_suffix = set()
 
 
 class Features:
@@ -886,58 +888,90 @@ def create_possible_words(text):
     print("NUMBER OF PREFIXES:")
     print(total_prefixes)
 
+    dropped_prefixes = set()
+    dropped_suffix = set()
     dropped_text = text
     # Drop everything
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
+        dropped_suffix.add(suffix)
         # print(dropped_text)
     dropped_text = dropped_text[total_prefixes:]
+    dropped_prefixes = set(prefixes)
     print("\nDropping all prefixes and suffixes:")
     # this is where we would check for 2 letters and put the pipeline
     # add all returned words to set, then sanity check every word in set after
     print(dropped_text)
-    text_possibilities.append(dropped_text)
+    bald_word = Word(dropped_text)
+    bald_word.dropped_prefixes = dropped_prefixes
+    bald_word.dropped_suffix = dropped_suffix
+    text_possibilities.append(bald_word)
 
     # Drop suffix, keep all prefixes
     dropped_text = text
+    dropped_prefixes = set()
+    dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
+        dropped_suffix.add(suffix)
     print("\nDropping suffix, keeping prefix")
     print(dropped_text)
-    text_possibilities.append(dropped_text)
+    bald_word = Word(dropped_text)
+    bald_word.dropped_prefixes = dropped_prefixes
+    bald_word.dropped_suffix = dropped_suffix
+    text_possibilities.append(bald_word)
 
     # Drop suffix, remove prefixes one at a time (keeping order)
     dropped_text = text
+    dropped_prefixes = set()
+    dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
+        dropped_suffix.add(suffix)
     i = 0
     while i <= total_prefixes:
         dropped_text = dropped_text[i:]
         print("\nDropping suffix, dropping prefixes gradually at step:")
         print(i)
         print(dropped_text)
-        text_possibilities.append(dropped_text)
+        if total_prefixes != 0:
+            dropped_prefixes.add(prefixes[i])
+        bald_word = Word(dropped_text)
+        bald_word.dropped_prefixes = dropped_prefixes
+        bald_word.dropped_suffix = dropped_suffix
+        text_possibilities.append(bald_word)
         i += 1
 
     # Keep suffix, remove prefixes one at a time (keeping order)
     # Note: If there is no suffix, this step already happened in the previous step
     dropped_text = text
+    dropped_prefixes = set()
+    dropped_suffix = set()
     if suffix != None:
         j = 0
         print(total_prefixes)
         while j <= total_prefixes:
             dropped_text = dropped_text[j:]
+            dropped_prefixes.add(prefixes[j])
             print("\nKeeping suffix, dropping prefixes gradually at step:")
             print(j)
             print(dropped_text)
-            text_possibilities.append(dropped_text)
+            bald_word = Word(dropped_text)
+            bald_word.dropped_prefixes = dropped_prefixes
+            bald_word.dropped_suffix = dropped_suffix
+            text_possibilities.append(bald_word)
             j += 1
 
     # Keep everything
     dropped_text = text
+    dropped_prefixes = set()
+    dropped_suffix = set()
     print("\nKeeping everything")
     print(dropped_text)
-    text_possibilities.append(dropped_text)
+    bald_word = Word(dropped_text)
+    bald_word.dropped_prefixes = dropped_prefixes
+    bald_word.dropped_suffix = dropped_suffix
+    text_possibilities.append(bald_word)
     # order to check:
     # drop everything (first step of next step, technically)
     # (suffix dropped) add prefix left to right
@@ -976,8 +1010,7 @@ def shadda_in_root(word):
     return word
 
 
-def pipeline(text):
-    test_word = Word(text)
+def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
     deconjugate(test_word)
