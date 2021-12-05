@@ -934,7 +934,7 @@ def create_possible_words(text):
         print("\nDropping suffix, dropping prefixes gradually at step:")
         print(i)
         print(dropped_text)
-        if total_prefixes != 0:
+        if i < total_prefixes:
             dropped_prefixes.add(prefixes[i])
         bald_word = Word(dropped_text)
         bald_word.dropped_prefixes = dropped_prefixes
