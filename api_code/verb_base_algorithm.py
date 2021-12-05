@@ -814,6 +814,8 @@ def print_word(word):
     print("Raw text: " + word.raw_text)
     print("Conjugated form: " + word.conjugated)
     print("Base form: " + word.third_past)
+    print("Prefixes removed: " + str(word.dropped_prefixes))
+    print("Suffix removed: " + str(word.dropped_suffix))
 
     feature_counter = 1
     for item in word.features:
@@ -1021,7 +1023,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("نمت")
+complete_possible_words = full_pipeline("سأذهب")
 
 for word in complete_possible_words:
     print_word(word)
