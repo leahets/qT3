@@ -177,6 +177,8 @@ def which_form(verb):
                         else:
                             if (check_x(verb)):
                                 return verb
+                            elif (check_viii(verb)):
+                                return verb
                             else:
                                 print("no form found")
                                 if verb.weak:
@@ -1056,7 +1058,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("يقضون")
+complete_possible_words = full_pipeline("نقتتل")
 
 for word in complete_possible_words:
     print('\n')
