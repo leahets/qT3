@@ -877,6 +877,7 @@ def print_features(f):
 def check_double_hamza(word):
     if (word.raw_text[0]) == "آ":
         word.conjugated = "أ" + "أ" + word.raw_text[1:]
+        word.raw_text = word.conjugated
     return word
 
 
@@ -1051,14 +1052,16 @@ def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
     deconjugate(test_word)
+    print_word(test_word)
     strip_fixes(test_word)
     check_weak_postconjugate(test_word)
     which_form(test_word)
+    print_word(test_word)
     check_root_hamza(test_word)
     return test_word
 
 
-complete_possible_words = full_pipeline("نقتتل")
+complete_possible_words = full_pipeline("آكل")
 
 for word in complete_possible_words:
     print('\n')
