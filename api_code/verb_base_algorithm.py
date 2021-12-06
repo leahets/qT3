@@ -679,7 +679,8 @@ def deconjugate(word):
 
     if first_letter not in ("أ", "ن", "ت", "ي"):
         # Prefix 1 (None)
-        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+        if last_letter not in ("ت", "ن", "ا"):
+            # removed shadda, mim, yaa
             # Suffix 1 (None)
             word.features.add(p3m1n)
         elif last_letter == "ت":
@@ -718,7 +719,7 @@ def deconjugate(word):
     elif first_letter == "أ":
         # Prefix 2 (أ)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+        if last_letter not in ("ت", "ن", "ا", "ي", "م",):
             # Suffix 1 (None)
             word.features.add(r1n1i)
             word.features.add(r1n1s)
@@ -726,7 +727,7 @@ def deconjugate(word):
     elif first_letter == "ن":
         # Prefix 3 (ن)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+        if last_letter not in ("ت", "ن", "ا", "ي", "م"):
             # Suffix 1 (None)
             word.features.add(r1n3i)
             word.features.add(r1n3s)
@@ -734,7 +735,8 @@ def deconjugate(word):
     elif first_letter == "ت":
         # Prefix 4 (ta)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+        if last_letter not in ("ن", "ا", "ي"):
+            # removed taa, mim, shadda
             # Suffix 1 (None)
             word.features.add(r2m1i)
             word.features.add(r2m1s)
@@ -789,8 +791,9 @@ def deconjugate(word):
     elif first_letter == "ي":
         # Prefix 5 (yaa)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "م", "ّ"):
+        if last_letter not in ("ن", "ا"):
             # *********THIS IS WHERE WE DELETED YAA
+            # removed mim, taa, shadda
             # Suffix 1 (None)
             word.features.add(r3m1i)
             word.features.add(r3m1s)
