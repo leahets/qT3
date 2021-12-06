@@ -1067,7 +1067,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("آكل")
+complete_possible_words = full_pipeline("سأذهب")
 
 for word in complete_possible_words:
     print('\n')
