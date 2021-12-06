@@ -31,6 +31,8 @@ class Word:
         self.invalid = False
         self.dropped_prefixes = set()
         self.dropped_suffix = set()
+        self.hollow = False
+        self.defective = False
 
     def __eq__(self, o) -> bool:
         if self.raw_text == o.raw_text:
@@ -769,7 +771,8 @@ def deconjugate(word):
     elif first_letter == "ي":
         # Prefix 5 (yaa)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م", "ّ"):
+        if last_letter not in ("ت", "ن", "ا", "م", "ّ"):
+            # *********THIS IS WHERE WE DELETED YAA
             # Suffix 1 (None)
             word.features.add(r3m1i)
             word.features.add(r3m1s)
@@ -1035,6 +1038,7 @@ def full_pipeline(text):
 
     for possible_word in text_possibilities:
         word = pipeline(possible_word)
+        # weak_in_root(possible_word)
         word = sanity_check(word)
         if not word.invalid:
             final_words.append(word)
@@ -1056,6 +1060,34 @@ def shadda_in_root(word):
     return word
 
 
+def weak_in_root(word):
+    weak_roots = ["و", "ا", "ي", "ى"]
+    for letter in word.root:
+        if letter in weak_roots:
+            word.weak = True
+    check_hollow_defective(word)
+    return word
+
+
+def check_hollow_defective(word):
+    if word.weak:
+        print(len(word.features))
+        arbitrary_feature = word.features.pop()
+        word.features.add(arbitrary_feature)
+        tense = arbitrary_feature.tense
+        if tense == "present":
+            hollow_letter = word.root[2]
+            new_letter = " "
+            if hollow_letter == "ا":
+                word.hollow = True
+                new_letter = "و/ي"
+                new_root = word.root[0:2] + new_letter + word.root[2:]
+                print("NEW ROOT ALERT")
+                print(new_root)
+
+    return word
+
+
 def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
@@ -1067,7 +1099,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("سأذهب")
+complete_possible_words = full_pipeline("يقضي")
 
 for word in complete_possible_words:
     print('\n')
