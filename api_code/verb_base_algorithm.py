@@ -1042,9 +1042,11 @@ def full_pipeline(text):
     return final_words
 
 
-def future_check(word):
+def mark_future(word):
     # if sin is in set of prefixes, mark as future
-    # sanity check: if future is true, features must be present
+    sin = ("س", "will")
+    if sin in word.dropped_prefixes:
+        word.future = True
     return word
 
 
