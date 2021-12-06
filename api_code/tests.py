@@ -1,3 +1,4 @@
+from typing import final
 import verb_base_algorithm
 
 
@@ -445,8 +446,53 @@ def test_deconjugate():
 #     assert word.root == "فعل"
 #     form, word = verb_base_algorithm.which_form(verb_base_algorithm.deconjugate(sample))
 
+def test_ending_root_letters():
+    final_meem = verb_base_algorithm.make_word("ينام")
+    final_meem = verb_base_algorithm.pipeline(final_meem)
+    assert final_meem.root == "ن ا م"
+    meem_features = final_meem.features
+    m_ft1 = verb_base_algorithm.decode_features("r3m1i")
+    m_ft2 = verb_base_algorithm.decode_features("r3m1j")
+    m_ft3 = verb_base_algorithm.decode_features("r3m1j")
+    assert len(meem_features) == 3
+    assert m_ft1 in meem_features
+    assert m_ft2 in meem_features
+    assert m_ft3 in meem_features
+    assert final_meem.form == "Form I"
 
+   
 
+def test_all_conjugations_present():
+    fake_r1n1i = verb_base_algorithm.make_word("أأخم") #ahem #this imight be failing 
+    fake_r1n1i = verb_base_algorithm.deconjugate(fake_r1n1i)
+    #assert len(fake_r1n1i.features) == 3
+    fake_r1n3i = verb_base_algorithm.make_word("نأخم")
+    fake_r1n3i = verb_base_algorithm.deconjugate(fake_r1n3i)
+    assert len(fake_r1n3i.features) == 3
+    #skip the other one (m) cause it is same as r3f1i
+    fake_r2n1i = verb_base_algorithm.make_word("تأخمين")
+    fake_r2n1i = verb_base_algorithm.deconjugate(fake_r2n1i)
+    assert len(fake_r2n1i.features) == 1
+    fake_r2m1i = verb_base_algorithm.make_word("تأخم")
+    fake_r2m1i = verb_base_algorithm.deconjugate(fake_r2m1i)
+    assert len(fake_r2m1i.features) == 6
+    fake_r2n2i = verb_base_algorithm.make_word("تأخمان")
+    fake_r2n2i = verb_base_algorithm.deconjugate(fake_r2n2i)
+    assert len(fake_r2n2i.features) == 3
+    fake_r2n3i = verb_base_algorithm.make_word("تأخمون")
+    fake_r2n3i = verb_base_algorithm.deconjugate(fake_r2n3i)
+    assert len(fake_r2n3i.features) == 1
+    fake_r3m1i = verb_base_algorithm.make_word("يأخم")
+    fake_r3m1i = verb_base_algorithm.make_word(fake_r3m1i)
+    assert len(fake_r3m1i.features) == 3
+    # fake_r3f1i = verb_base_algorithm.make_word("تأخم")
+    # fake_r3f1i =verb_base_algorithm.make_word(fake_r3f1i)
+    # fake_r3f2i = verb_base_algorithm.make_word("")
+    # fake_r3m2i = verb_base_algorithm.make_word("")
+    fake_r3n3i = verb_base_algorithm.make_word("يأخمون")
+    fake_r3n3i = verb_base_algorithm.make_word(fake_r3n3i)
+    assert len(fake_r3n3i.features) == 1
+    
 
 def test_new_hash():
     # tests feature equality
