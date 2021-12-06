@@ -719,7 +719,8 @@ def deconjugate(word):
     elif first_letter == "أ":
         # Prefix 2 (أ)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م",):
+        if last_letter not in ("ن", "ا", "ي"):
+            # removed taa, mim, shadda
             # Suffix 1 (None)
             word.features.add(r1n1i)
             word.features.add(r1n1s)
@@ -727,7 +728,8 @@ def deconjugate(word):
     elif first_letter == "ن":
         # Prefix 3 (ن)
         word.prefix_count += 1
-        if last_letter not in ("ت", "ن", "ا", "ي", "م"):
+        if last_letter not in ("ن", "ا", "ي"):
+            # removed taa, mim, shadda
             # Suffix 1 (None)
             word.features.add(r1n3i)
             word.features.add(r1n3s)
@@ -1109,8 +1111,6 @@ def check_hollow_defective(word):
                     new_letter = "و/ي"
                     new_root = word.root[0:2] + new_letter + word.root[3:]
                     word.root = new_root
-            elif tense == "present":
-                # wait maybe we don't care about doing this - is the root given for the past tense or the present tense? i feel like we want it to be yaa/waw since that's what changes; so we keep it as yaa/waw/alif maqsura????
                 defective_letter = word.root[-1]
                 new_letter = " "
                 if defective_letter in ["ي", "و", "ى"]:
@@ -1121,6 +1121,8 @@ def check_hollow_defective(word):
                         new_letter = "ي"
                     elif defective_letter == "و":
                         new_letter = "ا"
+                    new_root = word.root[0:-1] + new_letter
+                    word.root = new_root
     return word
 
 
@@ -1145,10 +1147,8 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("ينام")
+complete_possible_words = full_pipeline("قضى")
 
 for word in complete_possible_words:
     print('\n')
     print_word(word)
-
-# SINCE WE CHANGED THE TEXT TO A WORD OBJECT, THE OBJECTS ARE NOT EQUIVALENT WHEN WE CHECK FOR DUPLICATES
