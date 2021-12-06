@@ -33,6 +33,7 @@ class Word:
         self.dropped_suffix = set()
         self.hollow = False
         self.defective = False
+        self.geminated = True
 
     def __eq__(self, o) -> bool:
         if self.raw_text == o.raw_text:
@@ -639,7 +640,21 @@ def create_features():
     r3m3j = decode_features('r3m3j')
 
 
+def end_geminated_check(word):
+    if len(word.conjugated) >= 2:
+        last_letter = word.conjugated[-1]
+        second_last = word.conjugated[-2]
+        if last_letter == "ّ" and second_last != "ن":
+            word.geminated = True
+            new_conjugated = word.conjugated[:-1]
+            doubled_letter = second_last
+            new_conjugated = new_conjugated + doubled_letter
+            word.conjugated = new_conjugated
+    return word
+
+
 def deconjugate(word):
+    word = end_geminated_check(word)
     verb = word.conjugated
     word_length = len(verb)
     if word_length >= 1:
@@ -763,6 +778,9 @@ def deconjugate(word):
                 word.suffix_count += 1
                 word.features.add(r2m3s)
                 word.features.add(r2m3j)
+            elif second_last == "ن":
+                word.suffix_count += 1
+                word.features.add(p1n3n)
         elif last_letter == "ي":
             # Suffix 5 (ي)
             word.suffix_count += 1
@@ -804,6 +822,9 @@ def deconjugate(word):
                 word.suffix_count += 1
                 word.features.add(r3m3s)
                 word.features.add(r3m3j)
+            elif second_last == "ن":
+                word.suffix_count += 1
+                word.features.add(p1n3n)
     return word
 
 
