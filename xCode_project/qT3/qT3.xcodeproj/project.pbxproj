@@ -13,6 +13,7 @@
 		0408034B2713959F00C19FB9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 040803492713959F00C19FB9 /* Main.storyboard */; };
 		0408034D271395A300C19FB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0408034C271395A300C19FB9 /* Assets.xcassets */; };
 		04080350271395A300C19FB9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0408034E271395A300C19FB9 /* LaunchScreen.storyboard */; };
+		04D1A113275E9D18004DD73C /* SecondController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1A112275E9D18004DD73C /* SecondController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0408034C271395A300C19FB9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0408034F271395A300C19FB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04080351271395A300C19FB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04D1A112275E9D18004DD73C /* SecondController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				040803432713959F00C19FB9 /* AppDelegate.swift */,
 				040803452713959F00C19FB9 /* SceneDelegate.swift */,
 				040803472713959F00C19FB9 /* ViewController.swift */,
+				04D1A112275E9D18004DD73C /* SecondController.swift */,
 				040803492713959F00C19FB9 /* Main.storyboard */,
 				0408034C271395A300C19FB9 /* Assets.xcassets */,
 				0408034E271395A300C19FB9 /* LaunchScreen.storyboard */,
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				040803482713959F00C19FB9 /* ViewController.swift in Sources */,
+				04D1A113275E9D18004DD73C /* SecondController.swift in Sources */,
 				040803442713959F00C19FB9 /* AppDelegate.swift in Sources */,
 				040803462713959F00C19FB9 /* SceneDelegate.swift in Sources */,
 			);
