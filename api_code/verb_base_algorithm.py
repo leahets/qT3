@@ -886,7 +886,7 @@ def check_double_hamza(word):
 
 def check_root_hamza(word):
     if word.root != "":
-        for i in range(0, 5):
+        for i in range(0, len(word.root)):
             if word.root[i] in ("أ", "ؤ", "ئ"):
                 new_root = word.root[0:i] + "ء" + word.root[i+1:]
                 word.root = new_root
@@ -1071,6 +1071,7 @@ def weak_in_root(word):
 
 
 def check_hollow_defective(word):
+    check_root_filled(word)
     if word.weak:
         if len(word.features) >= 1:
             arbitrary_feature = word.features.pop()
