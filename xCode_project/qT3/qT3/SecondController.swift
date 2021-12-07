@@ -26,6 +26,7 @@ class SecondController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .systemGray
+        title = "qT3"
 //        field.returnKeyType = .done
 //        field.autocorrectionType = .no
 //        field.becomeFirstResponder()
@@ -69,8 +70,26 @@ class SecondController: UIViewController {
         view.addSubview(rectangleView2)
         view.addSubview(infoTitle)
         view.addSubview(infoLabel)
+        configureButtons()
         
       
+    }
+    private func configureButtons(){
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(onTapBack))
+    }
+    
+    @objc func onTapBack() {
+        print("tapped")
+        let story = UIStoryboard(name: "Main", bundle: nil)
+        let controller = story.instantiateViewController(identifier: "FirstController") as! ViewController
+        self.present(controller, animated: true, completion: nil)
+        //let navigation = UINavigationController(rootViewController: controller)
+        //self.view.addSubview(navigation.view)
+      
+        //self.view.addSubview(label)
+//        self.addChild(navigation)
+//        navigation.didMove(toParent: self)
+        
     }
     
 //    @IBAction func buttonTapped(){
