@@ -1,8 +1,8 @@
 # test verbs should be in 3rd person past tense singular (rightmost column of form chart)
 
 output_file_name = "output.txt"
-noun_prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "and"),
-                 ("ال", "the"), ("أ", "asking"), ("ف", "then"), ("ل", "to, because"))
+noun_prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("و", "and"),
+                 ("ال", "the"), ("ف", "then"), ("ل", "to, because"))
 
 i = 0
 
@@ -969,8 +969,6 @@ def sanity_check(word):
 
     return word
     # If in form 14 or 25, word must also have features 14 and 25
-
-    # If verb has multiple prefixes, check that they're in proper order
 
     # Vowel dropping - check that features match with possibility of a hollow verb
 
