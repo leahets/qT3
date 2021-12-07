@@ -1,13 +1,13 @@
 # test verbs should be in 3rd person past tense singular (rightmost column of form chart)
 
 output_file_name = "output.txt"
-prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "and"),
-            ("ال", "the"), ("أ", "asking"), ("ف", "then"), ("ل", "to, because"))
+noun_prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "and"),
+                 ("ال", "the"), ("أ", "asking"), ("ف", "then"), ("ل", "to, because"))
 
 i = 0
 
-verb_prefixes = (("س", "will"), ("و", "and"),
-                 ("ف", "then"), ("ل", "to, because"))
+verb_prefixes = (("س", "will", 2), ("و", "and", 0),
+                 ("ف", "then", 0), ("ل", "to, because", 1))
 
 verb_suffixes = (("ني", "me"), ("ك", "you"), ("ه", "him"), ("ها", "her"), ("كما", "you (dual)"), ("هما", "them (dual)"), ("نا", "us"),
                  ("كم", "you (plural masculine)"), ("كن", "you (plural feminine)"), ("هم", "them (plural masculine"), ("هن", "them (plural feminine)"))
@@ -194,6 +194,8 @@ def which_form(verb):
                                         verb.form = "Form I"
                                         return verb
                                     else:
+                                        print(
+                                            verb.raw_text + " is invalid because a form could not be found.")
                                         verb.invalid = True
                                         return verb
 
@@ -485,7 +487,7 @@ def check_form(base_verb, form):
         return check_x(base_verb)
     else:
         base_verb.invalid = True
-        print("INVALID FORM")
+        print(base_verb.raw_text + " is invalid because a form could not be found.")
 
 
 def decode_features(code):
@@ -930,6 +932,8 @@ def check_root_hamza(word):
 
 def check_invalid_preconjugate(word):
     if len(word.raw_text) <= 2:
+        print(word.raw_text +
+              " is invalid because there are only two letters before deconjugating.")
         word.invalid = True
 
 
@@ -942,8 +946,15 @@ def check_weak_postconjugate(word):
 def check_prefix_order(word):
     if len(word.dropped_prefixes) > 0:
         print("prefixes dropped:")
-        for pre in word.dropped_prefixes:
-            print(pre)
+        length = len(word.dropped_prefixes)
+        if length >= 2:
+            for i in range(0, length-1):
+                pre = word.dropped_prefixes[i]
+                next_pre = word.dropped_prefixes[i+1]
+                if pre[2] >= next_pre[2]:
+                    print(
+                        word.raw_text + " is invalid because the prefixes are conflicting or out of order.")
+                    word.invalid = True
     return word
 
 
@@ -975,6 +986,8 @@ def check_future(word):
     for f in word.features:
         tense = f.tense
         if word.future == True and tense == 'past':
+            print(word.raw_text +
+                  " is invalid because it has the future prefix but is in the past tense.")
             word.invalid = True
             return word
         elif word.future == True and tense == 'present':
@@ -1142,6 +1155,7 @@ def mark_future(word):
 
 def shadda_in_root(word):
     if "ّ" in word.root:
+        print(word.raw_text + " is invalid because there is a shadda in the root.")
         word.invalid = True
     return word
 
