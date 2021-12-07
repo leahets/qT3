@@ -1,5 +1,6 @@
 import flask
 from flask import request
+from api_code.verb_base_algorithm import full_pipeline
 import verb_base_algorithm
 import json
 
@@ -12,10 +13,28 @@ class Word:
         self.third_past = raw_text
         self.checked_forms = set()
         self.root = ""
-        self.pos = "V"  # automatically verbs for now
-        self.form = 0
+        self.form = ""
         self.prefix_count = 0
         self.suffix_count = 0
+        self.possible_prefixes = list()
+        self.suffix = None
+        self.future = False
+        self.weak = False
+        self.invalid = False
+        self.dropped_prefixes = set()
+        self.dropped_suffix = set()
+        self.hollow = False
+        self.defective = False
+        self.geminated = True
+
+    def __eq__(self, o) -> bool:
+        if self.raw_text == o.raw_text:
+            return True
+        else:
+            return False
+
+    def __hash__(self) -> int:
+        return hash(self.raw_text)
 
 
 class Features:
@@ -27,6 +46,34 @@ class Features:
         self.mood = mood
         self.prefix_count = 0
         self.suffix_count = 0
+        self.hash_string = self.calc_hash_string()
+
+    def __eq__(self, o) -> bool:
+        return self.tense == o.tense and self.number == o.number and self.gender == o.gender and self.person == o.person and self.mood == o.mood
+
+    def __hash__(self) -> int:
+        return hash(self.hash_string)
+
+    def calc_hash_string(self):
+        """
+        pretty much an 'encode features' method
+        """
+        hash_string = ""
+        if self.tense == "past":
+            hash_string += "p"
+        elif self.tense == "present":
+            hash_string += "r"
+
+        hash_string += str(self.number)
+
+        hash_string += self.gender[0]
+
+        hash_string += str(self.person)
+
+        hash_string += self.mood[0]
+
+        return hash_string
+
 
 app = flask.Flask(__name__)
 #app.config["DEBUG"] = True
@@ -66,16 +113,21 @@ def api_verb_info():
     else:
         return "Error: No verb field provided. Please specify a verb."
 
-    word = verb_base_algorithm.make_word(verb)
+    # word = verb_base_algorithm.make_word(verb)
+    words = verb_base_algorithm.full_pipeline(verb)
 
-    deconjugated_word_obj = verb_base_algorithm.deconjugate(word)
 
-    new_word = verb_base_algorithm.strip_fixes(deconjugated_word_obj)
-    form, new_word = verb_base_algorithm.which_form(new_word)
-    features_list = []
-    for feature in deconjugated_word_obj.features:
-        new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
-        features_list.append(new_feature_format)
+    # deconjugated_word_obj = verb_base_algorithm.deconjugate(word)
 
-    dict_word = {"word": verb, "form": form, "features": features_list, "root": new_word.root}
-    return json.dumps(dict_word)
+    # new_word = verb_base_algorithm.strip_fixes(deconjugated_word_obj)
+    # form, new_word = verb_base_algorithm.which_form(new_word)
+    all_words = []
+    for word in words:
+        features_list = []
+        for feature in word.features:
+            new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
+            features_list.append(new_feature_format)
+
+        dict_word = {"word": verb, "form": word.form, "features": features_list, "root": word.root}
+        all_words.append(json.dumps(dict_word))
+    return all_words#json.dumps(dict_word)
