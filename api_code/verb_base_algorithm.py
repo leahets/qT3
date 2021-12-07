@@ -1017,7 +1017,8 @@ def create_possible_words(text):
     if suffix != None:
         j = 0
         print(total_prefixes)
-        while j <= total_prefixes:
+        while j < total_prefixes:
+            # changed from <= to < for out of bounds errors, hopefully this fixes it
             dropped_text = dropped_text[j:]
             dropped_prefixes.add(prefixes[j])
             print("\nKeeping suffix, dropping prefixes gradually at step:")
@@ -1147,7 +1148,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("يأخم")
+complete_possible_words = full_pipeline("سأفهم")
 
 for word in complete_possible_words:
     print('\n')
