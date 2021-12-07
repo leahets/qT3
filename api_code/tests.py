@@ -202,7 +202,7 @@ def test_which_form_check_if_gibberish():
     # basic = verb_base_algorithm.make_word("فعّل")
     # assert verb_base_algorithm.which_form(basic) == "Form II", basic
     gibberish = verb_base_algorithm.make_word("ثتصصنيبيت")
-    gibberish = verb_base_algorithm.which_form(gibberish) 
+    gibberish = verb_base_algorithm.which_form(gibberish)
     assert gibberish.invalid == True
 
 
@@ -240,17 +240,16 @@ def test_leading_alif():
 
     leading_alif_dropped = verb_base_algorithm.deconjugate(
         leading_alif_dropped)
-   
+
     leading_alif_dropped = verb_base_algorithm.strip_fixes(
         leading_alif_dropped)
     assert leading_alif_dropped.third_past == "ستعمل"
     leading_alif_dropped = verb_base_algorithm.which_form(
         leading_alif_dropped)
 
-
     assert leading_alif_dropped.form == "Form X"
 
-    leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل") # we kill
+    leading_alif_dropped1 = verb_base_algorithm.make_word("نقتتل")  # we kill
 
     leading_alif_dropped1 = verb_base_algorithm.deconjugate(
         leading_alif_dropped1)
@@ -260,19 +259,21 @@ def test_leading_alif():
         leading_alif_dropped1)
 
     assert leading_alif_dropped1.form == "Form VIII"
-    
-def test_hamsa():    
+
+
+def test_hamsa():
     # test hamsated verbs like "to eat" where first person form creates double hamsa
 
     hamsa = verb_base_algorithm.make_word("آكل")
 
     hamsa = verb_base_algorithm.pipeline(hamsa)
 
-
     assert hamsa.form == "Form I/Form IV"
     assert hamsa.root == "ء ك ل"
 
 # write a seperate test for form 14 and 25
+
+
 def test_which_form_raw():
     pass
     # test form 1
@@ -280,11 +281,11 @@ def test_which_form_raw():
     form1 = verb_base_algorithm.which_form(form1)
     assert form1.form == "Form I"
 
-    #test form 2
+    # test form 2
     form2 = verb_base_algorithm.make_word("فعّل")
     form2 = verb_base_algorithm.which_form(form2)
     assert form2.form == "Form II"
-    # test form 3 
+    # test form 3
     form3 = verb_base_algorithm.make_word("فاعل")
     form3 = verb_base_algorithm.which_form(form3)
     assert form3.form == "Form III"
@@ -293,7 +294,7 @@ def test_which_form_raw():
     form4 = verb_base_algorithm.which_form(form4)
     assert form4.form == "Form IV"
 
-    #test form 5
+    # test form 5
     form5 = verb_base_algorithm.make_word("تفعّل")
     form5 = verb_base_algorithm.which_form(form5)
     assert form5.form == "Form V"
@@ -303,76 +304,80 @@ def test_which_form_raw():
     form6 = verb_base_algorithm.which_form(form6)
     assert form6.form == "Form VI"
 
-    #test form 7
+    # test form 7
     form7 = verb_base_algorithm.make_word("انفعل")
     form7 = verb_base_algorithm.which_form(form7)
     assert form7.form == "Form VII"
-    
-    #test form 8
+
+    # test form 8
     form8 = verb_base_algorithm.make_word("افتعل")
     past_features = verb_base_algorithm.decode_features("p2f1n")
     form8.features.add(past_features)
     form8 = verb_base_algorithm.which_form(form8)
     assert form8.form == "Form VIII"
 
-
-    #test form 10
+    # test form 10
     form10 = verb_base_algorithm.make_word("استفعل")
     past_features = verb_base_algorithm.decode_features("p2f1n")
     form10.features.add(past_features)
     form10 = verb_base_algorithm.which_form(form10)
     assert form10.form == "Form X"
 
+
 def test_ambiguous_forms():
-    form14 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("أفعل"))
+    form14 = verb_base_algorithm.pipeline(
+        verb_base_algorithm.make_word("أفعل"))
     assert form14.form == "Form I/Form IV"
 
-    form25 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("تدرّس"))
+    form25 = verb_base_algorithm.pipeline(
+        verb_base_algorithm.make_word("تدرّس"))
     assert form25.form == "Form II/Form V"
 
-    form5 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("يتدرّس"))
+    form5 = verb_base_algorithm.pipeline(
+        verb_base_algorithm.make_word("يتدرّس"))
     assert form5.form == "Form V"
 
-    form4 = verb_base_algorithm.pipeline(verb_base_algorithm.make_word("يأفعلون"))
+    form4 = verb_base_algorithm.pipeline(
+        verb_base_algorithm.make_word("يأفعلون"))
     assert form4.form == "Form IV"
+
 
 def test_full_pipeline():
     pass
 
     word_list_ex1 = verb_base_algorithm.full_pipeline("فكّت")
 
-    #ex2 = 
+    # ex2 =
 
 
 def test_defective():
-    ## these words should all be flagged as weak by the algorithm
+    # these words should all be flagged as weak by the algorithm
     ex1 = verb_base_algorithm.full_pipeline("يقضون")
 
-    assert len (ex1) == 1
+    assert len(ex1) == 1
     word1 = ex1[0]
     assert word1.weak == True
     assert word1.form == "Form I"
-    
 
     ex2 = verb_base_algorithm.full_pipeline("قضت")
 
-    assert len (ex2) == 1
+    assert len(ex2) == 1
     word2 = ex2[0]
     assert word2.weak == True
     assert word2.form == "Form I"
 
     ex3 = verb_base_algorithm.full_pipeline("قضوا")
 
-    assert len (ex3) == 1
+    assert len(ex3) == 1
     word3 = ex3[0]
     assert word3.weak == True
     assert word3.form == "Form I"
 
-    ## these words should all return the root with an alif maqsooora
+    # these words should all return the root with an alif maqsooora
 
     #ex4 = full_pipeline("")
 
-    ## these words should all return the root with a ya 
+    # these words should all return the root with a ya
 
     #ex4 = full_pipeline("")
 
@@ -380,13 +385,16 @@ def test_defective():
 
     #ex4 = full_pipeline("")
 
+    # every present tense conjugation
 
-    #every present tense conjugation
 
 def test_hollow():
     pass
+
+
 def test_assimilated():
     pass
+
 
 def test_deconjugate():
     #  test we form
@@ -446,6 +454,7 @@ def test_deconjugate():
 #     assert word.root == "فعل"
 #     form, word = verb_base_algorithm.which_form(verb_base_algorithm.deconjugate(sample))
 
+
 def test_ending_root_letters():
     final_meem = verb_base_algorithm.make_word("ينام")
     final_meem = verb_base_algorithm.pipeline(final_meem)
@@ -460,16 +469,16 @@ def test_ending_root_letters():
     assert m_ft3 in meem_features
     assert final_meem.form == "Form I"
 
-   
 
 def test_all_conjugations_present():
-    fake_r1n1i = verb_base_algorithm.make_word("أأخم") #ahem #this imight be failing 
+    fake_r1n1i = verb_base_algorithm.make_word(
+        "أأخم")  # ahem #this imight be failing
     fake_r1n1i = verb_base_algorithm.deconjugate(fake_r1n1i)
     #assert len(fake_r1n1i.features) == 3
     fake_r1n3i = verb_base_algorithm.make_word("نأخم")
     fake_r1n3i = verb_base_algorithm.deconjugate(fake_r1n3i)
     assert len(fake_r1n3i.features) == 3
-    #skip the other one (m) cause it is same as r3f1i
+    # skip the other one (m) cause it is same as r3f1i
     fake_r2n1i = verb_base_algorithm.make_word("تأخمين")
     fake_r2n1i = verb_base_algorithm.deconjugate(fake_r2n1i)
     assert len(fake_r2n1i.features) == 1
@@ -492,7 +501,7 @@ def test_all_conjugations_present():
     fake_r3n3i = verb_base_algorithm.make_word("يأخمون")
     fake_r3n3i = verb_base_algorithm.make_word(fake_r3n3i)
     assert len(fake_r3n3i.features) == 1
-    
+
 
 def test_new_hash():
     # tests feature equality
