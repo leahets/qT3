@@ -967,8 +967,10 @@ def check_future(word):
         elif word.future == True and tense == 'present':
             if word.form == "Form I/Form IV":
                 word.form = "Form I"
+            if word.form == "Form II/Form V":
+                word.form = "Form II"
             f.tense = "future"
-            return word
+    return word
 
 
 def create_possible_words(text):
@@ -1301,7 +1303,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("سأفهم")
+complete_possible_words = full_pipeline("ستدرّس")
 
 for word in complete_possible_words:
     print('\n')
