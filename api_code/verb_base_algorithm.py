@@ -22,8 +22,8 @@ class Word:
         self.checked_forms = set()
         self.root = ""
         self.form = ""
-        self.prefix_count = 0
-        self.suffix_count = 0
+        self.prefix_count = 0  # for conjugations
+        self.suffix_count = 0  # for conjugations
         self.possible_prefixes = list()
         self.suffix = None
         self.future = False
@@ -874,12 +874,6 @@ def identify_suffix(text):
     return possible_suffix
 
 
-def test_affixes(word):
-    for prefix in word.possible_prefixes:
-        strip_fixes(word)
-        # fix this function
-
-
 def print_word(word):
     print("Raw text: " + word.raw_text)
     print("Conjugated form: " + word.conjugated)
@@ -937,14 +931,22 @@ def check_weak_postconjugate(word):
         word.form = "Form I"
 
 
-def sanity_check(word):
-    shadda_in_root(word)
-    check_future(word)
+def check_prefix_order(word):
+    if word.
     return word
-    # If in form 14 or 25, word must also have features 14 and 25
 
+
+def sanity_check(word):
+    # If there is a shadda in the root, it's not correct
+    shadda_in_root(word)
     # If verb is marked as future, features must be in present
     # If verb is marked as future and form is 14, form is actually I -> correct features to match
+    check_future(word)
+    # If verb has multiple prefixes, check that they're in proper order
+    check_prefix_order(word)
+
+    return word
+    # If in form 14 or 25, word must also have features 14 and 25
 
     # If verb has multiple prefixes, check that they're in proper order
 
