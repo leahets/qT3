@@ -1064,7 +1064,6 @@ def full_pipeline(text):
 
     for possible_word in text_possibilities:
         word = pipeline(possible_word)
-        word = weak_in_root(possible_word)
         word = sanity_check(word)
         if not word.invalid:
             final_words.append(word)
@@ -1144,6 +1143,7 @@ def pipeline(test_word):
     which_form(test_word)
     check_root_filled(test_word)
     check_root_hamza(test_word)
+    weak_in_root(test_word)
     return test_word
 
 
