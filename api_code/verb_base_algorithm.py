@@ -1036,6 +1036,21 @@ def create_possible_words(text):
             text_possibilities.append(bald_word)
             j += 1
 
+    # Keep suffix, drop all prefixes
+    dropped_text = text
+    dropped_prefixes = set()
+    dropped_suffix = set()
+    if suffix != None:
+        dropped_text = dropped_text[total_prefixes:]
+        print("\nKeeping suffix, dropping ALL prefixes")
+        for prefix in prefixes:
+            dropped_prefixes.add(prefix)
+            print(dropped_text)
+        bald_word = Word(dropped_text)
+        bald_word.dropped_prefixes = dropped_prefixes
+        bald_word.dropped_suffix = dropped_suffix
+        text_possibilities.append(bald_word)
+
     # Keep everything
     dropped_text = text
     dropped_prefixes = set()
@@ -1065,6 +1080,8 @@ def create_possible_words(text):
 def full_pipeline(text):
     create_features()
     full_text_possibilities = create_possible_words(text)
+    for ex_word in full_text_possibilities:
+        print(ex_word.raw_text)
     text_possibilities = list(dict.fromkeys(full_text_possibilities))
     # this^ removes duplicates
     final_words = list()
@@ -1262,7 +1279,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("إطّلع")
+complete_possible_words = full_pipeline("سأفهم")
 
 for word in complete_possible_words:
     print('\n')
