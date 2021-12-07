@@ -856,6 +856,14 @@ def identify_prefixes(text):
         if (text[0] == prefix[0]):
             possible_prefixes.append(prefix)
             text = text[1:]
+            for prefix_2 in verb_prefixes:
+                if(text[0] == prefix_2[0]):
+                    possible_prefixes.append(prefix_2)
+                    text = text[1:]
+                    for prefix_3 in verb_prefixes:
+                        if(text[0] == prefix_3[0]):
+                            possible_prefixes.append(prefix_3)
+                            text = text[1:]
     return possible_prefixes
 
 
@@ -933,9 +941,9 @@ def check_weak_postconjugate(word):
 
 def check_prefix_order(word):
     if len(word.dropped_prefixes) > 0:
+        print("prefixes dropped:")
         for pre in word.dropped_prefixes:
-            # make this a list
-            return word
+            print(pre)
     return word
 
 
@@ -1308,7 +1316,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("ستدرّس")
+complete_possible_words = full_pipeline("وستدرّس")
 
 for word in complete_possible_words:
     print('\n')
