@@ -77,7 +77,7 @@ func randomReturn(str: String) -> Array<String> {
     return returnVar
 }
 
-private func getData(from url: String, completion: @escaping (Result<MyResult, Error>) -> Void) {
+private func getData(from url: String, completion: @escaping (Result<MyResults, Error>) -> Void) {
     //var return_val: MyResult?
     
     let task = URLSession.shared.dataTask(with: URL(string: url)!,completionHandler: {data, response, error in
@@ -89,9 +89,9 @@ private func getData(from url: String, completion: @escaping (Result<MyResult, E
             return
         }
         //have data
-        var result: MyResult?
+        var result: MyResults?
         do{
-            result = try JSONDecoder().decode(MyResult.self, from: data)
+            result = try JSONDecoder().decode(MyResults.self, from: data)
         }
         catch{
             print("failed to convert \(error.localizedDescription)")
@@ -102,8 +102,8 @@ private func getData(from url: String, completion: @escaping (Result<MyResult, E
         }
         
         
-        print(json.word)
-        print(json.form)
+        print(json.possible_words[0])
+        print(json.possible_words[0].form)
         
        DispatchQueue.main.async {
         completion(.success(json))
@@ -128,9 +128,12 @@ struct MyResult: Codable{
     let features: Array<Feature>
     let root: String
     
-   
-    
 }
+struct MyResults: Codable{
+    let possible_words: Array<MyResult>
+}
+
+
  
 
 
@@ -166,7 +169,7 @@ extension ViewController: UITextFieldDelegate{
                     print(error.localizedDescription)
 
                 case .success(let response):
-                    print (response.form)
+                    print (response[0].form)
        
                 }
                 

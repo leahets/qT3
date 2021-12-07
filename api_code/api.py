@@ -86,20 +86,20 @@ def home():
 def api_arabic():
     return "فعل"
 
-@app.route('/api/form', methods=['GET'])
-def api_verb_form():
-    # Check if an ID was provided as part of the URL.
-    # If ID is provided, assign it to a variable.
-    # If no ID is provided, display an error in the browser.
-    if 'id' in request.args:
-        verb = request.args['id']
-    else:
-        return "Error: No verb field provided. Please specify a verb."
+# @app.route('/api/form', methods=['GET'])
+# def api_verb_form():
+#     # Check if an ID was provided as part of the URL.
+#     # If ID is provided, assign it to a variable.
+#     # If no ID is provided, display an error in the browser.
+#     if 'id' in request.args:
+#         verb = request.args['id']
+#     else:
+#         return "Error: No verb field provided. Please specify a verb."
 
-    word = verb_base_algorithm.make_word(verb)
-    form = verb_base_algorithm.which_form(word)
-    dict_word = {"word": verb, "form": form}
-    return json.dumps(dict_word)
+#     word = verb_base_algorithm.make_word(verb)
+#     form = verb_base_algorithm.which_form(word)
+#     dict_word = {"word": verb, "form": form}
+#     return json.dumps(dict_word)
 
 
 @app.route('/api/verb', methods=['GET'])
@@ -112,14 +112,10 @@ def api_verb_info():
     else:
         return "Error: No verb field provided. Please specify a verb."
 
-    # word = verb_base_algorithm.make_word(verb)
+    #word = verb_base_algorithm.make_word(verb)
     words = verb_base_algorithm.full_pipeline(verb)
 
 
-    # deconjugated_word_obj = verb_base_algorithm.deconjugate(word)
-
-    # new_word = verb_base_algorithm.strip_fixes(deconjugated_word_obj)
-    # form, new_word = verb_base_algorithm.which_form(new_word)
     all_words = []
     for word in words:
         features_list = []
@@ -127,6 +123,6 @@ def api_verb_info():
             new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
             features_list.append(new_feature_format)
 
-        dict_word = {"word": verb, "form": word.form, "features": features_list, "root": word.root}
-        all_words.append(json.dumps(dict_word))
-    return json.dumps(all_words)#json.dumps(dict_word)
+        dict_word = {"word": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak}
+        all_words.append(dict_word)
+    return json.dumps({"possible_words" : all_words})#json.dumps(dict_word)
