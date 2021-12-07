@@ -1,6 +1,5 @@
 import flask
 from flask import request
-from api_code.verb_base_algorithm import full_pipeline
 import verb_base_algorithm
 import json
 
@@ -130,4 +129,4 @@ def api_verb_info():
 
         dict_word = {"word": verb, "form": word.form, "features": features_list, "root": word.root}
         all_words.append(json.dumps(dict_word))
-    return all_words#json.dumps(dict_word)
+    return json.dumps(all_words)#json.dumps(dict_word)
