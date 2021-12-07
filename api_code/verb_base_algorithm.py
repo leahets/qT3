@@ -938,15 +938,37 @@ def check_weak_postconjugate(word):
 
 
 def sanity_check(word):
-    word = shadda_in_root(word)
+    shadda_in_root(word)
+    check_future(word)
     return word
     # If in form 14 or 25, word must also have features 14 and 25
 
     # If verb is marked as future, features must be in present
+    # If verb is marked as future and form is 14, form is actually I -> correct features to match
 
     # If verb has multiple prefixes, check that they're in proper order
 
     # Vowel dropping - check that features match with possibility of a hollow verb
+
+
+def match_features(word):
+    if word.form == "Form I/Form IV":
+        print('help')
+    return word
+
+
+def check_future(word):
+    mark_future(word)
+    for f in word.features:
+        tense = f.tense
+        if word.future == True and tense == 'past':
+            word.invalid = True
+            return word
+        elif word.future == True and tense == 'present':
+            if word.form == "Form I/Form IV":
+                word.form = "Form I"
+            f.tense = "future"
+            return word
 
 
 def create_possible_words(text):
