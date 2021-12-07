@@ -182,14 +182,20 @@ def which_form(verb):
                                 return verb
                             elif (check_viii(verb)):
                                 return verb
+                            elif (check_viii_spelling(verb)):
+                                return verb
                             else:
                                 print("no form found")
-                                if verb.weak:
-                                    verb.form = "Form I"
+                                print("checking 8 spelling rule")
+                                if (check_viii_spelling(verb)):
                                     return verb
                                 else:
-                                    verb.invalid = True
-                                    return verb
+                                    if verb.weak:
+                                        verb.form = "Form I"
+                                        return verb
+                                    else:
+                                        verb.invalid = True
+                                        return verb
 
 
 def check_i(word):
@@ -368,7 +374,7 @@ def check_viii(word):
         word.features.add(arbitrary_feature)
         tense = arbitrary_feature.tense
         if tense == "past":
-            if first_letter == "ا":
+            if first_letter == "ا" or first_letter == "إ":
                 root = root + second_letter + ' '
                 if third_letter == "ت":
                     root = root + fourth_letter + ' '
@@ -1135,6 +1141,114 @@ def check_root_filled(word):
     return word
 
 
+def check_viii_spelling(word):
+    word.checked_forms.add(18)
+    base_verb = word.third_past
+    first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
+        base_verb)
+    if len(base_verb) >= 5:
+        fifth_letter = base_verb[4]
+    else:
+        fifth_letter = ' '
+
+    root = ""
+    if len(word.features) != 0:
+        arbitrary_feature = word.features.pop()
+        word.features.add(arbitrary_feature)
+        tense = arbitrary_feature.tense
+        if tense == "past":
+            if first_letter == "ا" or first_letter == "إ":
+                # change below
+                if third_letter == "ّ" and len(base_verb) == 5:
+                    if second_letter == "ط" or "ظ":
+                        root = root + second_letter + ' '
+                        root = root + fourth_letter + ' '
+                        root = root + fifth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                    elif second_letter == "ت":
+                        # possibly taa, possibly assimilated
+                        word.weak = True
+                        root = root + second_letter + ' '
+                        root = root + fourth_letter + ' '
+                        root = root + fifth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                    elif second_letter == "د":
+                        root = root + "د/ذ"
+                        root = root + fourth_letter + ' '
+                        root = root + fifth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                elif third_letter == "ط" and second_letter == "ص" or "ض":
+                    root = root + second_letter + ' '
+                    root = root + fourth_letter + ' '
+                    root = root + fifth_letter
+                    word.root = root
+                    word.form = "Form VIII, spelling shift"
+                    return True
+                elif third_letter == "د" and second_letter == "ز":
+                    root = root + second_letter + ' '
+                    root = root + fourth_letter + ' '
+                    root = root + fifth_letter
+                    word.root = root
+                    word.form = "Form VIII, spelling shift"
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        else:
+            if len(word.third_past) == 4:
+                root = root + first_letter + ' '
+                # change below
+                if second_letter == "ّ":
+                    if first_letter == "ط" or "ظ":
+                        root = root + third_letter + ' '
+                        root = root + fourth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                    elif first_letter == "ت":
+                        # possibly taa, possibly assimilated
+                        word.weak = True
+                        root = root + third_letter + ' '
+                        root = root + fourth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                    elif first_letter == "د":
+                        root = "د/ذ "
+                        root = root + third_letter + ' '
+                        root = root + fourth_letter
+                        word.root = root
+                        word.form = "Form VIII, spelling shift"
+                        return True
+                elif second_letter == "ط" and first_letter == "ص" or "ض":
+                    root = root + first_letter + ' '
+                    root = root + third_letter + ' '
+                    root = root + fourth_letter
+                    word.root = root
+                    word.form = "Form VIII, spelling shift"
+                    return True
+                elif second_letter == "د" and first_letter == "ز":
+                    root = root + first_letter + ' '
+                    root = root + third_letter + ' '
+                    root = root + fourth_letter
+                    word.root = root
+                    word.form = "Form VIII, spelling shift"
+                    return True
+                else:
+                    return False
+            else:
+                return False
+    else:
+        return False
+
+
 def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
@@ -1148,7 +1262,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("سأفهم")
+complete_possible_words = full_pipeline("إصطدم")
 
 for word in complete_possible_words:
     print('\n')
