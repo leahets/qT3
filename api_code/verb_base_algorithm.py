@@ -1,13 +1,13 @@
 # test verbs should be in 3rd person past tense singular (rightmost column of form chart)
 
 output_file_name = "output.txt"
-prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("س", "will"), ("و", "and"),
-            ("ال", "the"), ("أ", "asking"), ("ف", "then"), ("ل", "to, because"))
+noun_prefixes = (("ب", "with, in, by"), ("ك", "same as"), ("و", "and"),
+                 ("ال", "the"), ("ف", "then"), ("ل", "to, because"))
 
 i = 0
 
-verb_prefixes = (("س", "will"), ("و", "and"),
-                 ("ف", "then"), ("ل", "to, because"))
+verb_prefixes = (("س", "will", 2), ("و", "and", 0),
+                 ("ف", "then", 0), ("ل", "to, because", 1))
 
 verb_suffixes = (("ني", "me"), ("ك", "you"), ("ه", "him"), ("ها", "her"), ("كما", "you (dual)"), ("هما", "them (dual)"), ("نا", "us"),
                  ("كم", "you (plural masculine)"), ("كن", "you (plural feminine)"), ("هم", "them (plural masculine"), ("هن", "them (plural feminine)"))
@@ -22,14 +22,14 @@ class Word:
         self.checked_forms = set()
         self.root = ""
         self.form = ""
-        self.prefix_count = 0
-        self.suffix_count = 0
+        self.prefix_count = 0  # for conjugations
+        self.suffix_count = 0  # for conjugations
         self.possible_prefixes = list()
         self.suffix = None
         self.future = False
         self.weak = False
         self.invalid = False
-        self.dropped_prefixes = set()
+        self.dropped_prefixes = []
         self.dropped_suffix = set()
         self.hollow = False
         self.defective = False
@@ -194,6 +194,8 @@ def which_form(verb):
                                         verb.form = "Form I"
                                         return verb
                                     else:
+                                        print(
+                                            verb.raw_text + " is invalid because a form could not be found.")
                                         verb.invalid = True
                                         return verb
 
@@ -485,7 +487,7 @@ def check_form(base_verb, form):
         return check_x(base_verb)
     else:
         base_verb.invalid = True
-        print("INVALID FORM")
+        print(base_verb.raw_text + " is invalid because a form could not be found.")
 
 
 def decode_features(code):
@@ -856,6 +858,14 @@ def identify_prefixes(text):
         if (text[0] == prefix[0]):
             possible_prefixes.append(prefix)
             text = text[1:]
+            for prefix_2 in verb_prefixes:
+                if(text[0] == prefix_2[0]):
+                    possible_prefixes.append(prefix_2)
+                    text = text[1:]
+                    for prefix_3 in verb_prefixes:
+                        if(text[0] == prefix_3[0]):
+                            possible_prefixes.append(prefix_3)
+                            text = text[1:]
     return possible_prefixes
 
 
@@ -872,12 +882,6 @@ def identify_suffix(text):
                 # print(suffix)
                 break
     return possible_suffix
-
-
-def test_affixes(word):
-    for prefix in word.possible_prefixes:
-        strip_fixes(word)
-        # fix this function
 
 
 def print_word(word):
@@ -928,6 +932,8 @@ def check_root_hamza(word):
 
 def check_invalid_preconjugate(word):
     if len(word.raw_text) <= 2:
+        print(word.raw_text +
+              " is invalid because there are only two letters before deconjugating.")
         word.invalid = True
 
 
@@ -937,16 +943,58 @@ def check_weak_postconjugate(word):
         word.form = "Form I"
 
 
+def check_prefix_order(word):
+    if len(word.dropped_prefixes) > 0:
+        print("prefixes dropped:")
+        length = len(word.dropped_prefixes)
+        if length >= 2:
+            for i in range(0, length-1):
+                pre = word.dropped_prefixes[i]
+                next_pre = word.dropped_prefixes[i+1]
+                if pre[2] >= next_pre[2]:
+                    print(
+                        word.raw_text + " is invalid because the prefixes are conflicting or out of order.")
+                    word.invalid = True
+    return word
+
+
 def sanity_check(word):
-    word = shadda_in_root(word)
+    # If there is a shadda in the root, it's not correct
+    shadda_in_root(word)
+    # If verb is marked as future, features must be in present
+    # If verb is marked as future and form is 14, form is actually I -> correct features to match
+    check_future(word)
+    # If verb has multiple prefixes, check that they're in proper order
+    check_prefix_order(word)
+
     return word
     # If in form 14 or 25, word must also have features 14 and 25
 
-    # If verb is marked as future, features must be in present
-
-    # If verb has multiple prefixes, check that they're in proper order
-
     # Vowel dropping - check that features match with possibility of a hollow verb
+
+
+def match_features(word):
+    if word.form == "Form I/Form IV":
+        print('help')
+    return word
+
+
+def check_future(word):
+    mark_future(word)
+    for f in word.features:
+        tense = f.tense
+        if word.future == True and tense == 'past':
+            print(word.raw_text +
+                  " is invalid because it has the future prefix but is in the past tense.")
+            word.invalid = True
+            return word
+        elif word.future == True and tense == 'present':
+            if word.form == "Form I/Form IV":
+                word.form = "Form I"
+            if word.form == "Form II/Form V":
+                word.form = "Form II"
+            f.tense = "future"
+    return word
 
 
 def create_possible_words(text):
@@ -961,7 +1009,7 @@ def create_possible_words(text):
     print("NUMBER OF PREFIXES:")
     print(total_prefixes)
 
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     dropped_text = text
     # Drop everything
@@ -970,7 +1018,7 @@ def create_possible_words(text):
         dropped_suffix.add(suffix)
         # print(dropped_text)
     dropped_text = dropped_text[total_prefixes:]
-    dropped_prefixes = set(prefixes)
+    dropped_prefixes = list(prefixes)
     print("\nDropping all prefixes and suffixes:")
     # this is where we would check for 2 letters and put the pipeline
     # add all returned words to set, then sanity check every word in set after
@@ -982,7 +1030,7 @@ def create_possible_words(text):
 
     # Drop suffix, keep all prefixes
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
@@ -996,7 +1044,7 @@ def create_possible_words(text):
 
     # Drop suffix, remove prefixes one at a time (keeping order)
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
@@ -1008,7 +1056,7 @@ def create_possible_words(text):
         print(i)
         print(dropped_text)
         if i < total_prefixes:
-            dropped_prefixes.add(prefixes[i])
+            dropped_prefixes.append(prefixes[i])
         bald_word = Word(dropped_text)
         bald_word.dropped_prefixes = dropped_prefixes
         bald_word.dropped_suffix = dropped_suffix
@@ -1018,7 +1066,7 @@ def create_possible_words(text):
     # Keep suffix, remove prefixes one at a time (keeping order)
     # Note: If there is no suffix, this step already happened in the previous step
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         j = 0
@@ -1026,7 +1074,7 @@ def create_possible_words(text):
         while j < total_prefixes:
             # changed from <= to < for out of bounds errors, hopefully this fixes it
             dropped_text = dropped_text[j:]
-            dropped_prefixes.add(prefixes[j])
+            dropped_prefixes.append(prefixes[j])
             print("\nKeeping suffix, dropping prefixes gradually at step:")
             print(j)
             print(dropped_text)
@@ -1036,9 +1084,24 @@ def create_possible_words(text):
             text_possibilities.append(bald_word)
             j += 1
 
+    # Keep suffix, drop all prefixes
+    dropped_text = text
+    dropped_prefixes = list()
+    dropped_suffix = set()
+    if suffix != None:
+        dropped_text = dropped_text[total_prefixes:]
+        print("\nKeeping suffix, dropping ALL prefixes")
+        for prefix in prefixes:
+            dropped_prefixes.append(prefix)
+            print(dropped_text)
+        bald_word = Word(dropped_text)
+        bald_word.dropped_prefixes = dropped_prefixes
+        bald_word.dropped_suffix = dropped_suffix
+        text_possibilities.append(bald_word)
+
     # Keep everything
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     print("\nKeeping everything")
     print(dropped_text)
@@ -1065,6 +1128,8 @@ def create_possible_words(text):
 def full_pipeline(text):
     create_features()
     full_text_possibilities = create_possible_words(text)
+    for ex_word in full_text_possibilities:
+        print(ex_word.raw_text)
     text_possibilities = list(dict.fromkeys(full_text_possibilities))
     # this^ removes duplicates
     final_words = list()
@@ -1088,6 +1153,7 @@ def mark_future(word):
 
 def shadda_in_root(word):
     if "ّ" in word.root:
+        print(word.raw_text + " is invalid because there is a shadda in the root.")
         word.invalid = True
     return word
 
@@ -1262,7 +1328,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("إصطدم")
+complete_possible_words = full_pipeline("يأخم")
 
 for word in complete_possible_words:
     print('\n')
