@@ -29,7 +29,7 @@ class Word:
         self.future = False
         self.weak = False
         self.invalid = False
-        self.dropped_prefixes = set()
+        self.dropped_prefixes = []
         self.dropped_suffix = set()
         self.hollow = False
         self.defective = False
@@ -932,7 +932,10 @@ def check_weak_postconjugate(word):
 
 
 def check_prefix_order(word):
-    if word.
+    if len(word.dropped_prefixes) > 0:
+        for pre in word.dropped_prefixes:
+            # make this a list
+            return word
     return word
 
 
@@ -987,7 +990,7 @@ def create_possible_words(text):
     print("NUMBER OF PREFIXES:")
     print(total_prefixes)
 
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     dropped_text = text
     # Drop everything
@@ -996,7 +999,7 @@ def create_possible_words(text):
         dropped_suffix.add(suffix)
         # print(dropped_text)
     dropped_text = dropped_text[total_prefixes:]
-    dropped_prefixes = set(prefixes)
+    dropped_prefixes = list(prefixes)
     print("\nDropping all prefixes and suffixes:")
     # this is where we would check for 2 letters and put the pipeline
     # add all returned words to set, then sanity check every word in set after
@@ -1008,7 +1011,7 @@ def create_possible_words(text):
 
     # Drop suffix, keep all prefixes
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
@@ -1022,7 +1025,7 @@ def create_possible_words(text):
 
     # Drop suffix, remove prefixes one at a time (keeping order)
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[:-len(suffix[0])]
@@ -1034,7 +1037,7 @@ def create_possible_words(text):
         print(i)
         print(dropped_text)
         if i < total_prefixes:
-            dropped_prefixes.add(prefixes[i])
+            dropped_prefixes.append(prefixes[i])
         bald_word = Word(dropped_text)
         bald_word.dropped_prefixes = dropped_prefixes
         bald_word.dropped_suffix = dropped_suffix
@@ -1044,7 +1047,7 @@ def create_possible_words(text):
     # Keep suffix, remove prefixes one at a time (keeping order)
     # Note: If there is no suffix, this step already happened in the previous step
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         j = 0
@@ -1052,7 +1055,7 @@ def create_possible_words(text):
         while j < total_prefixes:
             # changed from <= to < for out of bounds errors, hopefully this fixes it
             dropped_text = dropped_text[j:]
-            dropped_prefixes.add(prefixes[j])
+            dropped_prefixes.append(prefixes[j])
             print("\nKeeping suffix, dropping prefixes gradually at step:")
             print(j)
             print(dropped_text)
@@ -1064,13 +1067,13 @@ def create_possible_words(text):
 
     # Keep suffix, drop all prefixes
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     if suffix != None:
         dropped_text = dropped_text[total_prefixes:]
         print("\nKeeping suffix, dropping ALL prefixes")
         for prefix in prefixes:
-            dropped_prefixes.add(prefix)
+            dropped_prefixes.append(prefix)
             print(dropped_text)
         bald_word = Word(dropped_text)
         bald_word.dropped_prefixes = dropped_prefixes
@@ -1079,7 +1082,7 @@ def create_possible_words(text):
 
     # Keep everything
     dropped_text = text
-    dropped_prefixes = set()
+    dropped_prefixes = list()
     dropped_suffix = set()
     print("\nKeeping everything")
     print(dropped_text)
