@@ -221,7 +221,10 @@ def check_i(word):
         root = root + third_letter
         word.root = root
         # checking for form 14
-        if word.raw_text[0] == "أ":
+        arbitrary_feature = word.features.pop()
+        word.features.add(arbitrary_feature)
+        tense = arbitrary_feature.tense
+        if tense == "present" or word.raw_text[0] == "أ":
             word.form = "Form I/Form IV"
         else:
             word.form = "Form I"
@@ -1358,7 +1361,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("نام")
+complete_possible_words = full_pipeline("سأفهم")
 
 # nam in past tense being marked as present
 
