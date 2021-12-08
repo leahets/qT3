@@ -57,7 +57,7 @@ class Features:
 def test_form1_check():
     basic = verb_base_algorithm.make_word("فعل")
     hollow = verb_base_algorithm.make_word("نام")
-    defective = verb_base_algorithm.make_word("بقع")
+    defective = verb_base_algorithm.make_word("بقى")
     formv = verb_base_algorithm.make_word("تعرّف")
     form2 = verb_base_algorithm.make_word("درّس")
 
@@ -386,6 +386,28 @@ def test_defective():
     #ex4 = full_pipeline("")
 
     # every present tense conjugation
+
+
+def test_weak_check():
+    assimilated_text = "وصل"
+    hollow_text = "نام"
+    defective_text = "بقى"
+
+    assimilated_list = verb_base_algorithm.full_pipeline(assimilated_text)
+
+    assert len(assimilated_list) == 1
+    assert assimilated_list[0].weak == True
+    # we have no marker for assimilated - should we?
+
+    hollow_list = verb_base_algorithm.full_pipeline(hollow_text)
+    assert len(hollow_list) == 1
+    assert hollow_list[0].weak == True
+    assert hollow_list[0].hollow == True
+
+    defective_list = verb_base_algorithm.full_pipeline(defective_text)
+    assert len(defective_list) == 1
+    assert defective_list[0].weak == True
+    assert defective_list[0].defective == True
 
 
 def test_hollow():

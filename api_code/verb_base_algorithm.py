@@ -1149,6 +1149,8 @@ def full_pipeline(text):
         final_words = list()
 
         for possible_word in text_possibilities:
+            print("POSSIBLE WORD:")
+            print_word(possible_word)
             word = pipeline(possible_word)
             word = sanity_check(word)
             if not word.invalid:
@@ -1181,7 +1183,6 @@ def weak_in_root(word):
     for letter in word.root:
         if letter in weak_roots:
             word.weak = True
-            print("WEAKLING WORD")
     check_hollow_defective(word)
     return word
 
@@ -1346,7 +1347,9 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("يأخم")
+complete_possible_words = full_pipeline("نام")
+
+# nam in past tense being marked as present
 
 for word in complete_possible_words:
     print('\n')
