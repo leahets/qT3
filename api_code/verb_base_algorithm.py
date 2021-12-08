@@ -856,8 +856,6 @@ def deconjugate(word):
 
 
 def strip_fixes(word):
-    # print('\n')
-    # print(word.raw_text)
     no_prefix = word.raw_text[word.prefix_count:]
     no_suffix = no_prefix[0:len(no_prefix) - word.suffix_count]
     word.third_past = no_suffix
@@ -893,7 +891,6 @@ def identify_suffix(text):
         else:
             if suffix[0] == text[-suffix_length:]:
                 possible_suffix = suffix
-                # print(suffix)
                 break
     return possible_suffix
 
@@ -918,6 +915,7 @@ def print_word(word):
     print("This word may be weak:" + str(word.weak))
     print("This word is hollow: " + str(word.hollow))
     print("This word is defective: " + str(word.defective))
+    print("This word is assimilated: " + str(word.assimilated))
     print("Invalid? " + str(word.invalid))
 
 
@@ -978,6 +976,8 @@ def check_prefix_order(word):
 def sanity_check(word):
     # If there is a shadda in the root, it's not correct
     shadda_in_root(word)
+    # If verb is hollow and past tense with alif in middle, adjust features to match appropriate 1stp/2ndp vs 3rdp feminine
+    check_hollow_past(word)
     # If verb is marked as future, features must be in present
     # If verb is marked as future and form is 14, form is actually I -> correct features to match
     check_future(word)
@@ -1183,7 +1183,6 @@ def shadda_in_root(word):
 
 
 def weak_in_root(word):
-    check_root_filled(word)
     weak_roots = ["و", "ا", "ي", "ى"]
     for letter in word.root:
         if letter in weak_roots:
@@ -1194,10 +1193,12 @@ def weak_in_root(word):
 
 def check_hollow_defective(word):
     if word.weak:
+        print(len(word.features))
         if len(word.features) >= 1:
             arbitrary_feature = word.features.pop()
             word.features.add(arbitrary_feature)
             tense = arbitrary_feature.tense
+            print_features(arbitrary_feature)
             if tense == "past":
                 hollow_letter = word.root[2]
                 new_letter = " "
@@ -1206,25 +1207,28 @@ def check_hollow_defective(word):
                     new_letter = "و/ي"
                     new_root = word.root[0:2] + new_letter + word.root[3:]
                     word.root = new_root
-                defective_letter = word.root[-1]
-                new_letter = " "
-                if defective_letter in ["ي", "و", "ى"]:
-                    word.defective = True
-                    if defective_letter == "ي":
-                        new_letter = "ى"
-                    elif defective_letter == "ى":
-                        new_letter = "ي"
-                    elif defective_letter == "و":
-                        new_letter = "ا"
-                    new_root = word.root[0:-1] + new_letter
-                    word.root = new_root
+                else:
+                    defective_letter = word.root[-1]
+                    new_letter = " "
+                    if defective_letter in ["ي", "و", "ى"]:
+                        word.defective = True
+                        if defective_letter == "ي":
+                            new_letter = "ى"
+                        elif defective_letter == "ى":
+                            new_letter = "ي"
+                        elif defective_letter == "و":
+                            new_letter = "ا"
+                        new_root = word.root[0:-1] + new_letter
+                        word.root = new_root
+                    else:
+                        word.assimilated = True
     return word
 
 
 def check_root_filled(word):
     if word.root == "":
         root_list = []
-        if len(word.raw_text) == 3:
+        if len(word.raw_text) == 3 and not word.weak:
             for letter in word.raw_text:
                 root_list.append(letter)
             word.root = str.join(' ', root_list)
@@ -1236,7 +1240,7 @@ def check_root_filled(word):
 
 
 def check_viii_spelling(word):
-    word.checked_forms.add(18)
+    word.checked_forms.add(80)
     base_verb = word.third_past
     first_letter, second_letter, third_letter, fourth_letter, last_letter = letter_assignment(
         base_verb)
@@ -1344,11 +1348,12 @@ def check_viii_spelling(word):
 
 
 def check_assimilated(word):
-    if len(word.third_past) == 2:
-        if word.prefix_count == 1:
-            word.assimilated = True
-            new_root = "و/ي" + word.root[1:]
-            word.root = new_root
+    if word.assimilated:
+        if len(word.third_past) == 2:
+            if word.suffix_count == 1:
+                word.assimilated = True
+                new_root = "و/ي " + word.root
+                word.root = new_root
     return word
 
 
@@ -1363,8 +1368,9 @@ def check_hollow_past(word):
                     word.features.discard(p2m1n)
                 elif len(word.conjugated) == 3:
                     word.features.discard(p3f1n)
-                # feature set should not have past 3rd feminine singular
-                # feature set should have past 1st person, 2nd person masculine singular, 2nd person feminine singular
+                    # feature set should not have past 3rd feminine singular
+                    # feature set should have past 1st person, 2nd person masculine singular, 2nd person feminine singular
+    return word
 
 
 def pipeline(test_word):
@@ -1374,7 +1380,6 @@ def pipeline(test_word):
     strip_fixes(test_word)
     check_weak_postconjugate(test_word)
     which_form(test_word)
-    print_word(test_word)
     check_root_filled(test_word)
     check_root_hamza(test_word)
     weak_in_root(test_word)
@@ -1382,7 +1387,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("سأفهم")
+complete_possible_words = full_pipeline("صمت")
 
 # nam in past tense being marked as present
 
