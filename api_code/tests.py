@@ -545,6 +545,39 @@ def test_new_hash():
 
 
 def test_hollow_full():
+    word_list = verb_base_algorithm.full_pipeline("باعه")
+    word = word_list.pop()
+    if word.raw_text == "باعه":
+        word = word_list.pop()
+    assert word.raw_text == "باع"
+    assert word.conjugated == "باع"
+    features = word.features.pop()
+    assert verb_base_algorithm.decode_features("p3m1n") == features
+    assert word.third_past == "باع"
+    assert 1 in word.checked_forms
+    assert word.root == "ب و/ي ع"
+    assert word.form == "Form I"
+    assert word.prefix_count == 0  # for conjugations
+    assert word.suffix_count == 0  # for conjugations
+    assert len(word.possible_prefixes) == 0
+    #assert word.suffix == ("ه", "him")
+    assert word.future == False
+    assert word.weak == True
+    assert word.invalid == False
+    assert word.dropped_prefixes == []
+    assert ("ه", "him") in word.dropped_suffix
+    assert word.hollow == True
+    assert word.defective == False
+    assert word.geminated == False
+
+    pass
+
+
+def test_weak_full():
+    pass
+
+
+def test_defective_full():
     pass
 
 

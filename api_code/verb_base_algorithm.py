@@ -25,7 +25,7 @@ class Word:
         self.prefix_count = 0  # for conjugations
         self.suffix_count = 0  # for conjugations
         self.possible_prefixes = list()
-        self.suffix = None
+        #self.suffix = None
         self.future = False
         self.weak = False
         self.invalid = False
@@ -33,7 +33,7 @@ class Word:
         self.dropped_suffix = set()
         self.hollow = False
         self.defective = False
-        self.geminated = True
+        self.geminated = False
 
     def __eq__(self, o) -> bool:
         if self.raw_text == o.raw_text:
