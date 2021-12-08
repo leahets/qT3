@@ -7,33 +7,24 @@
 
 import UIKit
 
+//class CurrentWords: ObservableObject{
+//    @Published var currWords:Int = 0
+//
+//}
+
 class ViewController: UIViewController {
     //@StateObject var global_results = CurrrentWords()
+    //var globalResults = CurrentWords()
     
     var formLabel: UILabel!
     var formSubmit: UIButton!
+    
+    var globalResults: MyResults?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-//        let listReturn:Array<String> = linkListReturn(str: "Help")
-//        var count:Int = 1
-//        for item in listReturn{
-//            let button: UIButton = UIButton()
-//            button.setTitle(item, for: .normal)
-//            button.tag = count
-//            button.setTitleColor(.blue, for: .normal)
-//            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
-//            count += 1
-//            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
-//            view.addSubview(button)
-//
-//
-//
-//
-//        }
-        
-        formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
+
+        //formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
         //formLabel.backgroundColor = .systemBlue
         var userField = UITextField(frame: CGRect(x: 40, y: 100, width: 300, height: 40))
         userField.backgroundColor = .systemBlue
@@ -46,7 +37,7 @@ class ViewController: UIViewController {
         //formSubmit.setTitle("Deduct!", for: .normal)
         
         view.addSubview(userField)
-        view.addSubview(formLabel)
+        //view.addSubview(formLabel)
     }
     
     @objc func onTap(sender: UIButton) {
@@ -60,6 +51,21 @@ class ViewController: UIViewController {
         label.text = String(sender.tag)
         self.view.addSubview(label)
         self.addChild(navigation)
+        let formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
+        formLabel.text = globalResults?.possible_words[sender.tag-1].form
+        self.view.addSubview(formLabel)
+        let rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
+        rootLabel.text = globalResults?.possible_words[sender.tag-1].root
+        self.view.addSubview(rootLabel)
+//        let infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
+//        infoLabel.backgroundColor = .systemBlue
+//        infoLabel.text = globalResults?.possible_words[sender.tag-1].features
+//
+        //this is going to be a whole chunk of code!! about the stack view let's go
+        
+        
+        //controller.globalResults = globalResults
+        // this has to go after adding all the labels
         navigation.didMove(toParent: self)
         
     }
@@ -189,6 +195,8 @@ extension ViewController: UITextFieldDelegate{
                 case .success(let response):
                     print (response)
                     var count = 1
+                    //self.globalResults.$currWords = "Sup Worlds!"
+                    globalResults = response
                     for item in response.possible_words{
                         let button: UIButton = UIButton()
                         button.setTitle(item.word, for: .normal)

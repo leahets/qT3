@@ -18,6 +18,7 @@ class SecondController: UIViewController {
     var infoLabel: UITextView!
     var infoTitle: UILabel!
     var rectangleView2: UIView!
+    var globalResults:MyResults?
     
 //    @IBOutlet his class is not key value coding-compliant for the key button.'
 //    @IBOutlet var button: UIButton!
@@ -32,8 +33,7 @@ class SecondController: UIViewController {
 //        field.becomeFirstResponder()
 //        field.delegate = self
 //
-        formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
-        formLabel.text = ""
+       
         formTitle = UILabel(frame: CGRect(x: 40, y: 175, width: 200, height: 50))
         formTitle.text = "form:"
         formTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -41,8 +41,7 @@ class SecondController: UIViewController {
         rectangleView.backgroundColor = .systemBlue
         rectangleView.alpha = 0.5
         
-        rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
-        rootLabel.text = ""
+      
         rootTitle = UILabel(frame: CGRect(x: 200, y: 275, width: 200, height: 50))
         rootTitle.text = "root:"
         rootTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -50,9 +49,7 @@ class SecondController: UIViewController {
         rectangleView1.backgroundColor = .systemBlue
         rectangleView1.alpha = 0.5
         
-        infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
-        infoLabel.backgroundColor = .systemBlue
-        infoLabel.text = ""
+       
         infoTitle = UILabel(frame: CGRect(x: 40, y: 375, width: 200, height: 50))
         infoTitle.text = "info:"
         infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -63,13 +60,13 @@ class SecondController: UIViewController {
         
         view.addSubview(rectangleView)
         view.addSubview(formTitle)
-        view.addSubview(formLabel)
+        //view.addSubview(formLabel)
         view.addSubview(rectangleView1)
         view.addSubview(rootTitle)
-        view.addSubview(rootLabel)
+        //view.addSubview(rootLabel)
         view.addSubview(rectangleView2)
         view.addSubview(infoTitle)
-        view.addSubview(infoLabel)
+        //view.addSubview(infoLabel)
         configureButtons()
         
       
@@ -142,10 +139,12 @@ class SecondController: UIViewController {
 
     }
     struct MyResult: Codable{
+        let input: String
         let word: String
         let form: String
         let features: Array<Feature>
         let root: String
+        let weak: Bool
         
        
         
