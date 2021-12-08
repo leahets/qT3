@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    //@StateObject var global_results = CurrrentWords()
     
     var formLabel: UILabel!
     var formSubmit: UIButton!
@@ -15,14 +16,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        let listReturn:Array<String> = randomReturn(str: "Help")
+        let listReturn:Array<String> = linkListReturn(str: "Help")
         var count:Int = 1
         for item in listReturn{
             let button: UIButton = UIButton()
             button.setTitle(item, for: .normal)
             button.tag = count
             button.setTitleColor(.blue, for: .normal)
-            button.frame = CGRect(x: 20, y: 100 + 100 * count, width: 200, height: 40)
+            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
             count += 1
             button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
             view.addSubview(button)
@@ -34,7 +35,7 @@ class ViewController: UIViewController {
         
         formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
         //formLabel.backgroundColor = .systemBlue
-        var userField = UITextField(frame: CGRect(x: 20, y: 100, width: 300, height: 40))
+        var userField = UITextField(frame: CGRect(x: 40, y: 100, width: 300, height: 40))
         userField.backgroundColor = .systemBlue
         userField.alpha = 0.5
         userField.returnKeyType = .done
@@ -69,12 +70,14 @@ class ViewController: UIViewController {
 
 }
 
-func randomReturn(str: String) -> Array<String> {
+func linkListReturn(str: String) -> Array<String> {
     var returnVar: [String] = []
     for char in str{
         returnVar.append(String(char))
     }
     return returnVar
+ 
+    
 }
 
 private func getData(from url: String, completion: @escaping (Result<MyResults, Error>) -> Void) {
@@ -148,7 +151,9 @@ extension ViewController: UITextFieldDelegate{
 //        }
 //        return true
 //    }
+    
 //}
+    
        if let text = textField.text{
             formLabel.text = text
             
@@ -158,6 +163,7 @@ extension ViewController: UITextFieldDelegate{
             print(verb_test)
             verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             print(verb_encoded)
+            //let url = "http://127.0.0.1:5000/api/verb?id=" + verb_encoded
             let url = "https://qt3-arabic-deduction.herokuapp.com/api/verb?id=" + verb_encoded
             
             
@@ -170,6 +176,7 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     print (response)
+                    
        
                 }
                 
@@ -185,3 +192,6 @@ extension ViewController: UITextFieldDelegate{
     }
 }
 //*/
+//class CurrentWords: ObservableObject{
+//    @Published var result: MyResults
+//}
