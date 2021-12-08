@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        let listReturn:Array<String> = linkListReturn(str: "Help")
-        var count:Int = 1
+//        let listReturn:Array<String> = linkListReturn(str: "Help")
+//        var count:Int = 1
 //        for item in listReturn{
 //            let button: UIButton = UIButton()
 //            button.setTitle(item, for: .normal)
@@ -66,6 +66,14 @@ class ViewController: UIViewController {
 
     
     
+    func removeAllButtons(){
+        for tagNum in [1, 2, 3, 4, 5] {
+            if let viewWithTag = self.view.viewWithTag(tagNum) {
+                viewWithTag.removeFromSuperview()
+            }
+        }
+        
+    }
 
 
 }
@@ -79,6 +87,7 @@ func linkListReturn(str: String) -> Array<String> {
  
     
 }
+
 
 private func getData(from url: String, completion: @escaping (Result<MyResults, Error>) -> Void) {
     //var return_val: MyResult?
@@ -131,6 +140,7 @@ struct MyResult: Codable{
     let form: String
     let features: Array<Feature>
     let root: String
+    let weak: Bool
     
 }
 struct MyResults: Codable{
@@ -156,7 +166,8 @@ extension ViewController: UITextFieldDelegate{
 //}
     
        if let text = textField.text{
-            formLabel.text = text
+           // formLabel.text = text
+            removeAllButtons()
             
             let verb_test: String
             let verb_encoded: String
