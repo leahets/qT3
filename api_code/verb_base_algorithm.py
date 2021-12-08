@@ -742,13 +742,16 @@ def deconjugate(word):
             word.features.add(r1n1j)
     elif first_letter == "ن":
         # Prefix 3 (ن)
-        word.prefix_count += 1
-        if last_letter not in ("ن", "ا", "ي"):
-            # removed taa, mim, shadda
-            # Suffix 1 (None)
-            word.features.add(r1n3i)
-            word.features.add(r1n3s)
-            word.features.add(r1n3j)
+        if word_length == 3:
+            word.features.add(p3m1n)
+        else:
+            word.prefix_count += 1
+            if last_letter not in ("ن", "ا", "ي"):
+                # removed taa, mim, shadda
+                # Suffix 1 (None)
+                word.features.add(r1n3i)
+                word.features.add(r1n3s)
+                word.features.add(r1n3j)
     elif first_letter == "ت":
         # Prefix 4 (ta)
         word.prefix_count += 1
@@ -909,6 +912,8 @@ def print_word(word):
     print("This verb is in form: " + str(word.form))
     print("The root of this word is " + word.root)
     print("This word may be weak:" + str(word.weak))
+    print("This word is hollow: " + str(word.hollow))
+    print("This word is defective: " + str(word.defective))
     print("Invalid? " + str(word.invalid))
 
 
@@ -1179,6 +1184,7 @@ def shadda_in_root(word):
 
 
 def weak_in_root(word):
+    check_root_filled(word)
     weak_roots = ["و", "ا", "ي", "ى"]
     for letter in word.root:
         if letter in weak_roots:
@@ -1188,7 +1194,6 @@ def weak_in_root(word):
 
 
 def check_hollow_defective(word):
-    check_root_filled(word)
     if word.weak:
         if len(word.features) >= 1:
             arbitrary_feature = word.features.pop()
@@ -1220,9 +1225,14 @@ def check_hollow_defective(word):
 def check_root_filled(word):
     if word.root == "":
         root_list = []
-        for letter in word.third_past:
-            root_list.append(letter)
-        word.root = str.join(' ', root_list)
+        if len(word.raw_text) == 3:
+            for letter in word.raw_text:
+                root_list.append(letter)
+            word.root = str.join(' ', root_list)
+        else:
+            for letter in word.third_past:
+                root_list.append(letter)
+            word.root = str.join(' ', root_list)
     return word
 
 
@@ -1341,6 +1351,7 @@ def pipeline(test_word):
     strip_fixes(test_word)
     check_weak_postconjugate(test_word)
     which_form(test_word)
+    print_word(test_word)
     check_root_filled(test_word)
     check_root_hamza(test_word)
     weak_in_root(test_word)
