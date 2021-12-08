@@ -215,19 +215,19 @@ def test_root():
 
     basic1 = verb_base_algorithm.deconjugate(basic)
     basic2 = verb_base_algorithm.strip_fixes(basic1)
-    basic_value = verb_base_algorithm.which_form(basic2)
-    assert basic_value.root == "ف ع ل"
+    verb_base_algorithm.which_form(basic2)
+    assert basic2.root == "ف ع ل"
 
     sample1 = verb_base_algorithm.deconjugate(sample)
     sample2 = verb_base_algorithm.strip_fixes(sample1)
-    sample_value = verb_base_algorithm.which_form(sample2)
-    assert sample_value.root == "ل ع ب"
+    verb_base_algorithm.which_form(sample2)
+    assert sample2.root == "ل ع ب"
 
     tricky1 = verb_base_algorithm.deconjugate(tricky)
     # tricky2 = verb_base_algorithm.strip_fixes(tricky1)
     # print(tricky2)
-    tricky_value = verb_base_algorithm.which_form(tricky1)
-    assert tricky_value.root == "ن ا م"
+    verb_base_algorithm.which_form(tricky1)
+    assert tricky1.root == "ن ا م"
 
 
 def test_correct_form_basic():
@@ -432,7 +432,7 @@ def test_deconjugate():
 
     assert len(first_past.features) == 4
 
-    # test first person secoond form
+    # test first person second form
     # not sure why this test isn't working rn, will come back to it
     # second_person = verb_base_algorithm.make_word("تفعلين")
     # #second_feature1 = verb_base_algorithm.decode_features("r3f1i")
