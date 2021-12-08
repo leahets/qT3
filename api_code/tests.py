@@ -604,7 +604,7 @@ def test_hollow_full_2():
 
 
 def test_hollow_dropped(word):
-    word_list = verb_base_algorithm.full_pipeline("صمت")
+    word_list = verb_base_algorithm.full_pipeline("صامت")
     word = word_list.pop()
     # if word.raw_text == "صامت":
     #word = word_list.pop()
