@@ -1153,6 +1153,11 @@ def full_pipeline(text):
             word = sanity_check(word)
             if not word.invalid:
                 final_words.append(word)
+
+    if len(final_words) == 0:
+        no_word = Word(text)
+        no_word.form = "None"
+        final_words.append(no_word)
     return final_words
 
 
