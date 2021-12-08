@@ -583,6 +583,10 @@ def test_hollow_full_2():
         assert verb_base_algorithm.decode_features("p3f1n") == features
     elif verb_base_algorithm.decode_features("p1n1n") == features:
         assert verb_base_algorithm.decode_features("p1n1n") == features
+    elif verb_base_algorithm.decode_features("p2f1n") == features:
+        assert verb_base_algorithm.decode_features("p2f1n") == features
+    elif verb_base_algorithm.decode_features("p2m1n") == features:
+        assert verb_base_algorithm.decode_features("p2m1n") == features
     else:
         assert False == True  # this should never run
     assert word.third_past == "صام"

@@ -1352,6 +1352,21 @@ def check_assimilated(word):
     return word
 
 
+def check_hollow_past(word):
+    if word.hollow:
+        if word.conjugated[-1] == "ت":
+            if p3f1n in word.features:
+                if len(word.conjugated) == 4:
+                    # feature set should only have past 3rd feminine singular
+                    word.features.discard(p1n1n)
+                    word.features.discard(p2f1n)
+                    word.features.discard(p2m1n)
+                elif len(word.conjugated) == 3:
+                    word.features.discard(p3f1n)
+                # feature set should not have past 3rd feminine singular
+                # feature set should have past 1st person, 2nd person masculine singular, 2nd person feminine singular
+
+
 def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
