@@ -8,6 +8,7 @@
 import UIKit
 
 class SecondController: UIViewController {
+    //@property (nonatomic, assign) BOOL isSomethingEnabled;
 
     var formLabel: UILabel!
     var rectangleView: UIView!
@@ -80,6 +81,21 @@ class SecondController: UIViewController {
         let story = UIStoryboard(name: "Main", bundle: nil)
         let controller = story.instantiateViewController(identifier: "FirstController") as! ViewController
         self.present(controller, animated: true, completion: nil)
+        
+//        for item in response.possible_words{
+//            let button: UIButton = UIButton()
+//            button.setTitle(item.word, for: .normal)
+//            button.tag = count
+//            button.setTitleColor(.blue, for: .normal)
+//            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
+//            count += 1
+//            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
+//            view.addSubview(button)
+//
+//
+//
+//
+//        }
         //let navigation = UINavigationController(rootViewController: controller)
         //self.view.addSubview(navigation.view)
       
