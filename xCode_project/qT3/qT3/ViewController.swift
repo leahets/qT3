@@ -126,6 +126,7 @@ struct Feature: Codable {
 
 }
 struct MyResult: Codable{
+    let input: String
     let word: String
     let form: String
     let features: Array<Feature>
@@ -176,7 +177,7 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     print (response)
-                    var count = 0
+                    var count = 1
                     for item in response.possible_words{
                         let button: UIButton = UIButton()
                         button.setTitle(item.word, for: .normal)
