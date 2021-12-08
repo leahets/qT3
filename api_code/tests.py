@@ -61,6 +61,12 @@ def test_form1_check():
     formv = verb_base_algorithm.make_word("تعرّف")
     form2 = verb_base_algorithm.make_word("درّس")
 
+    basic.features.add(verb_base_algorithm.decode_features("r3m1i"))
+    hollow.features.add(verb_base_algorithm.decode_features("r3m1i"))
+    defective.features.add(verb_base_algorithm.decode_features("r3m1i"))
+    formv.features.add(verb_base_algorithm.decode_features("r3f1i"))
+    form2.features.add(verb_base_algorithm.decode_features("r3f1i"))
+
     assert verb_base_algorithm.check_i(basic) == True
     assert verb_base_algorithm.check_i(hollow) == True
     assert verb_base_algorithm.check_i(defective) == True
@@ -278,6 +284,7 @@ def test_which_form_raw():
     pass
     # test form 1
     form1 = verb_base_algorithm.make_word("فعل")
+    form1.features.add(verb_base_algorithm.decode_features("p3m1n"))
     verb_base_algorithm.which_form(form1)
     assert form1.form == "Form I"
 
@@ -489,7 +496,7 @@ def test_ending_root_letters():
     assert m_ft1 in meem_features
     assert m_ft2 in meem_features
     assert m_ft3 in meem_features
-    assert final_meem.form == "Form I"
+    assert final_meem.form == "Form I/Form IV"
 
 
 def test_all_conjugations_present():
