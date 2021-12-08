@@ -955,6 +955,7 @@ def check_invalid_preconjugate(word):
 def check_weak_postconjugate(word):
     if len(word.third_past) <= 2:
         word.weak = True
+        word.checked_forms.add(1)
         word.form = "Form I"
 
 
@@ -986,12 +987,6 @@ def sanity_check(word):
     # If in form 14 or 25, word must also have features 14 and 25
 
     # Vowel dropping - check that features match with possibility of a hollow verb
-
-
-def match_features(word):
-    if word.form == "Form I/Form IV":
-        print('help')
-    return word
 
 
 def check_future(word):

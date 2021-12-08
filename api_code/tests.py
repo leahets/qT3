@@ -570,11 +570,62 @@ def test_hollow_full():
     assert word.defective == False
     assert word.geminated == False
 
-    pass
+
+def test_assimilated_full():
+    word_list = verb_base_algorithm.full_pipeline("وصل")
+    word = word_list.pop()
+    assert word.raw_text == "وصل"
+    assert word.conjugated == "وصل"
+    features = word.features.pop()
+    assert verb_base_algorithm.decode_features("p3m1n") == features
+    assert word.third_past == "وصل"
+    assert 1 in word.checked_forms
+    assert word.root == "و ص ل"
+    assert word.form == "Form I"
+    assert word.prefix_count == 0  # for conjugations
+    assert word.suffix_count == 0  # for conjugations
+    assert len(word.possible_prefixes) == 0
+    #assert word.suffix == ("ه", "him")
+    assert word.future == False
+    assert word.weak == True
+    assert word.invalid == False
+    assert word.dropped_prefixes == []
+    assert len(word.dropped_suffix) == 0
+    assert word.hollow == False
+    assert word.defective == False
+    assert word.geminated == False
 
 
-def test_weak_full():
-    pass
+def test_assimilated_dropped():
+    word_list = verb_base_algorithm.full_pipeline("يصل")
+    word = word_list.pop()
+    assert word.raw_text == "يصل"
+    assert word.conjugated == "يصل"
+    features = word.features.pop()
+    if verb_base_algorithm.decode_features("r3m1i") == features:
+        assert verb_base_algorithm.decode_features("r3m1i") == features
+    elif verb_base_algorithm.decode_features("r3m1s") == features:
+        assert verb_base_algorithm.decode_features("r3m1s") == features
+    elif verb_base_algorithm.decode_features("r3m1j") == features:
+        assert verb_base_algorithm.decode_features("r3m1j") == features
+    else:
+        assert False == True  # this should never run
+    assert word.third_past == "صل"
+    assert 1 in word.checked_forms
+    assert word.root == "و ص ل"
+    assert word.form == "Form I"
+    assert word.prefix_count == 1  # for conjugations
+    assert word.suffix_count == 0  # for conjugations
+    assert len(word.possible_prefixes) == 0
+    #assert word.suffix == ("ه", "him")
+    assert word.future == False
+    assert word.weak == True
+    assert word.invalid == False
+    assert word.dropped_prefixes == []
+    assert len(word.dropped_suffix) == 0
+    assert word.hollow == False
+    assert word.defective == False
+    assert word.geminated == False
 
 
 def test_defective_full():
