@@ -571,6 +571,38 @@ def test_hollow_full():
     assert word.geminated == False
 
 
+def test_hollow_full_2():
+    word_list = verb_base_algorithm.full_pipeline("صامت")
+    word = word_list.pop()
+    # if word.raw_text == "صامت":
+    #word = word_list.pop()
+    assert word.raw_text == "صامت"
+    assert word.conjugated == "صامت"
+    features = word.features.pop()
+    if verb_base_algorithm.decode_features("p3f1n") == features:
+        assert verb_base_algorithm.decode_features("p3f1n") == features
+    elif verb_base_algorithm.decode_features("p1n1n") == features:
+        assert verb_base_algorithm.decode_features("p1n1n") == features
+    else:
+        assert False == True  # this should never run
+    assert word.third_past == "صام"
+    assert 1 in word.checked_forms
+    assert word.root == "ص و/ي م"
+    assert word.form == "Form I"
+    assert word.prefix_count == 0  # for conjugations
+    assert word.suffix_count == 1  # for conjugations
+    assert len(word.possible_prefixes) == 0
+    #assert word.suffix == ("ه", "him")
+    assert word.future == False
+    assert word.weak == True
+    assert word.invalid == False
+    assert word.dropped_prefixes == []
+    # assert ("ه", "him") in word.dropped_suffix
+    assert word.hollow == True
+    assert word.defective == False
+    assert word.geminated == False
+
+
 def test_assimilated_full():
     word_list = verb_base_algorithm.full_pipeline("وصل")
     word = word_list.pop()
@@ -612,7 +644,7 @@ def test_assimilated_dropped():
         assert False == True  # this should never run
     assert word.third_past == "صل"
     assert 1 in word.checked_forms
-    assert word.root == "و ص ل"
+    assert word.root == "و/ي ص ل"
     assert word.form == "Form I"
     assert word.prefix_count == 1  # for conjugations
     assert word.suffix_count == 0  # for conjugations

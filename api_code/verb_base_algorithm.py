@@ -34,6 +34,7 @@ class Word:
         self.hollow = False
         self.defective = False
         self.geminated = False
+        self.assimilated = False
 
     def __eq__(self, o) -> bool:
         if self.raw_text == o.raw_text:
@@ -1342,6 +1343,15 @@ def check_viii_spelling(word):
         return False
 
 
+def check_assimilated(word):
+    if len(word.third_past) == 2:
+        if word.prefix_count == 1:
+            word.assimilated = True
+            new_root = "و/ي" + word.root[1:]
+            word.root = new_root
+    return word
+
+
 def pipeline(test_word):
     check_invalid_preconjugate(test_word)
     check_double_hamza(test_word)
@@ -1353,6 +1363,7 @@ def pipeline(test_word):
     check_root_filled(test_word)
     check_root_hamza(test_word)
     weak_in_root(test_word)
+    check_assimilated(test_word)
     return test_word
 
 
