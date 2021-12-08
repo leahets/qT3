@@ -7,45 +7,46 @@
 
 import UIKit
 
+class CurrentWords: ObservableObject{
+    @Published var currWords:Int = 0
+
+}
+
 class ViewController: UIViewController {
+    //@StateObject var global_results = CurrrentWords()
+    var globalResults = CurrentWords()
+    var localResults: MyResults?
     
     var formLabel: UILabel!
     var formSubmit: UIButton!
+    
+    //var globalResults: MyResults?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        let listReturn:Array<String> = randomReturn(str: "Help")
-        var count:Int = 1
-        for item in listReturn{
-            let button: UIButton = UIButton()
-            button.setTitle(item, for: .normal)
-            button.tag = count
-            button.setTitleColor(.blue, for: .normal)
-            button.frame = CGRect(x: 20, y: 100 + 100 * count, width: 200, height: 40)
-            count += 1
-            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
-            view.addSubview(button)
-            
-        
+        let screenWidth = self.view.frame.size.width
 
-          
-        }
-        
-        formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
+        //formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
         //formLabel.backgroundColor = .systemBlue
-        var userField = UITextField(frame: CGRect(x: 20, y: 100, width: 300, height: 40))
+        var userField = UITextField(frame: CGRect(x: screenWidth/2-150, y: 100, width: 300, height: 40))
         userField.backgroundColor = .systemBlue
         userField.alpha = 0.5
         userField.returnKeyType = .done
         userField.becomeFirstResponder()
         userField.delegate = self
         userField.autocorrectionType = .no
+        //userField.center = self.center
+        
+        let instructLabel = UILabel(frame: CGRect(x: screenWidth/2-150, y: 50, width: 300, height: 40))
+        instructLabel.text = "Please provide an Arabic verb"// + String(globalResults.currWords)
         //var formSubmit = UIButton(frame: CGRect(x: 20, y:160, width: 80, height: 40))
         //formSubmit.setTitle("Deduct!", for: .normal)
         
         view.addSubview(userField)
-        view.addSubview(formLabel)
+        view.addSubview(instructLabel)
+        
+
+        
     }
     
     @objc func onTap(sender: UIButton) {
@@ -55,27 +56,83 @@ class ViewController: UIViewController {
        // self.present(controller, animated: true, completion: nil)
         let navigation = UINavigationController(rootViewController: controller)
         self.view.addSubview(navigation.view)
-        let label = UILabel(frame: CGRect(x: 100, y: 300, width: 200, height: 40))
-        label.text = String(sender.tag)
-        self.view.addSubview(label)
+        
+        //sc
         self.addChild(navigation)
+        let wikiButton = UIButton(frame: CGRect(x: 200, y: 100, width: 200, height: 40))
+        wikiButton.setTitle(localResults?.possible_words[sender.tag-1].word, for: .normal)
+        wikiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 32)
+        wikiButton.setTitleColor(.blue, for: .normal)
+        wikiButton.addTarget(self, action: #selector(onTapWiki), for: .touchUpInside)
+        
+        self.view.addSubview(wikiButton)
+        let formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
+        formLabel.text = localResults?.possible_words[sender.tag-1].form
+        self.view.addSubview(formLabel)
+        let rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
+        rootLabel.text = localResults?.possible_words[sender.tag-1].root
+        self.view.addSubview(rootLabel)
+//        let infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
+//        infoLabel.backgroundColor = .systemBlue
+//        infoLabel.text = globalResults?.possible_words[sender.tag-1].features
+//
+        //this is going to be a whole chunk of code!! about the stack view let's go
+        
+        
+        //controller.globalResults = globalResults
+        // this has to go after adding all the labels
         navigation.didMove(toParent: self)
         
     }
 
     
+    @objc func onTapWiki(sender:UIButton) {
+        print("tapped123")
+        let verb1: String!
+        let verb_encoded: String
+        
+        let title = sender.titleLabel!
     
+        verb1 = String(title.text!)
+        //print(verb1)
+        
+        verb_encoded = verb1.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        //print(verb_encoded)
+       
+        let url_possible = "https://en.wiktionary.org/wiki/" + verb_encoded
+        
+        if let url = URL(string: url_possible){
+            UIApplication.shared.open(url)
+        }
+       // UIApplication.shared.open(NSURL(string: "http://www.google.com")! as URL)
+       
+        
+    }
+
+    
+    
+    func removeAllButtons(){
+        for tagNum in [1, 2, 3, 4, 5] {
+            if let viewWithTag = self.view.viewWithTag(tagNum) {
+                viewWithTag.removeFromSuperview()
+            }
+        }
+        
+    }
 
 
 }
 
-func randomReturn(str: String) -> Array<String> {
+func linkListReturn(str: String) -> Array<String> {
     var returnVar: [String] = []
     for char in str{
         returnVar.append(String(char))
     }
     return returnVar
+ 
+    
 }
+
 
 private func getData(from url: String, completion: @escaping (Result<MyResults, Error>) -> Void) {
     //var return_val: MyResult?
@@ -123,10 +180,12 @@ struct Feature: Codable {
 
 }
 struct MyResult: Codable{
+    let input: String
     let word: String
     let form: String
     let features: Array<Feature>
     let root: String
+    let weak: Bool
     
 }
 struct MyResults: Codable{
@@ -148,9 +207,12 @@ extension ViewController: UITextFieldDelegate{
 //        }
 //        return true
 //    }
+    
 //}
+    
        if let text = textField.text{
-            formLabel.text = text
+           // formLabel.text = text
+            removeAllButtons()
             
             let verb_test: String
             let verb_encoded: String
@@ -158,6 +220,7 @@ extension ViewController: UITextFieldDelegate{
             print(verb_test)
             verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             print(verb_encoded)
+            //let url = "http://127.0.0.1:5000/api/verb?id=" + verb_encoded
             let url = "https://qt3-arabic-deduction.herokuapp.com/api/verb?id=" + verb_encoded
             
             
@@ -170,6 +233,25 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     print (response)
+                    var count = 1
+                    //self.globalResults.$currWords = "Sup Worlds!"
+                    globalResults.currWords += 1
+                    localResults = response
+                    for item in response.possible_words{
+                        let button: UIButton = UIButton()
+                        button.setTitle(item.word, for: .normal)
+                        button.tag = count
+                        button.setTitleColor(.blue, for: .normal)
+                        button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
+                        count += 1
+                        button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
+                        view.addSubview(button)
+                        
+                    
+
+                      
+                    }
+                    
        
                 }
                 
@@ -185,3 +267,6 @@ extension ViewController: UITextFieldDelegate{
     }
 }
 //*/
+//class CurrentWords: ObservableObject{
+//    @Published var result: MyResults
+//}

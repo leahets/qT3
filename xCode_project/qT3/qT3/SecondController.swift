@@ -8,6 +8,7 @@
 import UIKit
 
 class SecondController: UIViewController {
+    //@property (nonatomic, assign) BOOL isSomethingEnabled;
 
     var formLabel: UILabel!
     var rectangleView: UIView!
@@ -18,6 +19,7 @@ class SecondController: UIViewController {
     var infoLabel: UITextView!
     var infoTitle: UILabel!
     var rectangleView2: UIView!
+    var globalResults:MyResults?
     
 //    @IBOutlet his class is not key value coding-compliant for the key button.'
 //    @IBOutlet var button: UIButton!
@@ -32,8 +34,7 @@ class SecondController: UIViewController {
 //        field.becomeFirstResponder()
 //        field.delegate = self
 //
-        formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
-        formLabel.text = ""
+       
         formTitle = UILabel(frame: CGRect(x: 40, y: 175, width: 200, height: 50))
         formTitle.text = "form:"
         formTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -41,8 +42,7 @@ class SecondController: UIViewController {
         rectangleView.backgroundColor = .systemBlue
         rectangleView.alpha = 0.5
         
-        rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
-        rootLabel.text = ""
+      
         rootTitle = UILabel(frame: CGRect(x: 200, y: 275, width: 200, height: 50))
         rootTitle.text = "root:"
         rootTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -50,9 +50,7 @@ class SecondController: UIViewController {
         rectangleView1.backgroundColor = .systemBlue
         rectangleView1.alpha = 0.5
         
-        infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
-        infoLabel.backgroundColor = .systemBlue
-        infoLabel.text = ""
+       
         infoTitle = UILabel(frame: CGRect(x: 40, y: 375, width: 200, height: 50))
         infoTitle.text = "info:"
         infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
@@ -63,13 +61,13 @@ class SecondController: UIViewController {
         
         view.addSubview(rectangleView)
         view.addSubview(formTitle)
-        view.addSubview(formLabel)
+        //view.addSubview(formLabel)
         view.addSubview(rectangleView1)
         view.addSubview(rootTitle)
-        view.addSubview(rootLabel)
+        //view.addSubview(rootLabel)
         view.addSubview(rectangleView2)
         view.addSubview(infoTitle)
-        view.addSubview(infoLabel)
+        //view.addSubview(infoLabel)
         configureButtons()
         
       
@@ -83,6 +81,21 @@ class SecondController: UIViewController {
         let story = UIStoryboard(name: "Main", bundle: nil)
         let controller = story.instantiateViewController(identifier: "FirstController") as! ViewController
         self.present(controller, animated: true, completion: nil)
+        
+//        for item in response.possible_words{
+//            let button: UIButton = UIButton()
+//            button.setTitle(item.word, for: .normal)
+//            button.tag = count
+//            button.setTitleColor(.blue, for: .normal)
+//            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
+//            count += 1
+//            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
+//            view.addSubview(button)
+//
+//
+//
+//
+//        }
         //let navigation = UINavigationController(rootViewController: controller)
         //self.view.addSubview(navigation.view)
       
@@ -97,7 +110,7 @@ class SecondController: UIViewController {
 //        print("button tapped")
 //    }
 
-    private func getData(from url: String, completion: @escaping (Result<MyResult, Error>) -> Void) {
+    private func getData(from url: String, completion: @escaping (Result<MyResults, Error>) -> Void) {
         //var return_val: MyResult?
         
         let task = URLSession.shared.dataTask(with: URL(string: url)!,completionHandler: {data, response, error in
@@ -109,9 +122,9 @@ class SecondController: UIViewController {
                 return
             }
             //have data
-            var result: MyResult?
+            var result: MyResults?
             do{
-                result = try JSONDecoder().decode(MyResult.self, from: data)
+                result = try JSONDecoder().decode(MyResults.self, from: data)
             }
             catch{
                 print("failed to convert \(error.localizedDescription)")
@@ -122,8 +135,7 @@ class SecondController: UIViewController {
             }
             
             
-            print(json.word)
-            print(json.form)
+            print(json)
             
            DispatchQueue.main.async {
             completion(.success(json))
@@ -143,13 +155,18 @@ class SecondController: UIViewController {
 
     }
     struct MyResult: Codable{
+        let input: String
         let word: String
         let form: String
         let features: Array<Feature>
         let root: String
+        let weak: Bool
         
        
         
+    }
+    struct MyResults: Codable{
+        let possible_words: Array<MyResult>
     }
      
 
@@ -157,72 +174,74 @@ class SecondController: UIViewController {
 
 
 
-extension SecondController: UITextFieldDelegate{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        func updateLabel(input: String) -> Void{
-            formLabel.text = input
-        }
-        if let text = textField.text{
-            formLabel.text = text
-            
-            let verb_test: String
-            let verb_encoded: String
-            verb_test = text
-            print(verb_test)
-            verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-            print(verb_encoded)
-            let url = "https://qt3-arabic-deduction.herokuapp.com/api/verb?id=" + verb_encoded
-            
-            
-            getData(from: url){ [self] results in
-                
-                //var test_help: String
-                switch results {
-                case .failure(let error):
-                    print(error.localizedDescription)
-
-                case .success(let response):
-                    //print(response.form)
-                   // var featureStringMonster = " "
-                    var genders = "gender: "
-                    var tenses = "tense: "
-                    var moods = "mood: "
-                    var nums = "number: "
-                    var persons = "person: "
-                    
-                    for feature in response.features{
-                        genders = genders + " " + feature.gender
-                        tenses = tenses + " " + feature.tense
-                        moods = moods + " " + feature.mood
-                        nums = nums + " " + String(feature.number)
-                        persons = persons + " " + String(feature.person)
-//                        print(feature)
-//                        let tenseNum = feature.tense + " " + String(feature.number) + " "
+//extension SecondController: UITextFieldDelegate{
+//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        textField.resignFirstResponder()
 //
-//                        let personGender = feature.gender + " " + String(feature.person) + " "
-//                        let mood = feature.mood + "\n"
-//                        let featureString = tenseNum + personGender + mood
-//                        featureStringMonster = featureStringMonster + featureString
-                        //feature
-                        
-                    }
-                    formLabel.text = response.form //+ " " + response.root + "\n" + featureStringMonster
-                    rootLabel.text = response.root
-                    
-                    infoLabel.text = genders + "\n" + tenses + "\n" + moods + "\n" + nums + "\n" + persons
-                    // use `genres` here, e.g. update model and UI
-                }
-                
-            }
-            
-            //label.text = help
-            
-            
-            //print("\(text)")
-        }
-        
-        return true
-    }
-}
+//        func updateLabel(input: String) -> Void{
+//            formLabel.text = input
+//        }
+//        if let text = textField.text{
+//            formLabel.text = text
+//
+//            let verb_test: String
+//            let verb_encoded: String
+//            verb_test = text
+//            print(verb_test)
+//            verb_encoded = verb_test.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+//            print(verb_encoded)
+//            let url = "http://127.0.0.1:5000/api/verb?id=" + verb_encoded
+//            //let url = "https://qt3-arabic-deduction.herokuapp.com/api/verb?id=" + verb_encoded
+//
+//
+//            getData(from: url){ [self] results in
+//
+//                //var test_help: String
+//                switch results {
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//
+//                case .success(let response):
+//                    //print(response.form)
+//                   // var featureStringMonster = " "
+//                    let word = response.possible_words[0]
+//                    var genders = "gender: "
+//                    var tenses = "tense: "
+//                    var moods = "mood: "
+//                    var nums = "number: "
+//                    var persons = "person: "
+//
+//                    for feature in response.features{
+//                        genders = genders + " " + feature.gender
+//                        tenses = tenses + " " + feature.tense
+//                        moods = moods + " " + feature.mood
+//                        nums = nums + " " + String(feature.number)
+//                        persons = persons + " " + String(feature.person)
+////                        print(feature)
+////                        let tenseNum = feature.tense + " " + String(feature.number) + " "
+////
+////                        let personGender = feature.gender + " " + String(feature.person) + " "
+////                        let mood = feature.mood + "\n"
+////                        let featureString = tenseNum + personGender + mood
+////                        featureStringMonster = featureStringMonster + featureString
+//                        //feature
+//
+//                    }
+//                    formLabel.text = response.form //+ " " + response.root + "\n" + featureStringMonster
+//                    rootLabel.text = response.root
+//
+//                    infoLabel.text = genders + "\n" + tenses + "\n" + moods + "\n" + nums + "\n" + persons
+//                    // use `genres` here, e.g. update model and UI
+//                }
+//
+//            }
+//
+//            //label.text = help
+//
+//
+//            //print("\(text)")
+//        }
+//
+//        return true
+//    }
+//}

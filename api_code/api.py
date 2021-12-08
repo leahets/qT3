@@ -123,6 +123,6 @@ def api_verb_info():
             new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
             features_list.append(new_feature_format)
 
-        dict_word = {"word": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak}
+        dict_word = {"word": word.raw_text, "input": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak}
         all_words.append(dict_word)
     return json.dumps({"possible_words" : all_words})#json.dumps(dict_word)
