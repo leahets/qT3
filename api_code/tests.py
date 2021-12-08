@@ -202,7 +202,7 @@ def test_which_form_check_if_gibberish():
     # basic = verb_base_algorithm.make_word("فعّل")
     # assert verb_base_algorithm.which_form(basic) == "Form II", basic
     gibberish = verb_base_algorithm.make_word("ثتصصنيبيت")
-    gibberish = verb_base_algorithm.which_form(gibberish)
+    verb_base_algorithm.which_form(gibberish)
     assert gibberish.invalid == True
 
 
@@ -215,19 +215,19 @@ def test_root():
 
     basic1 = verb_base_algorithm.deconjugate(basic)
     basic2 = verb_base_algorithm.strip_fixes(basic1)
-    basic_value = verb_base_algorithm.which_form(basic2)
-    assert basic_value.root == "ف ع ل"
+    verb_base_algorithm.which_form(basic2)
+    assert basic2.root == "ف ع ل"
 
     sample1 = verb_base_algorithm.deconjugate(sample)
     sample2 = verb_base_algorithm.strip_fixes(sample1)
-    sample_value = verb_base_algorithm.which_form(sample2)
-    assert sample_value.root == "ل ع ب"
+    verb_base_algorithm.which_form(sample2)
+    assert sample2.root == "ل ع ب"
 
     tricky1 = verb_base_algorithm.deconjugate(tricky)
     # tricky2 = verb_base_algorithm.strip_fixes(tricky1)
     # print(tricky2)
-    tricky_value = verb_base_algorithm.which_form(tricky1)
-    assert tricky_value.root == "ن ا م"
+    verb_base_algorithm.which_form(tricky1)
+    assert tricky1.root == "ن ا م"
 
 
 def test_correct_form_basic():
@@ -244,7 +244,7 @@ def test_leading_alif():
     leading_alif_dropped = verb_base_algorithm.strip_fixes(
         leading_alif_dropped)
     assert leading_alif_dropped.third_past == "ستعمل"
-    leading_alif_dropped = verb_base_algorithm.which_form(
+    verb_base_algorithm.which_form(
         leading_alif_dropped)
 
     assert leading_alif_dropped.form == "Form X"
@@ -255,7 +255,7 @@ def test_leading_alif():
         leading_alif_dropped1)
     leading_alif_dropped1 = verb_base_algorithm.strip_fixes(
         leading_alif_dropped1)
-    leading_alif_dropped1 = verb_base_algorithm.which_form(
+    verb_base_algorithm.which_form(
         leading_alif_dropped1)
 
     assert leading_alif_dropped1.form == "Form VIII"
@@ -278,49 +278,49 @@ def test_which_form_raw():
     pass
     # test form 1
     form1 = verb_base_algorithm.make_word("فعل")
-    form1 = verb_base_algorithm.which_form(form1)
+    verb_base_algorithm.which_form(form1)
     assert form1.form == "Form I"
 
     # test form 2
     form2 = verb_base_algorithm.make_word("فعّل")
-    form2 = verb_base_algorithm.which_form(form2)
+    verb_base_algorithm.which_form(form2)
     assert form2.form == "Form II"
     # test form 3
     form3 = verb_base_algorithm.make_word("فاعل")
-    form3 = verb_base_algorithm.which_form(form3)
+    verb_base_algorithm.which_form(form3)
     assert form3.form == "Form III"
     # test form 4
     form4 = verb_base_algorithm.make_word("أفعل")
-    form4 = verb_base_algorithm.which_form(form4)
+    verb_base_algorithm.which_form(form4)
     assert form4.form == "Form IV"
 
     # test form 5
     form5 = verb_base_algorithm.make_word("تفعّل")
-    form5 = verb_base_algorithm.which_form(form5)
+    verb_base_algorithm.which_form(form5)
     assert form5.form == "Form V"
 
     # test form 6
     form6 = verb_base_algorithm.make_word("تفاعل")
-    form6 = verb_base_algorithm.which_form(form6)
+    verb_base_algorithm.which_form(form6)
     assert form6.form == "Form VI"
 
     # test form 7
     form7 = verb_base_algorithm.make_word("انفعل")
-    form7 = verb_base_algorithm.which_form(form7)
+    verb_base_algorithm.which_form(form7)
     assert form7.form == "Form VII"
 
     # test form 8
     form8 = verb_base_algorithm.make_word("افتعل")
     past_features = verb_base_algorithm.decode_features("p2f1n")
     form8.features.add(past_features)
-    form8 = verb_base_algorithm.which_form(form8)
+    verb_base_algorithm.which_form(form8)
     assert form8.form == "Form VIII"
 
     # test form 10
     form10 = verb_base_algorithm.make_word("استفعل")
     past_features = verb_base_algorithm.decode_features("p2f1n")
     form10.features.add(past_features)
-    form10 = verb_base_algorithm.which_form(form10)
+    verb_base_algorithm.which_form(form10)
     assert form10.form == "Form X"
 
 
@@ -432,7 +432,7 @@ def test_deconjugate():
 
     assert len(first_past.features) == 4
 
-    # test first person secoond form
+    # test first person second form
     # not sure why this test isn't working rn, will come back to it
     # second_person = verb_base_algorithm.make_word("تفعلين")
     # #second_feature1 = verb_base_algorithm.decode_features("r3f1i")
@@ -492,14 +492,14 @@ def test_all_conjugations_present():
     fake_r2n3i = verb_base_algorithm.deconjugate(fake_r2n3i)
     assert len(fake_r2n3i.features) == 1
     fake_r3m1i = verb_base_algorithm.make_word("يأخم")
-    fake_r3m1i = verb_base_algorithm.make_word(fake_r3m1i)
+    fake_r3m1i = verb_base_algorithm.deconjugate(fake_r3m1i)
     assert len(fake_r3m1i.features) == 3
     # fake_r3f1i = verb_base_algorithm.make_word("تأخم")
     # fake_r3f1i =verb_base_algorithm.make_word(fake_r3f1i)
     # fake_r3f2i = verb_base_algorithm.make_word("")
     # fake_r3m2i = verb_base_algorithm.make_word("")
     fake_r3n3i = verb_base_algorithm.make_word("يأخمون")
-    fake_r3n3i = verb_base_algorithm.make_word(fake_r3n3i)
+    fake_r3n3i = verb_base_algorithm.deconjugate(fake_r3n3i)
     assert len(fake_r3n3i.features) == 1
 
 

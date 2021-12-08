@@ -96,6 +96,13 @@ def make_word(verb):
     return Word(verb)
 
 
+def english_checker(text):
+    for letter in text:
+        if letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
+            return True
+    return False
+
+
 def letter_assignment(text):
     word_length = len(text)
     if word_length >= 1:
@@ -1126,20 +1133,31 @@ def create_possible_words(text):
 
 
 def full_pipeline(text):
-    create_features()
-    full_text_possibilities = create_possible_words(text)
-    for ex_word in full_text_possibilities:
-        print(ex_word.raw_text)
-    text_possibilities = list(dict.fromkeys(full_text_possibilities))
-    # this^ removes duplicates
-    final_words = list()
+    if english_checker(text):
+        bad_word = Word(text)
+        bad_word.form = "English"
+        bad_list = list()
+        bad_list.append(bad_word)
+        return bad_list
+    else:
+        create_features()
+        full_text_possibilities = create_possible_words(text)
+        for ex_word in full_text_possibilities:
+            print(ex_word.raw_text)
+        text_possibilities = list(dict.fromkeys(full_text_possibilities))
+        # this^ removes duplicates
+        final_words = list()
 
-    for possible_word in text_possibilities:
-        word = pipeline(possible_word)
-        word = sanity_check(word)
-        if not word.invalid:
-            final_words.append(word)
+        for possible_word in text_possibilities:
+            word = pipeline(possible_word)
+            word = sanity_check(word)
+            if not word.invalid:
+                final_words.append(word)
 
+    if len(final_words) == 0:
+        no_word = Word(text)
+        no_word.form = "None"
+        final_words.append(no_word)
     return final_words
 
 

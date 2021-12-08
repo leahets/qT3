@@ -18,20 +18,20 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         let listReturn:Array<String> = linkListReturn(str: "Help")
         var count:Int = 1
-        for item in listReturn{
-            let button: UIButton = UIButton()
-            button.setTitle(item, for: .normal)
-            button.tag = count
-            button.setTitleColor(.blue, for: .normal)
-            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
-            count += 1
-            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
-            view.addSubview(button)
-            
-        
-
-          
-        }
+//        for item in listReturn{
+//            let button: UIButton = UIButton()
+//            button.setTitle(item, for: .normal)
+//            button.tag = count
+//            button.setTitleColor(.blue, for: .normal)
+//            button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
+//            count += 1
+//            button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
+//            view.addSubview(button)
+//
+//
+//
+//
+//        }
         
         formLabel = UILabel(frame: CGRect(x: 20, y: 400, width: 100, height: 40))
         //formLabel.backgroundColor = .systemBlue
@@ -176,6 +176,21 @@ extension ViewController: UITextFieldDelegate{
 
                 case .success(let response):
                     print (response)
+                    var count = 0
+                    for item in response.possible_words{
+                        let button: UIButton = UIButton()
+                        button.setTitle(item.word, for: .normal)
+                        button.tag = count
+                        button.setTitleColor(.blue, for: .normal)
+                        button.frame = CGRect(x: 20, y: 100 + 50 * count, width: 200, height: 20)
+                        count += 1
+                        button.addTarget(self, action: #selector(onTap(sender:)), for: .touchUpInside)
+                        view.addSubview(button)
+                        
+                    
+
+                      
+                    }
                     
        
                 }
