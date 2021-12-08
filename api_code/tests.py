@@ -544,6 +544,10 @@ def test_new_hash():
 #     type1 = verb_base_algorithm.make_word()
 
 
+def test_hollow_full():
+    pass
+
+
 #     assert verb_base_algorithm.deconjugate()
 if __name__ == "__main__":
     import pytest
