@@ -608,6 +608,7 @@ def test_hollow_dropped():
     #word = word_list.pop()
     assert word.raw_text == "صمت"
     assert word.conjugated == "صمت"
+    assert word.hollow == True
     features = word.features.pop()
     if verb_base_algorithm.decode_features("p1n1n") == features:
         assert verb_base_algorithm.decode_features("p1n1n") == features
@@ -619,7 +620,7 @@ def test_hollow_dropped():
         assert False == True  # this should never run
     assert word.third_past == "صم"
     assert 1 in word.checked_forms
-    assert word.root == "ص و/ي م"
+    assert word.root == "ص م"
     assert word.form == "Form I"
     assert word.prefix_count == 0  # for conjugations
     assert word.suffix_count == 1  # for conjugations
@@ -630,7 +631,7 @@ def test_hollow_dropped():
     assert word.invalid == False
     assert word.dropped_prefixes == []
     # assert ("ه", "him") in word.dropped_suffix
-    assert word.hollow == True
+
     assert word.defective == False
     assert word.geminated == False
 

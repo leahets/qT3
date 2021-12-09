@@ -954,6 +954,12 @@ def check_invalid_preconjugate(word):
 def check_weak_postconjugate(word):
     if len(word.third_past) <= 2:
         word.weak = True
+        if len(word.features) >= 1:
+            feature = word.features.pop()
+            word.features.add(feature)
+            if feature.tense == "past":
+                word.hollow = True
+        ##here check feature set, if it's in xyz it's hollow else if it's in abc it's assimilated
         word.checked_forms.add(1)
         word.form = "Form I"
 
@@ -1383,7 +1389,7 @@ def pipeline(test_word):
     check_root_filled(test_word)
     check_root_hamza(test_word)
     weak_in_root(test_word)
-    check_assimilated(test_word)
+    # check_assimilated(test_word)
     return test_word
 
 
