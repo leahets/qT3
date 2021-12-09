@@ -94,6 +94,7 @@ class ViewController: UIViewController {
                 let gender = feat.gender
                 let mood = feat.mood
                 //let person = feat.person
+                var plural: String
                 var person: String
                 let tense = feat.tense
                 switch (feat.person) {
@@ -106,8 +107,17 @@ class ViewController: UIViewController {
                 default:
                     person = "unknown"
                 }
-                
-                featureLabel.text = String(format: "%@ tense, in %@ person, %@ in gender, and in the %@ mood", tense, person, gender, mood)
+                switch (feat.person) {
+                case 1:
+                    plural = "singular"
+                case 2:
+                    plural = "dual"
+                case 3:
+                    plural = "plural"
+                default:
+                    plural = "unknown"
+                }
+                featureLabel.text = String(format: "%@ tense, in %@ person, %@ in gender, %@, and in the %@ mood", tense, person, gender, plural, mood)
                 //stackList.append(featureLabel)
                 featureLabel.numberOfLines = 3
                 self.view.addSubview(featureLabel)
@@ -122,13 +132,14 @@ class ViewController: UIViewController {
         
         if ((localResults?.possible_words[sender.tag-1].weak) != nil){
             if localResults?.possible_words[sender.tag-1].weak == true{
-                let weakButton = UIButton(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
-                weakButton.setImage(UIImage(systemName: "Compose"), for: .normal)
-                weakButton.backgroundColor = .systemGray
+                let weakButton = UIButton(frame: CGRect(x: 120, y: 225, width: 20, height: 20))
+                //weakButton.backgroundColor = .systemGray
+                weakButton.setImage(UIImage(systemName: "info.circle.fill"), for: .normal)
+                weakButton.addTarget(self, action: #selector(onTapWeak), for: .touchUpInside)
                 self.view.addSubview(weakButton)
-                let testlabel = UILabel(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
-                testlabel.text = "ding ding ding weak"
-                //self.view.addSubview(testlabel)
+                
+                //let testlabel = UILabel(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
+                
             }
             
         }
@@ -160,6 +171,12 @@ class ViewController: UIViewController {
         }
        // UIApplication.shared.open(NSURL(string: "http://www.google.com")! as URL)
        
+        
+    }
+    
+    @objc func onTapWeak(){
+        print("tapped weak")
+        
         
     }
 
