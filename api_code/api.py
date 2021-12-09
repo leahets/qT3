@@ -125,10 +125,13 @@ def api_verb_info():
             features_list.append(new_feature_format)
         prefix_list = []
         for pre in word.dropped_prefixes:
-            prefix_list.append(pre)
+            prefix = {"arabic": pre[0], "meaning": pre[1]}
+            prefix_list.append(prefix)
+            
         suffix_list = []
         for suf in word.dropped_suffix:
-            suffix_list.append(suf)
+            suffix = {"arabic": suf[0], "meaning": suf[1]}
+            suffix_list.append(suffix)
 
         dict_word = {"word": word.raw_text, "input": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak, "suffixes": suffix_list, "prefixes": prefix_list, "hollow": word.hollow, "defective": word.defective, "geminated": word.geminated}
         all_words.append(dict_word)

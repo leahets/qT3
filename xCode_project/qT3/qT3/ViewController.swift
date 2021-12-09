@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     //@StateObject var global_results = CurrrentWords()
     var globalResults = CurrentWords()
     var localResults: MyResults?
+    var currentWord: MyResult?
     
     var formLabel: UILabel!
     var formSubmit: UIButton!
@@ -75,7 +76,7 @@ class ViewController: UIViewController {
 //        let infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
 //        infoLabel.backgroundColor = .systemBlue
 //        infoLabel.text = globalResults?.possible_words[sender.tag-1].features
-//
+        currentWord = localResults?.possible_words[sender.tag-1]
         //this is going to be a whole chunk of code!! about the stack view let's go
 //        var stackView: UIStackView{
 //            let stack = UIStackView()
@@ -138,6 +139,7 @@ class ViewController: UIViewController {
                 weakButton.addTarget(self, action: #selector(onTapWeak), for: .touchUpInside)
                 self.view.addSubview(weakButton)
                 
+                
                 //let testlabel = UILabel(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
                 
             }
@@ -176,6 +178,10 @@ class ViewController: UIViewController {
     
     @objc func onTapWeak(){
         print("tapped weak")
+//
+        if currentWord != nil{
+            
+        }
         
         
     }
@@ -250,6 +256,10 @@ struct Feature: Codable {
     let mood: String
 
 }
+struct Affix: Codable{
+    let arabic: String
+    let meaning: String
+}
 struct MyResult: Codable{
     let input: String
     let word: String
@@ -257,6 +267,8 @@ struct MyResult: Codable{
     let features: Array<Feature>
     let root: String
     let weak: Bool
+    let suffix: Array<Affix>
+    let prefixes: Array<Affix>
     
 }
 struct MyResults: Codable{
