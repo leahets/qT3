@@ -59,7 +59,7 @@ class ViewController: UIViewController {
         
         //sc
         self.addChild(navigation)
-        let wikiButton = UIButton(frame: CGRect(x: 200, y: 65, width: 200, height: 40))
+        let wikiButton = UIButton(frame: CGRect(x: 200, y: 80, width: 200, height: 40))
         wikiButton.setTitle(localResults?.possible_words[sender.tag-1].word, for: .normal)
         wikiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 32)
         wikiButton.setTitleColor(.blue, for: .normal)
@@ -120,7 +120,19 @@ class ViewController: UIViewController {
 //        }
         //add the defective flag
         
-        //if localResults?
+        if ((localResults?.possible_words[sender.tag-1].weak) != nil){
+            if localResults?.possible_words[sender.tag-1].weak == true{
+                let weakButton = UIButton(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
+                weakButton.setImage(UIImage(systemName: "Compose"), for: .normal)
+                weakButton.backgroundColor = .systemGray
+                self.view.addSubview(weakButton)
+                let testlabel = UILabel(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
+                testlabel.text = "ding ding ding weak"
+                //self.view.addSubview(testlabel)
+            }
+            
+        }
+                
         //controller.globalResults = globalResults
         // this has to go after adding all the labels
         navigation.didMove(toParent: self)

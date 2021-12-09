@@ -28,14 +28,14 @@ class SecondController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = .systemGray
+        //view.backgroundColor = .systemGray
         title = "qT3"
 //        field.returnKeyType = .done
 //        field.autocorrectionType = .no
 //        field.becomeFirstResponder()
 //        field.delegate = self
 //
-        rectangleView0 = UIView(frame: CGRect(x: 200, y: 60, width: 200, height: 50))
+        rectangleView0 = UIView(frame: CGRect(x: 200, y: 75, width: 200, height: 50))
         rectangleView0.backgroundColor = UIColor(red: 16/255, green: 52/255, blue: 166/255, alpha: 1)
         rectangleView0.alpha = 0.5
        
@@ -78,7 +78,7 @@ class SecondController: UIViewController {
       
     }
     private func configureButtons(){
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .rewind, target: self, action: #selector(onTapBack))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .reply, target: self, action: #selector(onTapBack))
     }
     
     @objc func onTapBack() {
