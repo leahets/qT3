@@ -178,11 +178,41 @@ class ViewController: UIViewController {
     
     @objc func onTapWeak(){
         print("tapped weak")
+        var weakType = "weak"
 //
         if currentWord != nil{
             
+            
+            if ((currentWord?.defective) != nil){
+                if currentWord?.defective == true{
+                weakType = "defective"
+                }
+            }
+            if ((currentWord?.hollow) != nil){
+                if currentWord?.hollow == true{
+                weakType = "hollow"
+                }
+            }
+            if ((currentWord?.geminated) != nil){
+                if currentWord?.geminated == true {
+                weakType = "geminated"
+                }
+            }
         }
+        print(weakType)
+        let infoString = String(format: "This word may be %@", weakType)
         
+        let rectanglePopup = UIView(frame: CGRect(x: 140, y: 245, width: 200, height: 50))
+        rectanglePopup.backgroundColor = .systemGray
+        let infoLabel = UILabel(frame: CGRect(x: 5, y: 0, width: 200, height: 50))
+        infoLabel.text = infoString
+        infoLabel.numberOfLines = 2
+        rectanglePopup.addSubview(infoLabel)
+        self.view.addSubview(rectanglePopup)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // your code here delayed by 0.5 seconds
+            rectanglePopup.removeFromSuperview()
+        }
         
     }
 
@@ -267,8 +297,12 @@ struct MyResult: Codable{
     let features: Array<Feature>
     let root: String
     let weak: Bool
-    let suffix: Array<Affix>
+    let suffixes: Array<Affix>
     let prefixes: Array<Affix>
+    let defective: Bool
+    let geminated: Bool
+    let hollow: Bool
+    
     
 }
 struct MyResults: Codable{
