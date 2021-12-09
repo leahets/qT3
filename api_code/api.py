@@ -1,3 +1,4 @@
+from typing import Sequence
 import flask
 from flask import request
 import verb_base_algorithm
@@ -122,7 +123,13 @@ def api_verb_info():
         for feature in word.features:
             new_feature_format = {"tense": feature.tense, "number": feature.number, "gender":feature.gender, "person":feature.person, "mood":feature.mood}
             features_list.append(new_feature_format)
+        prefix_list = []
+        for pre in word.dropped_prefixes:
+            prefix_list.append(pre)
+        suffix_list = []
+        for suf in word.dropped_suffix:
+            suffix_list.append(suf)
 
-        dict_word = {"word": word.raw_text, "input": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak}
+        dict_word = {"word": word.raw_text, "input": verb, "form": word.form, "features": features_list, "root": word.root, "weak": word.weak, "suffixes": suffix_list, "prefixes": prefix_list, "hollow": word.hollow, "defective": word.defective, "geminated": word.geminated}
         all_words.append(dict_word)
     return json.dumps({"possible_words" : all_words})#json.dumps(dict_word)
