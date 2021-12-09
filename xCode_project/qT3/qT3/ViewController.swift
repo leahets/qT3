@@ -145,6 +145,21 @@ class ViewController: UIViewController {
             }
             
         }
+        let affixButton = UIButton(frame: CGRect(x: 160, y: 110, width: 20, height: 20))
+        //weakButton.backgroundColor = .systemGray
+        affixButton.setImage(UIImage(systemName: "ellipsis.circle.fill"), for: .normal)
+        affixButton.addTarget(self, action: #selector(onTapAffix), for: .touchUpInside)
+        
+        if currentWord?.suffixes != nil{
+            if currentWord?.suffixes.count != 0 {
+                self.view.addSubview(affixButton)
+            }
+        }
+        if currentWord?.prefixes != nil{
+            if currentWord?.prefixes.count != 0 {
+                self.view.addSubview(affixButton)
+            }
+        }
                 
         //controller.globalResults = globalResults
         // this has to go after adding all the labels
@@ -208,6 +223,49 @@ class ViewController: UIViewController {
         infoLabel.text = infoString
         infoLabel.numberOfLines = 2
         rectanglePopup.addSubview(infoLabel)
+        self.view.addSubview(rectanglePopup)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // your code here delayed by 0.5 seconds
+            rectanglePopup.removeFromSuperview()
+        }
+        
+    }
+    @objc func onTapAffix(){
+        print("tapped affix")
+        
+//
+        
+        
+        let infoString = "This word was presented these affixes:"
+        
+        let rectanglePopup = UIView(frame: CGRect(x: 180, y: 130, width: 200, height: 200))
+        rectanglePopup.backgroundColor = .systemGray
+        let infoLabel = UILabel(frame: CGRect(x: 5, y: 0, width: 200, height: 50))
+        infoLabel.text = infoString
+        infoLabel.numberOfLines = 2
+        rectanglePopup.addSubview(infoLabel)
+        if currentWord != nil{
+            var count = 1
+            if ((currentWord?.suffixes) != nil){
+                for item in currentWord?.suffixes ?? [] {
+                    let suffixLabel = UILabel(frame: CGRect(x: 5, y: 50*count, width: 200, height: 50))
+                    suffixLabel.text = String(format: "suffix: %@ with meaning %@", item.arabic, item.meaning)
+                    suffixLabel.numberOfLines = 2
+                    rectanglePopup.addSubview(suffixLabel)
+                }
+               
+            }
+            if ((currentWord?.prefixes) != nil){
+                for item in currentWord?.prefixes ?? [] {
+                    let prefixLabel = UILabel(frame: CGRect(x: 5, y: 50*count, width: 200, height: 50))
+                    prefixLabel.text = String(format: "prefix: %@ with meaning %@", item.arabic, item.meaning)
+                    prefixLabel.numberOfLines = 2
+                    rectanglePopup.addSubview(prefixLabel)
+                }
+              
+            }
+           
+        }
         self.view.addSubview(rectanglePopup)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             // your code here delayed by 0.5 seconds
