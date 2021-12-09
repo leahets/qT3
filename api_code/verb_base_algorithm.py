@@ -959,7 +959,7 @@ def check_weak_postconjugate(word):
             word.features.add(feature)
             if feature.tense == "past":
                 word.hollow = True
-        ##here check feature set, if it's in xyz it's hollow else if it's in abc it's assimilated
+        # here check feature set, if it's in xyz it's hollow else if it's in abc it's assimilated
         word.checked_forms.add(1)
         word.form = "Form I"
 
@@ -1393,7 +1393,7 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("صمت")
+complete_possible_words = full_pipeline("نام")
 
 # nam in past tense being marked as present
 
