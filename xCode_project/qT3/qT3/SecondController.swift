@@ -11,6 +11,7 @@ class SecondController: UIViewController {
     //@property (nonatomic, assign) BOOL isSomethingEnabled;
 
     var formLabel: UILabel!
+    var rectangleView0: UIView!
     var rectangleView: UIView!
     var formTitle: UILabel!
     var rootLabel: UILabel!
@@ -34,31 +35,35 @@ class SecondController: UIViewController {
 //        field.becomeFirstResponder()
 //        field.delegate = self
 //
+        rectangleView0 = UIView(frame: CGRect(x: 200, y: 60, width: 200, height: 50))
+        rectangleView0.backgroundColor = UIColor(red: 16/255, green: 52/255, blue: 166/255, alpha: 1)
+        rectangleView0.alpha = 0.5
        
-        formTitle = UILabel(frame: CGRect(x: 40, y: 175, width: 200, height: 50))
+        formTitle = UILabel(frame: CGRect(x: 40, y: 125, width: 200, height: 50))
         formTitle.text = "form:"
         formTitle.font = UIFont.boldSystemFont(ofSize: 16)
-        rectangleView = UIView(frame: CGRect(x: 0, y: 200, width: 300, height: 50))
-        rectangleView.backgroundColor = .systemBlue
+        rectangleView = UIView(frame: CGRect(x: 0, y: 150, width: 300, height: 50))
+        rectangleView.backgroundColor = UIColor(red: 16/255, green: 52/255, blue: 166/255, alpha: 1)
         rectangleView.alpha = 0.5
         
       
-        rootTitle = UILabel(frame: CGRect(x: 200, y: 275, width: 200, height: 50))
+        rootTitle = UILabel(frame: CGRect(x: 200, y: 200, width: 200, height: 50))
         rootTitle.text = "root:"
         rootTitle.font = UIFont.boldSystemFont(ofSize: 16)
-        rectangleView1 = UIView(frame: CGRect(x: 200, y: 300, width: 300, height: 50))
-        rectangleView1.backgroundColor = .systemBlue
+        rectangleView1 = UIView(frame: CGRect(x: 160, y: 225, width: 300, height: 50))
+        rectangleView1.backgroundColor = UIColor(red: 16/255, green: 52/255, blue: 166/255, alpha: 1)
         rectangleView1.alpha = 0.5
         
        
-        infoTitle = UILabel(frame: CGRect(x: 40, y: 375, width: 200, height: 50))
-        infoTitle.text = "info:"
+        infoTitle = UILabel(frame: CGRect(x: 40, y: 275, width: 200, height: 50))
+        infoTitle.text = "info: "
         infoTitle.font = UIFont.boldSystemFont(ofSize: 16)
-        rectangleView2 = UIView(frame: CGRect(x: 0, y: 400, width: 400, height: 200))
-        rectangleView2.backgroundColor = .systemBlue
+        rectangleView2 = UIView(frame: CGRect(x: 0, y: 300, width: 500, height: 800))
+        rectangleView2.backgroundColor = UIColor(red: 16/255, green: 52/255, blue: 166/255, alpha: 1)
+        rectangleView2.alpha = 0.5
         //rectangleView2.alpha = 0.5
 
-        
+        view.addSubview(rectangleView0)
         view.addSubview(rectangleView)
         view.addSubview(formTitle)
         //view.addSubview(formLabel)

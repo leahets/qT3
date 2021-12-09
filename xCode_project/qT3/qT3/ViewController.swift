@@ -59,17 +59,17 @@ class ViewController: UIViewController {
         
         //sc
         self.addChild(navigation)
-        let wikiButton = UIButton(frame: CGRect(x: 200, y: 100, width: 200, height: 40))
+        let wikiButton = UIButton(frame: CGRect(x: 200, y: 65, width: 200, height: 40))
         wikiButton.setTitle(localResults?.possible_words[sender.tag-1].word, for: .normal)
         wikiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 32)
         wikiButton.setTitleColor(.blue, for: .normal)
         wikiButton.addTarget(self, action: #selector(onTapWiki), for: .touchUpInside)
         
         self.view.addSubview(wikiButton)
-        let formLabel = UILabel(frame: CGRect(x: 100, y: 200, width: 220, height: 50))
+        let formLabel = UILabel(frame: CGRect(x: 100, y: 150, width: 220, height: 50))
         formLabel.text = localResults?.possible_words[sender.tag-1].form
         self.view.addSubview(formLabel)
-        let rootLabel = UILabel(frame: CGRect(x: 250, y: 300, width: 220, height: 50))
+        let rootLabel = UILabel(frame: CGRect(x: 250, y: 225, width: 220, height: 50))
         rootLabel.text = localResults?.possible_words[sender.tag-1].root
         self.view.addSubview(rootLabel)
 //        let infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
@@ -77,8 +77,50 @@ class ViewController: UIViewController {
 //        infoLabel.text = globalResults?.possible_words[sender.tag-1].features
 //
         //this is going to be a whole chunk of code!! about the stack view let's go
+//        var stackView: UIStackView{
+//            let stack = UIStackView()
+//            stack.axis = .vertical
+//            stack.spacing = 20.0
+//            stack.alignment = .fill
+//            stack.distribution = .fillEqually
+//
+//            let stackList: Array<UILabel>
+            var count = 0
+            let featureSet = localResults?.possible_words[sender.tag-1].features
+            for feat in featureSet ?? [] {
+                count += 1
+                let featureLabel = UILabel(frame: CGRect(x: 20, y: 240 + 60 * count, width: Int(self.view.frame.size.width) - 20, height: 80))
+                
+                let gender = feat.gender
+                let mood = feat.mood
+                //let person = feat.person
+                var person: String
+                let tense = feat.tense
+                switch (feat.person) {
+                case 1:
+                    person = "1st"
+                case 2:
+                    person = "2nd"
+                case 3:
+                    person = "3rd"
+                default:
+                    person = "unknown"
+                }
+                
+                featureLabel.text = String(format: "%@ tense, in %@ person, %@ in gender, and in the %@ mood", tense, person, gender, mood)
+                //stackList.append(featureLabel)
+                featureLabel.numberOfLines = 3
+                self.view.addSubview(featureLabel)
+            }
+//            stackList.forEach
+//
+//
+//`
+//
+//        }
+        //add the defective flag
         
-        
+        //if localResults?
         //controller.globalResults = globalResults
         // this has to go after adding all the labels
         navigation.didMove(toParent: self)
