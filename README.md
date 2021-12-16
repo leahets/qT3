@@ -31,6 +31,8 @@ Our algorithm was implemented in Python, hosted to an API with Flask which was t
 
 ## Screenshots
 
+![An app screenshot of the input screen](./images/input_qt3.PNG)
+
 ![An app screenshot](./images/qT3_screenshot.PNG)
 
 
