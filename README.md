@@ -24,7 +24,7 @@ Here is a diagram walking through the methods of our algorithm.
 
 ## Technologies
 
-Our algorithm was implemented in Python, hosted to an API with Flask which was then deployed to Heroku, which was then accessed by our iOS application, built in Swift. 
+Our algorithm was implemented in Python, hosted to an API with Flask which was then deployed to Heroku, which was then accessed by our iOS application, built in Swift. The api can be accessed here: https://qt3-arabic-deduction.herokuapp.com/api/verb?id=%D8%A7%D8%B3%D8%AA%D8%B9%D9%85%D9%84 (with url form https://qt3-arabic-deduction.herokuapp.com/api/verb?id={ARABIC VERB HERE}
 
 ## Screenshots
 
