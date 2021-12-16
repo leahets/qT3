@@ -22,11 +22,19 @@ a rough and oft inaccurate translation. Our app fills this gap in exisiting reso
 
 Here is a diagram walking through the methods of our algorithm. 
 
+
+![A flowchart](./images/qt3_flowchart.png)
+
 ## Technologies
 
 Our algorithm was implemented in Python, hosted to an API with Flask which was then deployed to Heroku, which was then accessed by our iOS application, built in Swift. The api can be accessed here: https://qt3-arabic-deduction.herokuapp.com/api/verb?id=%D8%A7%D8%B3%D8%AA%D8%B9%D9%85%D9%84 (with url form https://qt3-arabic-deduction.herokuapp.com/api/verb?id={ARABIC VERB HERE}
 
 ## Screenshots
+
+![An app screenshot](./images/qT3_screenshot.PNG)
+
+
+![Another app screenshot](./images/qT3_screenshot1.PNG)
 
 ## Tests
 
