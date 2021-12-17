@@ -56,7 +56,7 @@ https://www.youtube.com/watch?v=joy9hu06J7g
 https://stackabuse.com/deploying-a-flask-application-to-heroku/
 https://dev.to/techparida/how-to-deploy-a-flask-app-on-heroku-heb
 
-This link has the command I need to deploy API
+This link has the command we used to deploy API
 https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f
 
 http://www.wseas.us/e-library/conferences/2011/Paris/ECC/ECC-66.pdf
