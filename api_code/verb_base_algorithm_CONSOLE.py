@@ -1393,7 +1393,8 @@ def pipeline(test_word):
     return test_word
 
 
-complete_possible_words = full_pipeline("قضيت")
+input_word = input("Please enter the word you would like to analyze: ")
+complete_possible_words = full_pipeline(input_word)
 
 # nam in past tense being marked as present
 
