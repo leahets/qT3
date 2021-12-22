@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     //@StateObject var global_results = CurrrentWords()
     var globalResults = CurrentWords()
     var localResults: MyResults?
+    var currentWord: MyResult?
     
     var formLabel: UILabel!
     var formSubmit: UIButton!
@@ -59,7 +60,7 @@ class ViewController: UIViewController {
         
         //sc
         self.addChild(navigation)
-        let wikiButton = UIButton(frame: CGRect(x: 200, y: 65, width: 200, height: 40))
+        let wikiButton = UIButton(frame: CGRect(x: 200, y: 80, width: 200, height: 40))
         wikiButton.setTitle(localResults?.possible_words[sender.tag-1].word, for: .normal)
         wikiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 32)
         wikiButton.setTitleColor(.blue, for: .normal)
@@ -75,7 +76,7 @@ class ViewController: UIViewController {
 //        let infoLabel = UITextView(frame: CGRect(x: 100, y: 400, width: 300, height: 150))
 //        infoLabel.backgroundColor = .systemBlue
 //        infoLabel.text = globalResults?.possible_words[sender.tag-1].features
-//
+        currentWord = localResults?.possible_words[sender.tag-1]
         //this is going to be a whole chunk of code!! about the stack view let's go
 //        var stackView: UIStackView{
 //            let stack = UIStackView()
@@ -94,6 +95,7 @@ class ViewController: UIViewController {
                 let gender = feat.gender
                 let mood = feat.mood
                 //let person = feat.person
+                var plural: String
                 var person: String
                 let tense = feat.tense
                 switch (feat.person) {
@@ -106,8 +108,17 @@ class ViewController: UIViewController {
                 default:
                     person = "unknown"
                 }
-                
-                featureLabel.text = String(format: "%@ tense, in %@ person, %@ in gender, and in the %@ mood", tense, person, gender, mood)
+                switch (feat.person) {
+                case 1:
+                    plural = "singular"
+                case 2:
+                    plural = "dual"
+                case 3:
+                    plural = "plural"
+                default:
+                    plural = "unknown"
+                }
+                featureLabel.text = String(format: "%@ tense, in %@ person, %@ in gender, %@, and in the %@ mood", tense, person, gender, plural, mood)
                 //stackList.append(featureLabel)
                 featureLabel.numberOfLines = 3
                 self.view.addSubview(featureLabel)
@@ -120,7 +131,36 @@ class ViewController: UIViewController {
 //        }
         //add the defective flag
         
-        //if localResults?
+        if ((localResults?.possible_words[sender.tag-1].weak) != nil){
+            if localResults?.possible_words[sender.tag-1].weak == true{
+                let weakButton = UIButton(frame: CGRect(x: 120, y: 225, width: 20, height: 20))
+                //weakButton.backgroundColor = .systemGray
+                weakButton.setImage(UIImage(systemName: "info.circle.fill"), for: .normal)
+                weakButton.addTarget(self, action: #selector(onTapWeak), for: .touchUpInside)
+                self.view.addSubview(weakButton)
+                
+                
+                //let testlabel = UILabel(frame: CGRect(x: 40, y: 100, width: 20, height: 20))
+                
+            }
+            
+        }
+        let affixButton = UIButton(frame: CGRect(x: 160, y: 110, width: 20, height: 20))
+        //weakButton.backgroundColor = .systemGray
+        affixButton.setImage(UIImage(systemName: "ellipsis.circle.fill"), for: .normal)
+        affixButton.addTarget(self, action: #selector(onTapAffix), for: .touchUpInside)
+        
+        if currentWord?.suffixes != nil{
+            if currentWord?.suffixes.count != 0 {
+                self.view.addSubview(affixButton)
+            }
+        }
+        if currentWord?.prefixes != nil{
+            if currentWord?.prefixes.count != 0 {
+                self.view.addSubview(affixButton)
+            }
+        }
+                
         //controller.globalResults = globalResults
         // this has to go after adding all the labels
         navigation.didMove(toParent: self)
@@ -148,6 +188,89 @@ class ViewController: UIViewController {
         }
        // UIApplication.shared.open(NSURL(string: "http://www.google.com")! as URL)
        
+        
+    }
+    
+    @objc func onTapWeak(){
+        print("tapped weak")
+        var weakType = "weak"
+//
+        if currentWord != nil{
+            
+            
+            if ((currentWord?.defective) != nil){
+                if currentWord?.defective == true{
+                weakType = "defective"
+                }
+            }
+            if ((currentWord?.hollow) != nil){
+                if currentWord?.hollow == true{
+                weakType = "hollow"
+                }
+            }
+            if ((currentWord?.geminated) != nil){
+                if currentWord?.geminated == true {
+                weakType = "geminated"
+                }
+            }
+        }
+        print(weakType)
+        let infoString = String(format: "This word may be %@", weakType)
+        
+        let rectanglePopup = UIView(frame: CGRect(x: 140, y: 245, width: 200, height: 50))
+        rectanglePopup.backgroundColor = .systemGray
+        let infoLabel = UILabel(frame: CGRect(x: 5, y: 0, width: 200, height: 50))
+        infoLabel.text = infoString
+        infoLabel.numberOfLines = 2
+        rectanglePopup.addSubview(infoLabel)
+        self.view.addSubview(rectanglePopup)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // your code here delayed by 0.5 seconds
+            rectanglePopup.removeFromSuperview()
+        }
+        
+    }
+    @objc func onTapAffix(){
+        print("tapped affix")
+        
+//
+        
+        
+        let infoString = "This word was presented these affixes:"
+        
+        let rectanglePopup = UIView(frame: CGRect(x: 180, y: 130, width: 200, height: 200))
+        rectanglePopup.backgroundColor = .systemGray
+        let infoLabel = UILabel(frame: CGRect(x: 5, y: 0, width: 200, height: 50))
+        infoLabel.text = infoString
+        infoLabel.numberOfLines = 2
+        rectanglePopup.addSubview(infoLabel)
+        if currentWord != nil{
+            var count = 1
+            if ((currentWord?.suffixes) != nil){
+                for item in currentWord?.suffixes ?? [] {
+                    let suffixLabel = UILabel(frame: CGRect(x: 5, y: 50*count, width: 200, height: 50))
+                    suffixLabel.text = String(format: "suffix: %@ with meaning %@", item.arabic, item.meaning)
+                    suffixLabel.numberOfLines = 2
+                    rectanglePopup.addSubview(suffixLabel)
+                }
+               
+            }
+            if ((currentWord?.prefixes) != nil){
+                for item in currentWord?.prefixes ?? [] {
+                    let prefixLabel = UILabel(frame: CGRect(x: 5, y: 50*count, width: 200, height: 50))
+                    prefixLabel.text = String(format: "prefix: %@ with meaning %@", item.arabic, item.meaning)
+                    prefixLabel.numberOfLines = 2
+                    rectanglePopup.addSubview(prefixLabel)
+                }
+              
+            }
+           
+        }
+        self.view.addSubview(rectanglePopup)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // your code here delayed by 0.5 seconds
+            rectanglePopup.removeFromSuperview()
+        }
         
     }
 
@@ -221,6 +344,10 @@ struct Feature: Codable {
     let mood: String
 
 }
+struct Affix: Codable{
+    let arabic: String
+    let meaning: String
+}
 struct MyResult: Codable{
     let input: String
     let word: String
@@ -228,6 +355,12 @@ struct MyResult: Codable{
     let features: Array<Feature>
     let root: String
     let weak: Bool
+    let suffixes: Array<Affix>
+    let prefixes: Array<Affix>
+    let defective: Bool
+    let geminated: Bool
+    let hollow: Bool
+    
     
 }
 struct MyResults: Codable{
